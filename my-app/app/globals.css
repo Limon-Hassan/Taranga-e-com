@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-nunito: 'Nunito', 'sans-serif';
+}
+@theme {
+  --font-noto-bengali: 'Noto Sans Bengali', 'sans-serif';
+}
+
+.slick-dots {
+  bottom: 12px !important;
+}
+
+.slick-dots li button::before {
+  color: red !important;
+}
