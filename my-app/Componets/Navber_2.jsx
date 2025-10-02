@@ -1,13 +1,15 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Container from './Container/Container';
 import { FaChevronDown } from 'react-icons/fa';
 
-
 const Navber_2 = () => {
- 
+  let [open, setOpen] = useState(false);
   return (
     <>
-      <section className="bg-white shadow-md py-[5px]">
+      
+      <section className="bg-white shadow-md py-[5px] mobile:hidden tablet:hidden computer:block laptop:block">
         <Container>
           <ul className="flex items-center justify-between">
             <li className="text-[18px] font-nunito font-medium text-[#484848]  cursor-pointer">

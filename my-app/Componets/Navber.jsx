@@ -6,7 +6,7 @@ import { IoMail } from 'react-icons/io5';
 const Navber = () => {
   return (
     <>
-      <section className="bg-[#E6963A] py-[5px]">
+      <section className="bg-[#E6963A] py-[5px] mobile:hidden tablet:block laptop:block computer:block ">
         <Container>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[30px]">

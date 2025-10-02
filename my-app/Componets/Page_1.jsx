@@ -5,7 +5,7 @@ import { FaCartShopping } from 'react-icons/fa6';
 const Page_1 = () => {
   return (
     <>
-      <section className="mb-[30px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[10px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px]">
         <Container>
           <div className="flex items-center justify-between  border-b border-dashed border-[#000]">
             <h3 className="text-[18px] font-nunito font-normal text-[#1e293b] mb-[20px]">

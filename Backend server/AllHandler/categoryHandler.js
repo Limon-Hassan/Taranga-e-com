@@ -1,4 +1,4 @@
-const { Cloudinary } = require('../Helper/Cloudinary');
+const { cloudinary } = require('../Helper/Cloudinary');
 const categorySchema = require('../models/categorySchema');
 const productSchema = require('../models/productSchema');
 
@@ -88,7 +88,7 @@ async function deleteCategory(req, res) {
     let deletePromise = deleteCategory.image.map(async url => {
       try {
         const publicId = url.split('/').pop().split('.')[0];
-        await Cloudinary.uploader.destroy(`Taranga_Category/${publicId}`);
+        await cloudinary.uploader.destroy(`Taranga_Category/${publicId}`);
       } catch (err) {
         console.error('Failed to delete image from Cloudinary:', err);
       }

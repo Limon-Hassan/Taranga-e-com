@@ -14,3 +14,10 @@
 .slick-dots li button::before {
   color: red !important;
 }
+
+@theme {
+  --breakpoint-mobile: 20rem;
+  --breakpoint-tablet: 38.75rem;
+  --breakpoint-laptop: 64rem;
+  --breakpoint-computer: 100rem;
+}

@@ -6,6 +6,9 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const {
   createProduct,
   getProduct,
+  topProduct,
+  updateProduct,
+  deleteProduct,
 } = require('../../AllHandler/productHandler');
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -22,5 +25,8 @@ const ProductPhoto = multer({
 
 router.post('/AddProduct', ProductPhoto.array('photo', 12), createProduct);
 router.get('/getProduct', getProduct);
+router.get('/topProduct', topProduct);
+router.put('/updateProduct', ProductPhoto.array('photo', 12), updateProduct);
+router.delete('/deleteProduct', deleteProduct);
 
 module.exports = router;

@@ -18,33 +18,33 @@ const Page = () => {
   };
   return (
     <>
-      <section className="mb-[40px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-0 tablet:mb-[20px] computer:mb-[40px] laptop:mb-[40px]">
         <Container>
           <div className="slider-container">
             <Slider {...settings}>
               <div>
-                <div className=" mt-[40px] h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
-                    className="bg-cover bg-center w-full"
+                    className="w-full h-full object-cover object-center"
                     src="/compressed.webp"
                     alt="benner"
                   />
                 </div>
               </div>
               <div>
-                <div className=" mt-[40px] h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
-                    className="bg-cover bg-center w-full"
-                    src="/MOBILE.webp"
+                    className="w-full h-full object-cover object-center"
+                    src="/INGCO-MOBILE.webp"
                     alt="benner"
                   />
                 </div>
               </div>
               <div>
-                <div className=" mt-[40px] h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
-                    className="bg-cover bg-center w-full"
-                    src="/INGCO-MOBILE.webp"
+                    className="w-full h-full object-cover object-center"
+                    src="/MOBILE.webp"
                     alt="benner"
                   />
                 </div>
