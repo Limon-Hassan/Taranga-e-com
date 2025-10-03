@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import Container from './Container/Container';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -18,7 +17,7 @@ const Page = () => {
   };
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-0 tablet:mb-[20px] computer:mb-[40px] laptop:mb-[40px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] computer:mb-[40px] laptop:mb-[40px]">
         <Container>
           <div className="slider-container">
             <Slider {...settings}>
