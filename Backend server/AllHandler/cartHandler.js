@@ -2,7 +2,7 @@ const cartSchema = require('../models/cartSchema');
 const productSchema = require('../models/productSchema');
 
 async function addCart(req, res) {
-  let { cartId, productId, area } = req.body;
+  let { cartId, productId } = req.body;
 
   try {
     const product = await productSchema.findById(productId);
@@ -28,18 +28,7 @@ async function addCart(req, res) {
     const price = Number(product.price) || 0;
     const weight = Number(product.weight) || 1;
 
-    const shippingCost =
-      weight <= 1
-        ? area === 'inside'
-          ? 60
-          : 120
-        : weight <= 2
-        ? area === 'inside'
-          ? 80
-          : 150
-        : area === 'inside'
-        ? 100
-        : 200;
+    const shippingCost = 0;
 
     cart.items.push({
       productId,
@@ -55,11 +44,7 @@ async function addCart(req, res) {
       0
     );
 
-    cart.shippingCost = cart.items.reduce(
-      (acc, item) => acc + Number(item.shippingCost),
-      0
-    );
-    cart.totalPrice = cart.subTotal + cart.shippingCost;
+    cart.totalPrice = cart.subTotal;
 
     await cart.save();
     return res.status(200).json({ msg: 'Product added to cart!', data: cart });
@@ -105,7 +90,7 @@ async function readCart(req, res) {
 
 async function cartSummary(req, res) {
   try {
-    const { cartId } = req.query;
+    const { cartId, area } = req.query;
 
     const cart = await cartSchema
       .findOne({ cartId })
@@ -114,9 +99,24 @@ async function cartSummary(req, res) {
     if (!cart) {
       return res.status(404).json({ msg: 'Cart not found' });
     }
+    if (!area) return res.status(400).json({ msg: 'Please Select An Area' });
 
     cart.items = cart.items.map(item => {
-      item.singleSubtotal = item.productId.price * item.quantity;
+      const price = Number(item.productId.price) || 0;
+      const weight = Number(item.productId.weight) || 1;
+      item.singleSubtotal = price * item.quantity;
+
+      let shippingCost = 0;
+      if (area === 'insideDhaka') {
+        if (weight <= 1) shippingCost = 60;
+        else if (weight <= 2) shippingCost = 80;
+        else shippingCost = 100;
+      } else if (area === 'outsideDhaka') {
+        if (weight <= 1) shippingCost = 120;
+        else if (weight <= 2) shippingCost = 150;
+        else shippingCost = 200;
+      }
+      item.shippingCost = shippingCost;
       return item;
     });
 
@@ -124,12 +124,10 @@ async function cartSummary(req, res) {
       (acc, item) => acc + item.singleSubtotal,
       0
     );
-
     cart.shippingCost = cart.items.reduce(
-      (acc, item) => acc + (item.shippingCost || 0),
+      (acc, item) => acc + item.shippingCost,
       0
     );
-
     cart.totalPrice = cart.subTotal + cart.shippingCost;
 
     return res.status(200).json({
@@ -160,7 +158,7 @@ async function IncrementCart(req, res) {
     }
 
     if (action === 'Increment') {
-      if (cartItems.items[0].quantity >= 20) {
+      if (cartItems.items[0].quantity >= 30) {
         return res.status(400).json({ msg: 'Max quantity of 20 reached' });
       } else if (
         cartItems.items[0].productId.stock <= cartItems.items[0].quantity
@@ -182,7 +180,7 @@ async function IncrementCart(req, res) {
     }
 
     cartItems.items = cartItems.items.map(item => {
-      item.singleSubtotal = item.productId.price * item.quantity;
+      item.singleSubtotal = item.price * item.quantity;
       return item;
     });
 
@@ -191,13 +189,7 @@ async function IncrementCart(req, res) {
       0
     );
 
-    cartItems.shippingCost = cartItems.items.reduce(
-      (acc, item) => acc + (item.shippingCost || 0),
-      0
-    );
-
-    cartItems.totalPrice = cartItems.subTotal + cartItems.shippingCost;
-
+    cartItems.totalPrice = cartItems.subTotal;
     await cartItems.save();
     return res.status(200).json({
       msg: `Cart ${

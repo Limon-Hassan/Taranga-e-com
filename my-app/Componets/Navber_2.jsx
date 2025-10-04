@@ -1,11 +1,8 @@
-'use client';
 
-import React, { useState } from 'react';
 import Container from './Container/Container';
 import { FaChevronDown } from 'react-icons/fa';
 
 const Navber_2 = () => {
-  let [open, setOpen] = useState(false);
   return (
     <>
       

@@ -1,33 +1,52 @@
-import React from 'react';
+'use client';
 import Container from './Container/Container';
 import { IoSearchSharp } from 'react-icons/io5';
 import { LuShoppingBag } from 'react-icons/lu';
-import { FaBangladeshiTakaSign } from 'react-icons/fa6';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { RxCross1 } from 'react-icons/rx';
+import { FaBangladeshiTakaSign, FaChevronDown } from 'react-icons/fa6';
+import { useState } from 'react';
+import Link from 'next/link';
 
 const Navber_1 = () => {
+  let [open, setOpen] = useState(false);
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full bg-[#ededed] py-[20px]">
         <Container>
-          <div className="laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
+          <div className=" mobile:relative tablet:relative laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
             <div className="computer:flex laptop:flex computer:items-center laptop:items-center mobile:gap-0 tablet:gap-0 laptop:gap-[30px] computer:gap-[50px]">
               <div className="mobile:mb-[30px] tablet:mb-[20px] mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
-                <img
-                  className="computer:w-[250px] laptop:w-[250px] mobile:w-[170px] tablet:w-[250px]  computer:mb-0 laptop:mb-0"
-                  src="/headimage.webp"
-                  alt="headimage"
-                />
-                <div className="mobile:flex tablet:flex computer:hidden laptop:hidden  mobile:items-center table:items-center gap-[8px]">
-                  <LuShoppingBag className="text-[25px] text-[#69727d]" />
-                  <span className="flex items-center  text-[20px] text-[#69727d]">
-                    00.0
-                    <FaBangladeshiTakaSign />
-                  </span>
-                </div>
+                <button
+                  onClick={() => setOpen(prev => !prev)}
+                  aria-expanded={open}
+                  aria-controls="mobile-menu"
+                  className=" py-2 px-2 mobile:block tablet:block laptop:hidden computer:hidden bg-black/20 rounded-full  text-white font-bold tablet:text-[20px] mobile:text-[15px]"
+                >
+                  {open ? <RxCross1 /> : <RxHamburgerMenu />}
+                </button>
+
+                <Link href="/">
+                  <img
+                    className="computer:w-[250px] laptop:w-[250px] mobile:w-[170px] tablet:w-[250px]  computer:mb-0 laptop:mb-0"
+                    src="/headimage.webp"
+                    alt="headimage"
+                  />
+                </Link>
+                <Link href="/cart">
+                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden  mobile:items-center table:items-center gap-[8px]">
+                    <LuShoppingBag className="text-[25px] text-[#69727d]" />
+                    <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
+                      00.0
+                      <FaBangladeshiTakaSign />
+                    </span>
+                  </div>
+                </Link>
               </div>
-              <div className="border border-[#E6963A] rounded-[4px] flex items-center gap-[20px] p-[6px]">
+              <div className="border border-[#E6963A] rounded-[4px] flex items-center mobile:gap-[10px] tablet:gap-[20px] laptop:gap-[20px] computer:gap-[20px] p-[6px]">
                 <input
-                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[365px] tablet:h-[50px] mobile:w-[190px] mobile:h-[40px] border border-[#D1D5DB] bg-white rounded-[5px] p-[10px] text-[18px] font-nunito font-normal text-[#000] "
+                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-[205px] mobile:h-[40px] border border-[#D1D5DB] bg-white rounded-[5px] p-[10px] text-[18px] font-nunito font-normal text-[#000] "
                   type="search"
                   placeholder="Search..."
                   name="search"
@@ -38,13 +57,50 @@ const Navber_1 = () => {
                 </button>
               </div>
             </div>
-            <div className="computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-[8px] laptop:gap-[8px] mobile:hidden tablet:hidden">
-              <LuShoppingBag className="text-[25px] text-[#69727d]" />
-              <span className="flex items-center  text-[20px] text-[#69727d]">
-                00.0
-                <FaBangladeshiTakaSign />
-              </span>
-            </div>
+            <Link href="/cart">
+              <div className="computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-[8px] laptop:gap-[8px] mobile:hidden tablet:hidden">
+                <LuShoppingBag className="text-[25px] text-[#69727d]" />
+                <span className="flex items-center  text-[20px] text-[#69727d]">
+                  00.0
+                  <FaBangladeshiTakaSign />
+                </span>
+              </div>
+            </Link>
+          </div>
+          <div
+            id="mobile-menu"
+            className={
+              `absolute left-0 right-0 mobile:top-[70px] tablet:top-[120px] bg-white shadow-md z-50
+               transform origin-top transition-all  duration-300 ease-in-out
+               ` +
+              (open
+                ? 'opacity-100 translate-y-0 pointer-events-auto'
+                : 'opacity-0 -translate-y-3 pointer-events-none')
+            }
+          >
+            <ul className="mobile:flex-col tablet:flex-col mobile:items-center tablet:items-center mobile:mb-[10px] tablet:mb-[15px] mobile:p-[10px] tablet:p-[20px]">
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] cursor-pointer">
+                Home
+              </li>
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+                Power Tools
+                <span>
+                  <FaChevronDown />
+                </span>
+              </li>
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+                Sefety Tools
+                <span>
+                  <FaChevronDown />
+                </span>
+              </li>
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+                Accessories
+                <span>
+                  <FaChevronDown />
+                </span>
+              </li>
+            </ul>
           </div>
         </Container>
       </section>

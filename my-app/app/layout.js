@@ -1,9 +1,10 @@
 import { Nunito, Noto_Sans_Bengali } from 'next/font/google';
 import './globals.css';
-import Navber from '@/Componets/Navber';
-import Navber_1 from '@/Componets/Navber_1';
-import Navber_2 from '@/Componets/Navber_2';
-import Footer from '@/Componets/Footer';
+import Navber from '../Componets/Navber';
+import Navber_1 from '../Componets/Navber_1';
+import Navber_2 from '../Componets/Navber_2';
+import Footer from '../Componets/Footer';
+
 
 const nunito = Nunito({
   subsets: ['latin'],

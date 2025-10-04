@@ -10,12 +10,12 @@ const Navber = () => {
         <Container>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[30px]">
-              <p className="flex items-center gap-[10px] text-white text-[18px] font-nunito">
+              <p className="flex items-center gap-[10px] text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
                 <FaPhoneVolume />
                 +880 01887604100
               </p>
 
-              <p className="flex items-center gap-[10px] text-white text-[18px] font-nunito">
+              <p className="flex items-center gap-[10px] text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
                 <IoMail /> mahammudhassanlimon@gmail.com
               </p>
             </div>

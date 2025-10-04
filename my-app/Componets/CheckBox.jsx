@@ -32,7 +32,7 @@ const CheckBox = ({ label, checked, className, onChange }) => {
           )}
         </div>
         <span
-          className={` ${className} text-[16px] font-nunito font-bold text-[#000] leading-6`}
+          className={` ${className} mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#000] leading-6`}
         >
           {label}
         </span>

@@ -14,7 +14,7 @@ const Page_3 = () => {
               See all
             </h3>
           </div>
-          <div className="flex flex-wrap items-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
+          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
             <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
               <img
                 className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
