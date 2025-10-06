@@ -1,6 +1,7 @@
 const { cloudinary } = require('../Helper/Cloudinary');
 const categorySchema = require('../models/categorySchema');
 const productSchema = require('../models/productSchema');
+let { getIO } = require('../socket_server');
 
 async function createProduct(req, res) {
   let { name, description, price, category, stock, brand, weight } = req.body;
@@ -32,7 +33,7 @@ async function createProduct(req, res) {
         }
       );
     }
-
+    getIO().emit('productCreated', product);
     return res
       .status(200)
       .send({ msg: 'product added successfully', data: product });
@@ -84,6 +85,7 @@ async function topProduct(req, res) {
       .limit(8)
       .populate({ path: 'category', select: 'name description image' });
 
+    getIO().emit('topProduct', topProduct);
     return res.json({
       success: true,
       topProduct,
@@ -118,6 +120,7 @@ async function updateProduct(req, res) {
       { new: true }
     );
     await updateProduct.save();
+    getIO().emit('productUpdated', updateProduct);
     return res.json({
       msg: 'Product update Successfully !',
       data: updateProduct,
@@ -144,6 +147,7 @@ async function deleteProduct(req, res) {
       }
     });
     await Promise.all(Deletepromise);
+    getIO().emit('productDeleted', id);
     return res.json({ msg: 'Product delete successfully !', id });
   } catch (error) {
     console.log(error);

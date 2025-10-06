@@ -5,10 +5,12 @@ let productSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      text: true,
     },
     description: {
       type: String,
       required: true,
+      text: true,
     },
     price: {
       type: Number,
@@ -29,7 +31,7 @@ let productSchema = new mongoose.Schema(
         ref: 'review',
       },
     ],
-    Totoalreviews: {
+    Totalreviews: {
       type: Number,
       default: 0,
     },
@@ -63,5 +65,5 @@ let productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+productSchema.index({ name: 'text', description: 'text' });
 module.exports = mongoose.model('product', productSchema);

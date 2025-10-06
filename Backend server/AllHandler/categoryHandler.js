@@ -1,6 +1,7 @@
 const { cloudinary } = require('../Helper/Cloudinary');
 const categorySchema = require('../models/categorySchema');
 const productSchema = require('../models/productSchema');
+const { getIO } = require('../socket_server');
 
 async function createCategory(req, res) {
   let { name, description } = req.body;
@@ -14,6 +15,7 @@ async function createCategory(req, res) {
     });
 
     await category.save();
+    getIO().emit('CategoryCreated', category);
     return res
       .status(200)
       .json({ msg: 'category created successfully', data: category });
@@ -71,6 +73,7 @@ async function updateCategory(req, res) {
     );
 
     await updatecategory.save();
+    getIO().emit('categoryUpdated', updateCategory);
     return res.json({ msg: 'update successfully', data: updatecategory });
   } catch (error) {
     console.log(error);
@@ -94,6 +97,7 @@ async function deleteCategory(req, res) {
       }
     });
     await Promise.all(deletePromise);
+    getIO().emit('categoryDeleted', id);
     return res.json({ msg: 'Delete Successfully', data: deleteCategory });
   } catch (error) {
     console.log(error);

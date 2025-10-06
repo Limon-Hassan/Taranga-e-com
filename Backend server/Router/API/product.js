@@ -10,6 +10,8 @@ const {
   updateProduct,
   deleteProduct,
 } = require('../../AllHandler/productHandler');
+const { makeReviews, getReviews } = require('../../AllHandler/reviewHandler');
+const { searchProduct } = require('../../AllHandler/searchHandler');
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -25,6 +27,9 @@ const ProductPhoto = multer({
 
 router.post('/AddProduct', ProductPhoto.array('photo', 12), createProduct);
 router.get('/getProduct', getProduct);
+router.get('/product/searchProduct', searchProduct);
+router.post('/CreateReviews', makeReviews);
+router.get('/getReviews', getReviews);
 router.get('/topProduct', topProduct);
 router.put('/updateProduct', ProductPhoto.array('photo', 12), updateProduct);
 router.delete('/deleteProduct', deleteProduct);

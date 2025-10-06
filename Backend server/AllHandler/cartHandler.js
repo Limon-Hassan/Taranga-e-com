@@ -1,5 +1,6 @@
 const cartSchema = require('../models/cartSchema');
 const productSchema = require('../models/productSchema');
+const { getIO } = require('../socket_server');
 
 async function addCart(req, res) {
   let { cartId, productId } = req.body;
@@ -47,6 +48,7 @@ async function addCart(req, res) {
     cart.totalPrice = cart.subTotal;
 
     await cart.save();
+    getIO().to(cartId).emit('Add cart', { cart });
     return res.status(200).json({ msg: 'Product added to cart!', data: cart });
   } catch (error) {
     console.error(error);
@@ -74,12 +76,14 @@ async function readCart(req, res) {
       (acc, item) => acc + Number(item.singleSubtotal),
       0
     );
-
+    getIO()
+      .to(cartId)
+      .emit('cartFetched', { cartId, items: getCart.items, subTotal });
     return res.status(200).json({
       msg: 'Cart fetched successfully',
       data: {
         cartId: getCart.cartId,
-        item,
+        items: getCart.items,
         subTotal,
       },
     });
@@ -129,7 +133,14 @@ async function cartSummary(req, res) {
       0
     );
     cart.totalPrice = cart.subTotal + cart.shippingCost;
-
+    await cart.save();
+    getIO().to(cartId).emit('cartSummery', {
+      cartId: cart.cartId,
+      subTotal: cart.subTotal,
+      shippingCost: cart.shippingCost,
+      totalPrice: cart.totalPrice,
+      items: cart.items,
+    });
     return res.status(200).json({
       msg: 'Cart summary fetched successfully',
       data: {
@@ -159,7 +170,7 @@ async function IncrementCart(req, res) {
 
     if (action === 'Increment') {
       if (cartItems.items[0].quantity >= 30) {
-        return res.status(400).json({ msg: 'Max quantity of 20 reached' });
+        return res.status(400).json({ msg: 'Max quantity of 30 reached' });
       } else if (
         cartItems.items[0].productId.stock <= cartItems.items[0].quantity
       ) {
@@ -191,6 +202,7 @@ async function IncrementCart(req, res) {
 
     cartItems.totalPrice = cartItems.subTotal;
     await cartItems.save();
+    getIO().to(cartId).emit('IncrementCart', { cartItems });
     return res.status(200).json({
       msg: `Cart ${
         action === 'Increment' ? 'Incremented' : 'Decremented'
@@ -207,6 +219,8 @@ async function deletedcart(req, res) {
   let { cartId } = req.query;
   try {
     let deleteCart = await cartSchema.findOneAndDelete({ cartId });
+
+    getIO().to(cartId).emit('deletedcart', { cartId });
     return res
       .status(200)
       .json({ msg: 'cart delete Successfully !', data: deleteCart });
