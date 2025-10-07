@@ -51,7 +51,8 @@ async function addCart(req, res) {
     getIO().to(cartId).emit('Add cart', { cart });
     return res.status(200).json({ msg: 'Product added to cart!', data: cart });
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
+    console.error(error.message);
     return res.status(500).json({ msg: 'Server error', error: String(error) });
   }
 }
@@ -88,7 +89,8 @@ async function readCart(req, res) {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -152,7 +154,8 @@ async function cartSummary(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
+    console.error(error.message);
     return res.status(500).json({ msg: 'Server error', error: String(error) });
   }
 }
@@ -210,7 +213,8 @@ async function IncrementCart(req, res) {
       data: cartItems,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
     res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }
@@ -225,7 +229,8 @@ async function deletedcart(req, res) {
       .status(200)
       .json({ msg: 'cart delete Successfully !', data: deleteCart });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 

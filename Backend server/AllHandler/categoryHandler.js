@@ -20,7 +20,8 @@ async function createCategory(req, res) {
       .status(200)
       .json({ msg: 'category created successfully', data: category });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -54,7 +55,10 @@ async function readCategory(req, res) {
 
       return res.json(categoriesWithCount);
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message);
+    console.error(error.message);
+  }
 }
 
 async function updateCategory(req, res) {
@@ -76,7 +80,8 @@ async function updateCategory(req, res) {
     getIO().emit('categoryUpdated', updateCategory);
     return res.json({ msg: 'update successfully', data: updatecategory });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -100,7 +105,8 @@ async function deleteCategory(req, res) {
     getIO().emit('categoryDeleted', id);
     return res.json({ msg: 'Delete Successfully', data: deleteCategory });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 

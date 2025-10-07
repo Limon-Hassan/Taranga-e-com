@@ -38,7 +38,8 @@ async function createProduct(req, res) {
       .status(200)
       .send({ msg: 'product added successfully', data: product });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -73,7 +74,8 @@ async function getProduct(req, res) {
       return res.json(product);
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -91,7 +93,8 @@ async function topProduct(req, res) {
       topProduct,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -126,7 +129,8 @@ async function updateProduct(req, res) {
       data: updateProduct,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -150,7 +154,8 @@ async function deleteProduct(req, res) {
     getIO().emit('productDeleted', id);
     return res.json({ msg: 'Product delete successfully !', id });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 

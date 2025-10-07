@@ -77,6 +77,8 @@ async function searchProduct(req, res) {
       related,
     });
   } catch (error) {
+    console.log(error.message);
+    console.error(error.message);
     return res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }

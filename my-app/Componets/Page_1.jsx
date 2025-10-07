@@ -1,7 +1,27 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { getProducts } from '../lib/api/productApi';
 import Container from './Container/Container';
+import { useSnackbar } from 'notistack';
 import { FaCartShopping } from 'react-icons/fa6';
 
-const Page_1 = () => {
+const Page_1 = ({ initialProducts }) => {
+  const [products, setProducts] = useState(initialProducts || []);
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    refreshProducts();
+  }, []);
+
+  async function refreshProducts() {
+    try {
+      const data = await getProducts();
+      setProducts(data);
+    } catch {
+      enqueueSnackbar('Failed to refresh products.', { variant: 'error' });
+    }
+  }
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px]">

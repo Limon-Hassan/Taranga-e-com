@@ -4,7 +4,7 @@ import Navber from '../Componets/Navber';
 import Navber_1 from '../Componets/Navber_1';
 import Navber_2 from '../Componets/Navber_2';
 import Footer from '../Componets/Footer';
-
+import ClientProvider from './ClientProvider';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <Navber />
         <Navber_1 />
         <Navber_2 />
-        {children}
+        <ClientProvider>{children}</ClientProvider>
         <Footer />
       </body>
     </html>

@@ -25,6 +25,7 @@ async function makeReviews(req, res) {
     });
   } catch (error) {
     console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -37,7 +38,8 @@ async function getReviews(req, res) {
 
     res.json({ msg: 'reviews found', data: GetReviews });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
   }
 }
 

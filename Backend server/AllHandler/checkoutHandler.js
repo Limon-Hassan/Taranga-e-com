@@ -61,7 +61,8 @@ async function makeCheckout(req, res) {
       data: checkout,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
     res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }
@@ -78,6 +79,8 @@ async function AdminReadCheckout(req, res) {
       });
     }
   } catch (error) {
+    console.log(error.message);
+    console.error(error.message);
     return res
       .status(500)
       .json({ msg: 'server error !', error: error.message });
@@ -92,7 +95,8 @@ async function deleteCheckout(req, res) {
     await checkout.deleteOne();
     return res.json({ msg: 'checkout deleted successfully' });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.error(error.message);
     return res
       .status(500)
       .json({ msg: 'server error !', error: error.message });
