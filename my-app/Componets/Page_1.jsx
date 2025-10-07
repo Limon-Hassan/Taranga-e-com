@@ -17,8 +17,8 @@ const Page_1 = ({ initialCategory }) => {
   async function refreshCategory() {
     try {
       const data = await GetCategory();
-      setCategory(data);
       console.log(data);
+      setCategory(data);
     } catch {
       enqueueSnackbar('Failed to refresh products.', { variant: 'error' });
     }
