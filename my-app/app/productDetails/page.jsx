@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import Container from '../../Componets/Container/Container';
 import { PiStarFill } from 'react-icons/pi';
+import { FaCartShopping } from 'react-icons/fa6';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import ProductDetails from '../../Componets/ProductDetails';
+import CustomerReview from '../../Componets/CustomerReview';
 
 const Page = () => {
   const images = [
@@ -51,12 +53,12 @@ const Page = () => {
 
   return (
     <>
-      <section className="py-[200px]">
+      <section className="mobile:py-[50px] tablet:py-[80px] laptop:py-[100px] computer:py-[100px]">
         <Container>
           <div className="flex flex-col lg:flex-row gap-[100px]">
             <div className="image_part relative shadow-md flex flex-col items-center">
               <div
-                className="  w-[400px] h-[400px] rounded-lg overflow-hidden bg-cover bg-center bg-no-repeat cursor-zoom-in"
+                className=" mobile:w-[300px] mobile:h-[300px] tablet:w-[400px] tablet:h-[400px] laptop:w-[400px] laptop:h-[400px] computer:w-[400px] computer:h-[400px] rounded-lg overflow-hidden bg-cover bg-center bg-no-repeat cursor-zoom-in"
                 style={{
                   backgroundImage: `url(${selectedImage})`,
                   ...zoomStyle,
@@ -79,7 +81,7 @@ const Page = () => {
                   <img
                     src={selectedImage}
                     alt="fullscreen"
-                    className="max-h-[90%] max-w-[90%] object-contain rounded-lg shadow-lg"
+                    className="mobile:max-w-[90%] mobile:max-h-auto tablet:max-w-[90%] tablet:max-h-[70%] laptop:max-h-[90%] laptop:max-w-[90%] computer:max-h-[90%] computer:max-w-[90%] object-contain rounded-lg shadow-lg"
                   />
                   <button
                     className="absolute top-5 right-5 text-white text-3xl font-bold cursor-pointer"
@@ -95,7 +97,7 @@ const Page = () => {
                     key={i}
                     src={img}
                     alt="product thumbnail"
-                    className={`w-[80px] h-auto rounded-md cursor-pointer transition-all duration-300 ${
+                    className={`mobile:w-[60px] tablet:w-[80px] laptop:w-[80px] computer:w-[80px] h-auto rounded-md cursor-pointer transition-all duration-300 ${
                       selectedImage === img
                         ? 'opacity-100 border-1 border-black/30'
                         : 'opacity-40 hover:opacity-70'
@@ -107,7 +109,7 @@ const Page = () => {
             </div>
 
             <div className="text_part ">
-              <h3 className="text-[24px] font-bold font-nunito text-[#383535] w-[486px] leading-snug mb-[10px]">
+              <h3 className="mobile:text-[18px] tablet:text-[24px] laptop:text-[24px] computer:text-[24px] font-bold font-nunito text-[#383535] mobile:w-auto tablet:w-[486px] laptop:w-[486px] computer:w-[486px] leading-snug mb-[10px]">
                 Smartec 20V Cordless Impact Drill Machine Metal Chuck With 24ps
                 Accessories
               </h3>
@@ -156,7 +158,225 @@ const Page = () => {
                 Reviews (1)
               </button>
             </div>
-            <div className="mt-8">{active.a && <ProductDetails />}</div>
+            <div className="mt-8 relative">
+              {(active.a && <ProductDetails />) ||
+                (active.b && <CustomerReview />)}
+            </div>
+          </div>
+          <div className="related-products mt-[50px]">
+            <h3 className="text-[#1e293b] font-nunito font-bold text-[20px] mb-[10px] border-b border-dashed border-[#000]">
+              You May Also Like
+            </h3>
+            <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+              <div className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]">
+                <img
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  src="/2.webp"
+                  alt="product"
+                />
+                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                    Cordless Drill
+                  </h3>
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium  tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    Smartec 20V Cordless Impact Drill Machine Metal Chuck With
+                    24ps
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">
+                    Accessories
+                  </h5>
+                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+                    4,650.00৳
+                  </h2>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <FaCartShopping className="mr-[10px]" />
+                    Order Now
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </Container>
       </section>
