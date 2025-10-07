@@ -10,7 +10,7 @@ app.use(router);
 let cors = require('cors');
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
@@ -75,7 +75,8 @@ app.get('/', (req, res) => {
   res.send('Hello World !');
 });
 
-const PORT = process.env.PORT || 44044;
+const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
+module.exports = { app, server };
