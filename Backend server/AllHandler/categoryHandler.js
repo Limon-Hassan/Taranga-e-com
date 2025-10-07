@@ -30,16 +30,18 @@ async function readCategory(req, res) {
   try {
     if (id) {
       let SingleCategory = await categorySchema.findById(id).populate({
-        path: 'product',
+        path: 'Product',
         select: 'name price image',
+        strictPopulate: false,
       });
       let categoryOBJ = SingleCategory.toObject();
       categoryOBJ.totalproducts = SingleCategory.Product.length;
       return res.json([categoryOBJ]);
     } else {
       let categories = await categorySchema.find().populate({
-        path: 'product',
+        path: 'Product',
         select: 'name price image',
+        strictPopulate: false,
       });
 
       let categoriesWithCount = categories.map(cat => {
