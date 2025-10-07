@@ -29,7 +29,7 @@ async function createProduct(req, res) {
       await categorySchema.updateMany(
         { _id: { $in: category } },
         {
-          $push: { product: product._id },
+          $push: { Product: product._id },
         }
       );
     }
