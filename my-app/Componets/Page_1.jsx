@@ -7,7 +7,7 @@ import { FaCartShopping } from 'react-icons/fa6';
 import { GetCategory } from '../lib/api/categoryApi';
 
 const Page_1 = ({ initialCategory }) => {
-  const [category, setCategory] = useState(initialProducts || []);
+  const [category, setCategory] = useState(initialCategory || []);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {

@@ -37,8 +37,10 @@ async function readCategory(req, res) {
       categoryOBJ.totalproducts = singleProduct;
       return res.json([categoryOBJ]);
     } else {
-      let category = await categorySchema.find().populate('product');
-     
+      let category = await categorySchema.find().populate({
+        path: 'Product',
+        strictPopulate: false,
+      });
 
       return res.json(category);
     }
