@@ -4,19 +4,20 @@ import { getProducts } from '../lib/api/productApi';
 import Container from './Container/Container';
 import { useSnackbar } from 'notistack';
 import { FaCartShopping } from 'react-icons/fa6';
+import { GetCategory } from '../lib/api/categoryApi';
 
-const Page_1 = ({ initialProducts }) => {
-  const [products, setProducts] = useState(initialProducts || []);
+const Page_1 = ({ initialCategory }) => {
+  const [category, setCategory] = useState(initialProducts || []);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    refreshProducts();
+    refreshCategory();
   }, []);
 
-  async function refreshProducts() {
+  async function refreshCategory() {
     try {
-      const data = await getProducts();
-      setProducts(data);
+      const data = await GetCategory();
+      setCategory(data);
       console.log(data);
     } catch {
       enqueueSnackbar('Failed to refresh products.', { variant: 'error' });
