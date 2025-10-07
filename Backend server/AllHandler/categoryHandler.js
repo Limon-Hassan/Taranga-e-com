@@ -37,23 +37,10 @@ async function readCategory(req, res) {
       categoryOBJ.totalproducts = singleProduct;
       return res.json([categoryOBJ]);
     } else {
-      let category = await categorySchema.find();
-      let categoriesWithCount = await Promise.all(
-        category.map(async category => {
-          let totalProducts = await productSchema.countDocuments({
-            category: category._id,
-          });
-          return {
-            _id: category._id,
-            name: category.name,
-            discription: category.discription,
-            image: category.image,
-            totalProducts,
-          };
-        })
-      );
+      let category = await categorySchema.find().populate('Product');
+     
 
-      return res.json(categoriesWithCount);
+      return res.json(category);
     }
   } catch (error) {
     console.log(error.message);

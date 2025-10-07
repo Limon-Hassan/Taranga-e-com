@@ -17,6 +17,7 @@ const Page_1 = ({ initialProducts }) => {
     try {
       const data = await getProducts();
       setProducts(data);
+      console.log(data);
     } catch {
       enqueueSnackbar('Failed to refresh products.', { variant: 'error' });
     }
