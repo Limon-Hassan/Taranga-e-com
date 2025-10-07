@@ -31,7 +31,7 @@ async function readCategory(req, res) {
     if (id) {
       let SingleCategory = await categorySchema.findById(id).populate({
         path: 'Product',
-        select: 'name price photo',
+        select: 'name price photo description',
         strictPopulate: false,
       });
       let categoryOBJ = SingleCategory.toObject();
@@ -40,7 +40,7 @@ async function readCategory(req, res) {
     } else {
       let categories = await categorySchema.find().populate({
         path: 'Product',
-        select: 'name price photo',
+        select: 'name price photo description',
         strictPopulate: false,
       });
 
