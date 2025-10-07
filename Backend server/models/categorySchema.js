@@ -13,7 +13,7 @@ let CategorySchema = new mongoose.Schema(
     Product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'product',
       },
     ],
     totalproducts: {

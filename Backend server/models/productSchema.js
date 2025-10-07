@@ -54,12 +54,7 @@ let productSchema = new mongoose.Schema(
     Accessories: {
       type: Number,
     },
-    UseTime: {
-      type: Number,
-    },
-    voltage: {
-      type: Number,
-    },
+   
   },
   {
     timestamps: true,
