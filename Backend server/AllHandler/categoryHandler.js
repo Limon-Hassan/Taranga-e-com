@@ -29,17 +29,27 @@ async function readCategory(req, res) {
   let { id } = req.query;
   try {
     if (id) {
-      let SingleCategory = await categorySchema.findById(id);
-      let singleProduct = await productSchema.countDocuments({
-        SingleCategory: id,
+      let SingleCategory = await categorySchema.findById(id).populate({
+        path: 'Product',
+        select: 'name price image',
       });
       let categoryOBJ = SingleCategory.toObject();
-      categoryOBJ.totalproducts = singleProduct;
+      categoryOBJ.totalproducts = SingleCategory.Product.length;
       return res.json([categoryOBJ]);
     } else {
-      let category = await categorySchema.find()
+      let categories = await categorySchema.find().populate({
+        path: 'Product',
+        select: 'name price image',
+      });
 
-      return res.json(category);
+      let categoriesWithCount = categories.map(cat => {
+        return {
+          ...cat.toObject(),
+          totalproducts: cat.Product.length,
+        };
+      });
+
+      return res.json(categoriesWithCount);
     }
   } catch (error) {
     console.log(error.message);
