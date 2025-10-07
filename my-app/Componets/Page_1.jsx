@@ -1,28 +1,53 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Container from './Container/Container';
-import { useSnackbar } from 'notistack';
 import { FaCartShopping } from 'react-icons/fa6';
+import { useRouter } from 'next/navigation';
 
-const Page_1 = ({ initialCategory }) => {
-  const [category, setCategory] = useState(initialCategory || []);
-  const { enqueueSnackbar } = useSnackbar();
+const Page_1 = () => {
+  const [category, setCategory] = useState([]);
+  const router = useRouter();
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function Fetch() {
+      try {
+        const response = await fetch(
+          'https://taranga-e-com.onrender.com/api/v3/category/getCategory'
+        );
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log(result); 
+      } catch (error) {
+        console.error(error); 
+      }
+    }
+
+    Fetch();
+  }, []);
+
+  let handleSubmit = async category => {
     try {
       const res = await fetch(
-        'https://taranga-e-com.onrender.com/api/v3/category/getCategory',
+        `https://taranga-e-com.onrender.com/api/v3/category/getCategory?id=${encodeURIComponent(
+          category
+        )}`,
         {
           cache: 'no-store',
         }
       );
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      setCategory(data);
+      console.log(data);
+      router.push(
+        `/category/${category}?data=${encodeURIComponent(JSON.stringify(data))}`
+      );
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
-  }, []);
+  };
 
   return (
     <>
@@ -32,15 +57,18 @@ const Page_1 = ({ initialCategory }) => {
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px]">
               {category[1]?.name}
             </h3>
-            <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px] cursor-pointer underline">
+            <h3
+              onClick={() => handleSubmit(category[1]._id)}
+              className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px] cursor-pointer underline"
+            >
               See all
             </h3>
           </div>
           <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
-            {category[1]?.Product?.map((pro, idx) => (
+            {category[1]?.Product?.slice(0, 8).map((pro, idx) => (
               <div
                 key={idx}
-                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] mobile:h-[335px] tablet:h-[400px] laptop:h-[480px] computer:h-[480px] rounded-[4px]"
+                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px]  rounded-[4px]"
               >
                 <img
                   className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
@@ -48,10 +76,15 @@ const Page_1 = ({ initialCategory }) => {
                   alt="product"
                 />
                 <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
-                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
                     {pro.name}
                   </h3>
-
+                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium tablet:font-medium laptop:font-normal truncate computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
+                    {pro.description}
+                  </p>
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">
+                    {category[1]?.name}
+                  </h5>
                   <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
                     {pro.price}.00৳
                   </h2>

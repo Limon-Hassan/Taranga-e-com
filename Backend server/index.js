@@ -5,8 +5,7 @@ let router = require('./Router/index');
 let app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-Connection();
-app.use(router);
+
 let cors = require('cors');
 app.use(
   cors({
@@ -14,6 +13,9 @@ app.use(
     credentials: true,
   })
 );
+
+Connection();
+app.use(router);
 let http = require('http');
 const { init: initSocket } = require('./socket_server');
 let server = http.createServer(app);
