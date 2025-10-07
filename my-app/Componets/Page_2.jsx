@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
+import { useRouter } from 'next/navigation';
 const Page_2 = () => {
   let [Category, setCategory] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function Fetch() {
@@ -14,10 +16,8 @@ const Page_2 = () => {
             cache: 'no-store',
           }
         );
-        console.log(res);
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
-        console.log(data);
         setCategory(data);
       } catch (error) {
         console.error(error);
@@ -25,6 +25,28 @@ const Page_2 = () => {
     }
     Fetch();
   }, []);
+
+  let HandleSubmit = async category => {
+    try {
+      const res = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/category/getCategory?id=${encodeURIComponent(
+          category
+        )}`,
+        {
+          cache: 'no-store',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+
+      setTimeout(() => {
+        router.push(`/category/${category}`);
+      }, [2000]);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px]">
@@ -33,7 +55,10 @@ const Page_2 = () => {
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px]">
               {Category[2]?.name}
             </h3>
-            <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px] cursor-pointer underline">
+            <h3
+              onClick={() => HandleSubmit(Category[2]?._id)}
+              className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px] cursor-pointer underline"
+            >
               See all
             </h3>
           </div>

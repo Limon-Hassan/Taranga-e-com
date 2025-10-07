@@ -10,6 +10,12 @@ import Link from 'next/link';
 
 const Navber_1 = () => {
   let [open, setOpen] = useState(false);
+  let [search, setSearch] = useState('');
+  let [suggestions, setSuggestions] = useState([]);
+
+  let handleSearch = e => {
+    setSearch(e.target.value);
+  };
 
   return (
     <>
@@ -46,6 +52,8 @@ const Navber_1 = () => {
               </div>
               <div className="border border-[#E6963A] rounded-[4px] flex items-center mobile:gap-[10px] tablet:gap-[20px] laptop:gap-[20px] computer:gap-[20px] p-[6px]">
                 <input
+                  value={search}
+                  onChange={handleSearch}
                   className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-[205px] mobile:h-[40px] border border-[#D1D5DB] bg-white rounded-[5px] p-[10px] text-[18px] font-nunito font-normal text-[#000] "
                   type="search"
                   placeholder="Search..."
