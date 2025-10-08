@@ -56,14 +56,14 @@ async function getProduct(req, res) {
         });
 
       let totalReview = singleProduct.reviews.length;
-      let relatedProduct = await productSchema
+      const relatedProduct = await productSchema
         .find({
-          category: { $in: singleProduct.category },
+          category: singleProduct.category._id || singleProduct.category,
           _id: { $ne: id },
         })
         .limit(8)
         .populate({
-          path: category,
+          path: 'category',
           select: 'name description image',
         });
       return res.json({
