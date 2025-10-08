@@ -16,6 +16,7 @@ const Navber_1 = () => {
   let handleSearch = e => {
     setSearch(e.target.value);
   };
+  
 
   return (
     <>

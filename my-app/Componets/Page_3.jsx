@@ -62,7 +62,7 @@ const Page_3 = () => {
             </h3>
           </div>
           <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
-            {category[0]?.Product?.map((item, index) => (
+            {category[0]?.Product?.slice(0, 8).map((item, index) => (
               <div
                 key={index}
                 className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px]  rounded-[4px]"
