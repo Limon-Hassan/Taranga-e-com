@@ -12,7 +12,7 @@ async function searchProduct(req, res) {
     if (query) {
       filter.$or = [
         { name: { $regex: query, $options: 'i' } },
-        { discription: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
       ];
     }
 
@@ -33,7 +33,7 @@ async function searchProduct(req, res) {
       .sort(sortOption)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate({ path: 'category', select: 'name discription image' });
+      .populate({ path: 'category', select: 'name description image' });
 
     let related = [];
     if (products.length > 0) {
@@ -60,7 +60,7 @@ async function searchProduct(req, res) {
         .find(relatedFilter)
         .sort(sortOption)
         .limit(10)
-        .populate({ path: 'category', select: 'name discription image' });
+        .populate({ path: 'category', select: 'name description image' });
     }
 
     getIO().emit('searchSuggestion', {

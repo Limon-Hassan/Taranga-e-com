@@ -3,29 +3,37 @@ import { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
+import socket from '../utills/socket';
 
 const Page_1 = () => {
   const [category, setCategory] = useState([]);
   const router = useRouter();
 
-  useEffect(() => {
-    async function Fetch() {
-      try {
-        const res = await fetch(
-          'https://taranga-e-com.onrender.com/api/v3/category/getCategory',
-          {
-            cache: 'no-store',
-          }
-        );
-        if (!res.ok) throw new Error('Failed to fetch');
-        const data = await res.json();
-        setCategory(data);
-      } catch (error) {
-        console.error(error);
-      }
+  async function Fetch() {
+    try {
+      const res = await fetch(
+        'https://taranga-e-com.onrender.com/api/v3/category/getCategory',
+        {
+          cache: 'no-store',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+      setCategory(data);
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
     Fetch();
-  }, []);
+    socket.on('CategoryCreated', newCategory => {
+      console.log('New Category Received:', newCategory);
+      setCategory(prev => [...prev, newCategory]);
+    });
+
+    return () => socket.off('CategoryCreated');
+  }, [socket]);
 
   let handleSubmit = async category => {
     try {

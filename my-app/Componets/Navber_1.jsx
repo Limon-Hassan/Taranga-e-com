@@ -5,18 +5,80 @@ import { LuShoppingBag } from 'react-icons/lu';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { RxCross1 } from 'react-icons/rx';
 import { FaBangladeshiTakaSign, FaChevronDown } from 'react-icons/fa6';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import socket from '../utills/socket';
 
 const Navber_1 = () => {
   let [open, setOpen] = useState(false);
   let [search, setSearch] = useState('');
   let [suggestions, setSuggestions] = useState([]);
+  const debounceRef = useRef(null);
 
-  let handleSearch = e => {
-    setSearch(e.target.value);
+  useEffect(() => {
+    const handler = data => {
+      if (!search.trim()) return;
+      if (
+        data.query &&
+        data.query.toLowerCase().includes(search.toLowerCase())
+      ) {
+        setSuggestions(data.suggestions || []);
+      }
+    };
+    socket.on('searchSuggestion', handler);
+    return () => socket.off('searchSuggestion', handler);
+  }, [socket, search]);
+
+  const handleSearch = async e => {
+    const value = e.target.value;
+    setSearch(value);
+
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      if (!value.trim()) {
+        setSuggestions([]);
+        return;
+      }
+      socket.emit('searchProducts', { query: value });
+
+      try {
+        const res = await fetch(
+          `/product/product/searchProduct?query=${encodeURIComponent(value)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error('Failed to fetch search results');
+
+        const data = await res.json();
+        const names = (data.products || []).map(p => p.name).slice(0, 8);
+        setSuggestions(names);
+      } catch (err) {
+        console.error('Search request failed:', err);
+      }
+    }, 200);
   };
-  
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('searchSuggestion', data => {
+      setSuggestions(data.products.map(p => p.name).slice(0, 5));
+    });
+
+    socket.on('searchError', err => {
+      console.error('Search error:', err);
+    });
+
+    return () => {
+      socket.off('searchResults');
+      socket.off('searchError');
+    };
+  }, [socket]);
 
   return (
     <>
