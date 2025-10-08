@@ -15,7 +15,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
       <button
         onClick={prev}
         disabled={active === 1}
-        className={`uppercase cursor-pointer flex items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
+        className={` mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
           active === 1
             ? 'text-gray-400 cursor-not-allowed'
             : 'hover:text-[#FFF] text-black hover:bg-[#E6963A]'
@@ -32,7 +32,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
           <button
             key={page}
             onClick={() => setActive(page)}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ease-in-out duration-200 font-bold text-sm ${
+            className={`mobile:w-[35px] mobile:h-[35px] tablet:w-10 tablet:h-10 laptop:w-10 laptop:h-10 computer:w-10 computer:h-10 flex items-center justify-center rounded-full transition-all ease-in-out duration-200 font-bold text-sm ${
               active === page
                 ? 'bg-[#E6963A] text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-[#E6963A]'
@@ -46,7 +46,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
       <button
         onClick={next}
         disabled={active === totalPages}
-        className={`uppercase cursor-pointer flex items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
+        className={`mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
           active === totalPages
             ? 'text-gray-400 cursor-not-allowed'
             : 'hover:text-[#FFF] text-black hover:bg-[#E6963A]'

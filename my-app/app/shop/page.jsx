@@ -6,12 +6,14 @@ import { FaChevronDown } from 'react-icons/fa';
 import Pagination from '../../Componets/Pagination';
 import socket from '../../utills/socket';
 import { useSearchParams } from 'next/navigation';
+import { FaBars } from 'react-icons/fa6';
+import { ImCross } from 'react-icons/im';
 
 const page = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get('search');
   let [minPrice, SetminPrice] = useState(0);
-  let [maxPrice, SetmaxPrice] = useState(500);
+  let [maxPrice, SetmaxPrice] = useState(0);
   const [sortOrder, setSortOrder] = useState('');
   let [CurrentPrice, SetCurrentPrice] = useState(maxPrice);
   let [filteredRange, setFilteredRange] = useState(null);
@@ -21,6 +23,7 @@ const page = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [ActiveSidebar, setActiveSidebar] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -66,6 +69,15 @@ const page = () => {
   }
 
   useEffect(() => {
+    if (products.length > 0) {
+      const prices = products.map(p => p.price);
+      const highest = Math.max(...prices);
+      SetmaxPrice(highest);
+      SetCurrentPrice(highest);
+    }
+  }, [products]);
+
+  useEffect(() => {
     FetchProduct();
   }, [query, filteredRange, sortOrder, currentPage]);
 
@@ -78,104 +90,201 @@ const page = () => {
   }, []);
 
   let handleRangeChange = e => {
-    SetCurrentPrice(Number(e.target.value));
-    SetmaxPrice(Number(e.target.value));
+    const value = Number(e.target.value);
+    SetCurrentPrice(value);
+    SetmaxPrice(value);
   };
-
   let handleFilter = () => {
     setFilteredRange({ min: minPrice, max: maxPrice });
+    setActiveSidebar(false);
   };
 
   return (
-    <section>
+    <section className="relative z-0">
       <Container>
-        <div className="flex justify-between mt-[60px] z-0" ref={menuRef}>
-          <div className="w-[260px]">
-            <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
-              <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
-                Widget Price Filter
-              </h5>
-              <div className="flex justify-between gap-3 px-[20px] pt-[30px] pb-[15px]">
-                <div className="flex-1">
-                  <label className="block text-sm text-[#6E777D] mb-1">
-                    Min price
-                  </label>
-                  <input
-                    type="number"
-                    value={minPrice}
-                    onChange={e => SetminPrice(Number(e.target.value))}
-                    className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
-                  />
-                </div>
+        <div
+          className="flex justify-between mobile:mt-0 laptop:mt-[60px] computer:mt-[60px] "
+          ref={menuRef}
+        >
+          <button
+            onClick={() => setActiveSidebar(!ActiveSidebar)}
+            className={`laptop:hidden computer:hidden absolute top-[10px] left-0 z-[99] text-white bg-[#E6963A] text-[20px] rounded-full w-[50px] h-[50px] flex justify-center items-center transition-all duration-500 ease-in-out ${
+              ActiveSidebar
+                ? 'opacity-100 rotate-90 left-0'
+                : 'opacity-50 rotate-0 top-[-20px] left-[-30px]'
+            }`}
+          >
+            {ActiveSidebar ? <ImCross /> : <FaBars />}
+          </button>
+          {ActiveSidebar === true ? (
+            <div
+              className={`w-full computer:block laptop:block bg-white absolute top-[10px] left-0 z-50 p-[10px] rounded-[6px]`}
+            >
+              <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
+                <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] ">
+                  Widget Price Filter
+                </h5>
+                <div className="flex justify-between gap-3 px-[20px] pt-[30px] pb-[15px]">
+                  <div className="flex-1">
+                    <label className="block text-sm text-[#6E777D] mb-1">
+                      Min price
+                    </label>
+                    <input
+                      type="number"
+                      value={minPrice}
+                      onChange={e => SetminPrice(Number(e.target.value))}
+                      className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
+                    />
+                  </div>
 
-                <div className="flex-1">
-                  <label className="block text-sm text-[#6E777D] mb-1">
-                    Max price
-                  </label>
+                  <div className="flex-1">
+                    <label className="block text-sm text-[#6E777D] mb-1">
+                      Max price
+                    </label>
+                    <input
+                      type="number"
+                      value={maxPrice}
+                      onChange={e => SetmaxPrice(Number(e.target.value))}
+                      className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
+                    />
+                  </div>
+                </div>
+                <div className="px-[20px] mb-[30px]">
                   <input
-                    type="number"
-                    value={maxPrice}
-                    onChange={e => SetmaxPrice(Number(e.target.value))}
-                    className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
+                    type="range"
+                    min={minPrice}
+                    max={maxPrice}
+                    value={CurrentPrice}
+                    onChange={handleRangeChange}
+                    className="w-full h-2 bg-[#E6963A] rounded-lg appearance-none cursor-pointer accent-[#E6963A]"
                   />
+                  <div className="flex justify-between items-center">
+                    <p className="mt-3 text-[16px] font-nunito font-normal text-[#6E777D]">
+                      Price: ${minPrice} — ${maxPrice}
+                    </p>
+
+                    <button
+                      onClick={handleFilter}
+                      className="mt-3 bg-[#E6963A] text-white font-semibold py-2 px-4 rounded-md cursor-pointer"
+                    >
+                      Filter
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className="px-[20px] mb-[30px]">
-                <input
-                  type="range"
-                  min={0}
-                  max={128}
-                  value={CurrentPrice}
-                  onChange={handleRangeChange}
-                  className="w-full h-2 bg-[#E6963A] rounded-lg appearance-none cursor-pointer accent-[#E6963A]"
-                />
-                <div className="flex justify-between items-center">
-                  <p className="mt-3 text-[18px] font-nunito font-normal text-[#6E777D]">
-                    Price: ${minPrice} — ${maxPrice}
-                  </p>
-
-                  <button
-                    onClick={handleFilter}
-                    className="mt-3 bg-[#E6963A] text-white font-semibold py-2 px-4 rounded-md cursor-pointer"
-                  >
-                    Filter
-                  </button>
+              <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
+                <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
+                  Product Categories
+                </h5>
+                <div className="p-[20px]">
+                  <ul>
+                    <li className="list-disc text-[14px] font-nunito  font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] ">
+                      <a href="#">Potato</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
-              <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
-                Product Categories
-              </h5>
-              <div className="p-[20px]">
-                <ul>
-                  <li className="list-disc text-[14px] font-nunito  font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                    <a href="#">Potato</a>
-                  </li>
-                  <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                    <a href="#">Potato</a>
-                  </li>
-                  <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                    <a href="#">Potato</a>
-                  </li>
-                  <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                    <a href="#">Potato</a>
-                  </li>
-                  <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] ">
-                    <a href="#">Potato</a>
-                  </li>
-                </ul>
+          ) : (
+            <div className="w-[260px] mobile:hidden tablet:hidden computer:block laptop:block">
+              <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
+                <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
+                  Widget Price Filter
+                </h5>
+                <div className="flex justify-between gap-3 px-[20px] pt-[30px] pb-[15px]">
+                  <div className="flex-1">
+                    <label className="block text-sm text-[#6E777D] mb-1">
+                      Min price
+                    </label>
+                    <input
+                      type="number"
+                      value={minPrice}
+                      onChange={e => SetminPrice(Number(e.target.value))}
+                      className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <label className="block text-sm text-[#6E777D] mb-1">
+                      Max price
+                    </label>
+                    <input
+                      type="number"
+                      value={maxPrice}
+                      onChange={e => SetmaxPrice(Number(e.target.value))}
+                      className="w-full border border-[#e2e2e2] rounded-[4px] px-[15px] py-1.5 outline-none font-medium text-[#2C3C28]"
+                    />
+                  </div>
+                </div>
+                <div className="px-[20px] mb-[30px]">
+                  <input
+                    type="range"
+                    min={minPrice}
+                    max={maxPrice}
+                    value={CurrentPrice}
+                    onChange={handleRangeChange}
+                    className="w-full h-2 bg-[#E6963A] rounded-lg appearance-none cursor-pointer accent-[#E6963A]"
+                  />
+                  <div className="flex justify-between items-center">
+                    <p className="mt-3 text-[16px] font-nunito font-normal text-[#6E777D]">
+                      Price: ${minPrice} — ${maxPrice}
+                    </p>
+
+                    <button
+                      onClick={handleFilter}
+                      className="mt-3 bg-[#E6963A] text-white font-semibold py-2 px-4 rounded-md cursor-pointer"
+                    >
+                      Filter
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
+                <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
+                  Product Categories
+                </h5>
+                <div className="p-[20px]">
+                  <ul>
+                    <li className="list-disc text-[14px] font-nunito  font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
+                      <a href="#">Potato</a>
+                    </li>
+                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] ">
+                      <a href="#">Potato</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          <div className="w-[915px]">
+          <div className="mobile:w-full tablet:w-full  laptop:w-[670px] computer:w-[915px]">
             <div className="flex justify-between items-center bg-[#F3F4F6] rounded-[6px] p-[15px] relative">
               <h4>Showing results ({products.length})</h4>
 
               <button
                 onClick={() => setOpen(prev => !prev)}
-                className="text-[16px] font-nunito font-semibold text-[#FFF] bg-[#E6963A] py-[8px] px-[14px] cursor-pointer rounded-[4px] flex items-center gap-2"
+                className="text-[16px] mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px]  font-nunito font-semibold text-[#FFF] bg-[#E6963A] py-[8px] mobile:px-[10px] tablet:px-[14px] laptop:px-[14px] computer:px-[14px] cursor-pointer rounded-[4px] flex items-center gap-2"
               >
                 Sort
                 <span className="ml-1.5 ">
@@ -208,7 +317,7 @@ const page = () => {
               )}
             </div>
 
-            <div className=" flex flex-wrap  content-start  items-end gap-[35px] mt-[20px] mb-[40px]">
+            <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[20px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
               {products?.map((pro, idx) => (
                 <div
                   key={idx}
@@ -243,7 +352,7 @@ const page = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-center my-[60px]">
+        <div className="flex items-center justify-center mobile:my-[40px] tablet:my-[60px] laptop:my-[60px] computer:my-[60px]">
           <Pagination
             active={currentPage}
             setActive={setCurrentPage}

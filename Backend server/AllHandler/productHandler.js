@@ -61,11 +61,15 @@ async function getProduct(req, res) {
           category: { $in: singleProduct.category },
           _id: { $ne: id },
         })
-        .limit(8);
+        .limit(8)
+        .populate({
+          path: category,
+          select: 'name description image',
+        });
       return res.json({
         product: {
           ...singleProduct.toObject(),
-          Totoalreviews: totalReview,
+          Totalreviews: totalReview,
         },
         relatedProduct,
       });
