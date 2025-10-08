@@ -1,4 +1,5 @@
 const productSchema = require('../models/productSchema');
+const { getIO } = require('../socket_server');
 
 async function searchProduct(req, res) {
   let { query, minPrice, maxPrice, sort, page = 1, limit = 20 } = req.query;
