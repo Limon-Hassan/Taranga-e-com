@@ -48,29 +48,32 @@ io.on('connection', socket => {
     console.log('❌ User disconnected:', socket.id);
   });
 
-  socket.on('searchProducts', async ({ query }) => {
-    try {
-      const { searchProducts } = require('./AllHandler/searchHandler');
+  socket.on(
+    'searchProducts',
+    async ({ query: value, page = 1, limit = 20 }) => {
+      try {
+        const { searchProduct } = require('./AllHandler/searchHandler');
 
-      const req = { query: { query } };
-      const res = {
-        status: code => ({
-          json: data => socket.emit('searchResults', data),
-        }),
-      };
-      const next = err => {
-        if (err) {
-          console.error('Search error:', err);
-          socket.emit('searchError', { msg: err.message });
-        }
-      };
+        const req = { query: { query: value, page, limit } };
+        const res = {
+          status: code => ({
+            json: data => socket.emit('searchResults', data),
+          }),
+        };
+        const next = err => {
+          if (err) {
+            console.error('Search error:', err);
+            socket.emit('searchError', { msg: err.message });
+          }
+        };
 
-      await searchProducts(req, res, next);
-    } catch (error) {
-      console.error('Socket search error:', error);
-      socket.emit('searchError', { msg: 'Something went wrong' });
+        await searchProduct(req, res, next);
+      } catch (error) {
+        console.error('Socket search error:', error);
+        socket.emit('searchError', { msg: 'Something went wrong' });
+      }
     }
-  });
+  );
 });
 
 app.get('/', (req, res) => {

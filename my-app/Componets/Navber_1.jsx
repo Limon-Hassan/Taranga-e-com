@@ -7,26 +7,42 @@ import { RxCross1 } from 'react-icons/rx';
 import { FaBangladeshiTakaSign, FaChevronDown } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import socket from '../utills/socket';
 
 const Navber_1 = () => {
   let [open, setOpen] = useState(false);
+  let router = useRouter();
   let [search, setSearch] = useState('');
   let [suggestions, setSuggestions] = useState([]);
   const debounceRef = useRef(null);
 
   useEffect(() => {
-    const handler = data => {
+    if (!socket) return;
+
+    const handleSuggestion = data => {
       if (!search.trim()) return;
       if (
-        data.query &&
+        data?.query &&
         data.query.toLowerCase().includes(search.toLowerCase())
       ) {
         setSuggestions(data.suggestions || []);
+      } else if (data?.products) {
+        setSuggestions(data.products.map(p => p.name).slice(0, 5));
       }
     };
-    socket.on('searchSuggestion', handler);
-    return () => socket.off('searchSuggestion', handler);
+
+    const handleError = err => {
+      console.error('Search error:', err);
+    };
+
+    socket.on('searchSuggestion', handleSuggestion);
+    socket.on('searchError', handleError);
+
+    return () => {
+      socket.off('searchSuggestion', handleSuggestion);
+      socket.off('searchError', handleError);
+    };
   }, [socket, search]);
 
   const handleSearch = async e => {
@@ -39,16 +55,21 @@ const Navber_1 = () => {
         setSuggestions([]);
         return;
       }
-      socket.emit('searchProducts', { query: value });
 
+      socket.emit('searchProducts', { query: value, page: 1, limit: 20 });
+      const queryParams = new URLSearchParams({
+        query: value,
+        page: 1,
+        limit: 20,
+      });
+
+      console.log('Query params:', queryParams.toString());
       try {
         const res = await fetch(
-          `/product/product/searchProduct?query=${encodeURIComponent(value)}`,
+          `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${queryParams.toString()}`,
           {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
           }
         );
 
@@ -56,6 +77,7 @@ const Navber_1 = () => {
 
         const data = await res.json();
         const names = (data.products || []).map(p => p.name).slice(0, 8);
+        console.log(names);
         setSuggestions(names);
       } catch (err) {
         console.error('Search request failed:', err);
@@ -63,22 +85,28 @@ const Navber_1 = () => {
     }, 200);
   };
 
-  useEffect(() => {
-    if (!socket) return;
+  const handleShow = async () => {
+    if (!search.trim()) return;
+    let currentSearch = search;
+    try {
+      const res = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${currentSearch}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
-    socket.on('searchSuggestion', data => {
-      setSuggestions(data.products.map(p => p.name).slice(0, 5));
-    });
-
-    socket.on('searchError', err => {
-      console.error('Search error:', err);
-    });
-
-    return () => {
-      socket.off('searchResults');
-      socket.off('searchError');
-    };
-  }, [socket]);
+      if (!res.ok) throw new Error('Failed to fetch search results');
+      setInterval(() => {
+        router.push(`/shop?query=${encodeURIComponent(search)}`);
+      }, [2000]);
+      setSearch('');
+      setSuggestions([]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -113,7 +141,7 @@ const Navber_1 = () => {
                   </div>
                 </Link>
               </div>
-              <div className="border border-[#E6963A] rounded-[4px] flex items-center mobile:gap-[10px] tablet:gap-[20px] laptop:gap-[20px] computer:gap-[20px] p-[6px]">
+              <div className="relative border border-[#E6963A] rounded-[4px] flex items-center mobile:gap-[10px] tablet:gap-[20px] laptop:gap-[20px] computer:gap-[20px] p-[6px]">
                 <input
                   value={search}
                   onChange={handleSearch}
@@ -123,7 +151,23 @@ const Navber_1 = () => {
                   name="search"
                   id="search"
                 />
-                <button className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-[#fff] bg-[#E6963A] rounded-[6px] mobile:py-[8px] tablet:py-[12px] laptop:py-[12px] computer:py-[12px] mobile:px-[10px] tablet:px-[24px] laptop:px-[24px] computer:px-[24px] cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-[8px] laptop:gap-[8px] computer:gap-[8px]">
+                {suggestions.length > 0 && (
+                  <ul className="absolute left-0 w-full bg-white border rounded shadow mt-1 z-10">
+                    {suggestions.map((s, i) => (
+                      <li
+                        key={i}
+                        className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                        // onClick={() => handleSuggestionClick(s)}
+                      >
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <button
+                  onClick={handleShow}
+                  className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-[#fff] bg-[#E6963A] rounded-[6px] mobile:py-[8px] tablet:py-[12px] laptop:py-[12px] computer:py-[12px] mobile:px-[10px] tablet:px-[24px] laptop:px-[24px] computer:px-[24px] cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-[8px] laptop:gap-[8px] computer:gap-[8px]"
+                >
                   <IoSearchSharp /> Search
                 </button>
               </div>
