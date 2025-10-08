@@ -63,7 +63,6 @@ const Navber_1 = () => {
         limit: 20,
       });
 
-      console.log('Query params:', queryParams.toString());
       try {
         const res = await fetch(
           `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${queryParams.toString()}`,
@@ -77,7 +76,6 @@ const Navber_1 = () => {
 
         const data = await res.json();
         const names = (data.products || []).map(p => p.name).slice(0, 8);
-        console.log(names);
         setSuggestions(names);
       } catch (err) {
         console.error('Search request failed:', err);
@@ -87,10 +85,15 @@ const Navber_1 = () => {
 
   const handleShow = async () => {
     if (!search.trim()) return;
-    let currentSearch = search;
+    let currentSearch = search.trim();
     try {
+      const params = new URLSearchParams({
+        query: currentSearch,
+        page: 1,
+        limit: 20,
+      }).toString();
       const res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${currentSearch}`,
+        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${params}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -98,9 +101,33 @@ const Navber_1 = () => {
       );
 
       if (!res.ok) throw new Error('Failed to fetch search results');
-      setInterval(() => {
-        router.push(`/shop?query=${encodeURIComponent(search)}`);
-      }, [2000]);
+      router.push(`/shop?search=${encodeURIComponent(currentSearch)}`);
+      setSearch('');
+      setSuggestions([]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSuggestionClick = async s => {
+    const params = new URLSearchParams({
+      query: s,
+      page: 1,
+      limit: 20,
+    }).toString();
+    try {
+      const res = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${params}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch search results');
+
+      router.push(`/shop?search=${encodeURIComponent(s)}`);
+
       setSearch('');
       setSuggestions([]);
     } catch (err) {
@@ -152,12 +179,12 @@ const Navber_1 = () => {
                   id="search"
                 />
                 {suggestions.length > 0 && (
-                  <ul className="absolute left-0 w-full bg-white border rounded shadow mt-1 z-10">
+                  <ul className="absolute left-0 top-[65px] w-full bg-white border rounded shadow  z-10">
                     {suggestions.map((s, i) => (
                       <li
                         key={i}
-                        className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
-                        // onClick={() => handleSuggestionClick(s)}
+                        className="px-3 py-2 text-[16px] truncate mobile:w-[300px] tablet:w-[550px] laptop:w-[550px] computer:w-[550px] hover:bg-gray-200 cursor-pointer"
+                        onClick={() => handleSuggestionClick(s)}
                       >
                         {s}
                       </li>
