@@ -66,8 +66,7 @@ async function searchProduct(req, res) {
     }
 
     const allProducts = [...products, ...related];
-
-    const totalPages = Math.ceil(totalProducts / limit);
+    const totalProduct = totalProducts + related.length;
 
     getIO().emit('searchSuggestion', {
       query,
@@ -78,7 +77,7 @@ async function searchProduct(req, res) {
       msg: 'Search results',
       count: allProducts.length,
       products: allProducts,
-      totalPages,
+      totalPages: Math.ceil(totalProduct / limit),
       currentPage: page,
     });
   } catch (error) {
