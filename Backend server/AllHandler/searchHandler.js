@@ -2,21 +2,19 @@ const productSchema = require('../models/productSchema');
 const { getIO } = require('../socket_server');
 
 async function searchProduct(req, res) {
-  let { query, minPrice, maxPrice, sort, page = 1, limit = 20 } = req.query;
   try {
+    let { query, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
     query = query?.trim();
     page = Number(page);
     limit = Number(limit);
 
     let filter = {};
-
     if (query) {
       filter.$or = [
         { name: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
       ];
     }
-
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = Number(minPrice);
@@ -27,9 +25,9 @@ async function searchProduct(req, res) {
     if (sort === 'lowToHigh') sortOption.price = 1;
     if (sort === 'highToLow') sortOption.price = -1;
 
-    const totalProducts = await productSchema.countDocuments(filter);
+    const totalMainProducts = await productSchema.countDocuments(filter);
 
-    let products = await productSchema
+    const products = await productSchema
       .find(filter)
       .sort(sortOption)
       .skip((page - 1) * limit)
@@ -38,7 +36,7 @@ async function searchProduct(req, res) {
 
     let related = [];
     if (products.length > 0) {
-      let categoryIds = products
+      const categoryIds = products
         .map(p =>
           Array.isArray(p.category)
             ? p.category.map(c => c._id)
@@ -46,17 +44,10 @@ async function searchProduct(req, res) {
         )
         .flat();
 
-      let relatedFilter = {
+      const relatedFilter = {
         category: { $in: categoryIds },
         _id: { $nin: products.map(p => p._id) },
       };
-
-      if (minPrice || maxPrice) {
-        relatedFilter.price = {};
-        if (minPrice) relatedFilter.price.$gte = Number(minPrice);
-        if (maxPrice) relatedFilter.price.$lte = Number(maxPrice);
-      }
-
       related = await productSchema
         .find(relatedFilter)
         .sort(sortOption)
@@ -71,15 +62,15 @@ async function searchProduct(req, res) {
 
     return res.status(200).json({
       msg: 'Search results',
-      count: products.length,
-      products,
-      totalPages: Math.ceil(totalProducts / limit),
+      count: products.length, 
+      mainProducts: products, 
+      related, 
+      totalMainProducts, 
+      totalPages: Math.ceil(totalMainProducts / limit),
       currentPage: page,
-      related,
     });
   } catch (error) {
-    console.log(error.message);
-    console.error(error.message);
+    console.error('Search Error:', error.message);
     return res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }

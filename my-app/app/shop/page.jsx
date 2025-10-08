@@ -18,7 +18,6 @@ const page = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const [products, setProducts] = useState([]);
-  const [related, setRelated] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,7 +53,11 @@ const page = () => {
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       console.log(data);
-      const allProducts = [...data.products, ...data.related];
+      const allProducts =
+        currentPage === 1
+          ? [...data.mainProducts, ...data.related]
+          : [...data.mainProducts];
+
       setProducts(allProducts || []);
       setTotalPages(data.totalPages || 1);
     } catch (error) {
@@ -167,9 +170,8 @@ const page = () => {
           </div>
 
           <div className="w-[915px]">
-            {/* {query && ( */}
             <div className="flex justify-between items-center bg-[#F3F4F6] rounded-[6px] p-[15px] relative">
-              <h4>Showing results ({products.count})</h4>
+              <h4>Showing results ({products.length})</h4>
 
               <button
                 onClick={() => setOpen(prev => !prev)}
@@ -205,10 +207,9 @@ const page = () => {
                 </div>
               )}
             </div>
-            {/* )} */}
 
             <div className=" flex flex-wrap  content-start  items-end gap-[35px] mt-[20px] mb-[40px]">
-              {products.products?.map((pro, idx) => (
+              {products?.map((pro, idx) => (
                 <div
                   key={idx}
                   className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px]  rounded-[4px]"
