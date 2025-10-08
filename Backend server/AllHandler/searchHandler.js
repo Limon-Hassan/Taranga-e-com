@@ -2,9 +2,8 @@ const productSchema = require('../models/productSchema');
 const { getIO } = require('../socket_server');
 
 async function searchProduct(req, res) {
+  let { query, minPrice, maxPrice, sort, page = 1, limit = 20 } = req.query;
   try {
-    let { query, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
-
     query = query?.trim();
     page = Number(page);
     limit = Number(limit);
@@ -65,9 +64,6 @@ async function searchProduct(req, res) {
         .populate({ path: 'category', select: 'name description image' });
     }
 
-    const allProducts = [...products, ...related];
-    const totalProduct = totalProducts + related.length;
-
     getIO().emit('searchSuggestion', {
       query,
       suggestions: products.map(p => p.name).slice(0, 5),
@@ -75,13 +71,15 @@ async function searchProduct(req, res) {
 
     return res.status(200).json({
       msg: 'Search results',
-      count: allProducts.length,
-      products: allProducts,
-      totalPages: Math.ceil(totalProduct / limit),
+      count: products.length,
+      products,
+      totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
+      related,
     });
   } catch (error) {
-    console.error('Search Error:', error.message);
+    console.log(error.message);
+    console.error(error.message);
     return res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }
