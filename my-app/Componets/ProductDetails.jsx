@@ -3,7 +3,7 @@ import React from 'react';
 import { SiBlockchaindotcom } from 'react-icons/si';
 import Container from './Container/Container';
 
-const ProductDetails = () => {
+const ProductDetails = ({ product }) => {
   return (
     <>
       <section>
@@ -12,23 +12,12 @@ const ProductDetails = () => {
             <span className="flex mobile:items-baseline tablet:items-center laptop:items-center computer:items-center gap-2.5">
               <SiBlockchaindotcom />
               <h3 className="mobile:text-[14px] tablet:text-[20px] laptop:text-[28px] computer:text-[28px] font-nunito font-bold text-[#1e293b]">
-                Smartec ২০V কর্ডলেস ইমপ্যাক্ট ড্রিল মেশিন (মেটাল চক সহ ২৪টি
-                এক্সেসরিজ)
+                {product.name}
               </h3>
             </span>
             <div
               className="product-description mt-6 text-[15px] text-[#444]"
-              dangerouslySetInnerHTML={{
-                __html: `
-             <h3><strong>Product Features:</strong></h3>
-            <ul>
-               <li>✅ High power 20V cordless drill</li>
-             <li>🔋 Long-lasting rechargeable battery</li>
-             <li>⚙️ Metal chuck with 24 accessories</li>
-              </ul>
-                      <p>Perfect for home and professional use.</p>
-                   `,
-              }}
+              dangerouslySetInnerHTML={{ __html: product.description }}
             />
           </div>
         </Container>

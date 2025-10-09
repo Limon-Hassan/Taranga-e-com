@@ -52,7 +52,7 @@ async function getProduct(req, res) {
         .populate('category')
         .populate({
           path: 'reviews',
-          populate: { path: 'user', select: 'name' },
+          populate: { select: 'name' },
         });
 
       let totalReview = singleProduct.reviews.length;
@@ -80,6 +80,7 @@ async function getProduct(req, res) {
   } catch (error) {
     console.log(error.message);
     console.error(error.message);
+    return res.status(500).json({ msg: 'error', error: error });
   }
 }
 

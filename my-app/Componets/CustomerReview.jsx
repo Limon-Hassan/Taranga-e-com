@@ -1,23 +1,77 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImCross } from 'react-icons/im';
 import Container from './Container/Container';
 import { FaUser } from 'react-icons/fa';
+import socket from '../utills/socket';
 
-const CustomerReview = () => {
+const CustomerReview = ({ product }) => {
   let [toggleShow, settoggleShow] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [Comment, setComment] = useState('');
+  const [name, setName] = useState('');
   const [hover, setHover] = useState(0);
 
-  let handleShow = () => {
-    settoggleShow(true);
+  let handleCommentSubmit = async () => {
+    const reviewData = {
+      name: name,
+      productId: product._id,
+      rating: rating,
+      comment: Comment,
+    };
+
+    try {
+      const response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/CreateReviews`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(reviewData),
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+      const data = await response.json();
+      console.log(data);
+      settoggleShow(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  let handleComment = e => {
-    setComment(e.target.value);
-  };
+  async function FetchReviews() {
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/getReviews?productId=${product._id}`
+      );
+
+      if (!response.ok) throw new Error('Faild to fetch Review');
+      let data = await response.json();
+      console.log('feetchdata', data);
+      setReviews(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    FetchReviews();
+    socket.emit('joinProduct', { productId: product._id });
+    socket.on('newReview', newReviews => {
+      console.log('New Category Received:', newReviews);
+      setReviews(prev =>
+        Array.isArray(prev)
+          ? [...prev, newReviews.reviews]
+          : [newReviews.reviews]
+      );
+    });
+
+    return () => socket.off('newReview');
+  }, [product._id]);
+
   return (
     <>
       <section>
@@ -103,7 +157,7 @@ const CustomerReview = () => {
                 4.65 out of 5
               </p>
               <button
-                onClick={handleShow}
+                onClick={() => settoggleShow(true)}
                 className="mb-2 me-2 mobile:text-[12px] tablet:text-[16px]  laptop:text-[16px] computer:text-[16px] font-display font-bold text-white bg-[#629D23] py-[10px] mobile:px-[15px] tablet:px-[24px] laptop:px-[24px] computer:px-[24px] rounded-[6px] cursor-pointer"
               >
                 Write a review
@@ -378,8 +432,8 @@ const CustomerReview = () => {
                     className="w-full h-[200px] text-[16px] font-display font-normal text-[#6E777D] bg-transparent placeholder:text-[16px] placeholder:font-medium p-[15px] my-[15px] rounded-[5px] border-2 border-[#e2e2e2] focus:border-[#629D23] outline-none resize-none"
                     type="text"
                     name="text"
-                    onChange={handleComment}
-                    placeholder="Make Your Reviews...."
+                    onChange={e => setComment(e.target.value)}
+                    placeholder="Make Your Reviews..."
                   ></textarea>
                 </div>
                 <div>
@@ -393,13 +447,14 @@ const CustomerReview = () => {
                     className="w-full h-[60px] text-[16px] font-display font-normal text-[#6E777D] bg-transparent placeholder:text-[16px] placeholder:font-medium p-[15px] my-[15px] rounded-[5px] border-2 border-[#e2e2e2] focus:border-[#629D23] outline-none resize-none"
                     type="name"
                     name="name"
+                    onChange={e => setName(e.target.value)}
                     placeholder="Your Name..."
                   ></textarea>
                 </div>
 
                 <div className="flex items-center gap-4 mt-[30px]">
                   <button
-                    // onClick={handleCommentSubmit}
+                    onClick={handleCommentSubmit}
                     className="text-[16px] font-display font-medium text-[#2C3C28] border border-[#dee2e6] hover:text-white hover:bg-[#629D23] transition-all ease-in-out duration-300 cursor-pointer py-[10px] px-[24px] rounded-[6px]"
                   >
                     Add Review

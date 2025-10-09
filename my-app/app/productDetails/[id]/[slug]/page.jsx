@@ -11,28 +11,26 @@ import { useParams } from 'next/navigation';
 const Page = () => {
   const [product, setProduct] = useState('');
   const [RelatedProduct, setRelatedProduct] = useState([]);
-  console.log(product);
-  console.log(RelatedProduct);
   const { id } = useParams();
-  const images = [
-    '/productimage.webp',
-    '/2.webp',
-    '/productimage.webp',
-    '/productimage.webp',
-  ];
-
+  const images = product && Array.isArray(product.photo) ? product.photo : [];
   let [active, setActive] = useState({
     a: false,
     b: false,
   });
 
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const [zoomStyle, setZoomStyle] = useState({
     backgroundPosition: 'center',
     backgroundSize: '100%',
   });
+
+  useEffect(() => {
+    if (product && Array.isArray(product.photo) && product.photo.length > 0) {
+      setSelectedImage(product.photo[0]);
+    }
+  }, [product]);
 
   const handleMouseMove = e => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -71,7 +69,6 @@ const Page = () => {
         if (!response.ok) throw new Error('Failed to fetch product');
 
         const data = await response.json();
-        console.log(data)
         setProduct(data.product);
         setRelatedProduct(data.relatedProduct);
       } catch (error) {
@@ -191,8 +188,8 @@ const Page = () => {
               </button>
             </div>
             <div className="mt-8 relative">
-              {(active.a && <ProductDetails />) ||
-                (active.b && <CustomerReview />)}
+              {(active.a && <ProductDetails product={product} />) ||
+                (active.b && <CustomerReview product={product} />)}
             </div>
           </div>
           <div className="related-products mt-[50px]">
@@ -218,7 +215,7 @@ const Page = () => {
                       {pro.description}
                     </p>
                     <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">
-                      {pro.category?.name}
+                      {pro.category[0]?.name}
                     </h5>
                     <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
                       {pro.price}.00৳

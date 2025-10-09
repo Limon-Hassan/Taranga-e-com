@@ -55,17 +55,16 @@ const Page_1 = () => {
   };
 
   let handleShowProduct = async product => {
+    console.log(product)
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`,
-        {
-          cache: 'no-store',
-        }
+        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
+      console.log(data);
       router.push(
         `/productDetails/${data.product._id}/${data.product.name.replace(
           /\s+/g,
@@ -97,7 +96,7 @@ const Page_1 = () => {
               <div
                 key={idx}
                 onClick={() => handleShowProduct(pro._id)}
-                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px]  rounded-[4px]"
+                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] hover:border-[#F1A31C] rounded-[4px]"
               >
                 <img
                   className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] cursor-pointer tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
