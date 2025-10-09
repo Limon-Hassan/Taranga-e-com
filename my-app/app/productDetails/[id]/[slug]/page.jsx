@@ -69,7 +69,7 @@ const Page = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       setProduct(data.product);
       setRelatedProduct(data.relatedProduct);
     } catch (error) {
@@ -79,17 +79,16 @@ const Page = () => {
 
   useEffect(() => {
     fetchProduct();
-    socket.on('productCreated', newProduct => {
-      if (newProduct._id === product._id) {
-        setProduct(prev => ({
-          ...prev,
-          Totalreviews: newProduct.Totalreviews,
-        }));
+    socket.emit('joinProduct', { productId: product._id });
+
+    socket.on('reviewAdded', data => {
+      if (data.productId === product._id) {
+        setProduct(prev => ({ ...prev, Totalreviews: data.Totalreviews }));
       }
     });
 
-    return () => socket.off('productCreated');
-  }, [socket]);
+    return () => socket.off('reviewAdded');
+  }, [product._id]);
 
   return (
     <>

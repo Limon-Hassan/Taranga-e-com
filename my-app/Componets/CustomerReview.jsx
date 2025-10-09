@@ -20,7 +20,7 @@ const CustomerReview = ({ product }) => {
       rating: rating,
       comment: Comment,
     };
-
+    console.log(reviewData);
     try {
       const response = await fetch(
         `https://taranga-e-com.onrender.com/api/v3/product/CreateReviews`,
@@ -35,6 +35,7 @@ const CustomerReview = ({ product }) => {
 
       if (!response.ok) throw new Error('Failed to fetch product');
       const data = await response.json();
+      console.log('gese', data);
       settoggleShow(false);
       setName('');
       setRating(0);
@@ -52,7 +53,7 @@ const CustomerReview = ({ product }) => {
 
       if (!response.ok) throw new Error('Faild to fetch Review');
       let data = await response.json();
-      console.log(data);
+      console.log('reviewsFound', data);
       setReviews(data.data);
     } catch (error) {
       console.log(error);
@@ -62,7 +63,8 @@ const CustomerReview = ({ product }) => {
   useEffect(() => {
     FetchReviews();
     socket.emit('joinProduct', { productId: product._id });
-    socket.on('newReview', newReviews => {
+    socket.on('reviewAdded', newReviews => {
+      console.log('newReview', newReviews);
       setReviews(prev =>
         Array.isArray(prev)
           ? [...prev, newReviews.reviews]
@@ -70,7 +72,7 @@ const CustomerReview = ({ product }) => {
       );
     });
 
-    return () => socket.off('newReview');
+    return () => socket.off('reviewAdded');
   }, [product._id, socket]);
 
   return (
