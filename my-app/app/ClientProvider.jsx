@@ -6,7 +6,14 @@ import socket from '../utills/socket';
 export default function ClientProvider({ children }) {
   return (
     <SocketContext.Provider value={socket}>
-      <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        maxSnack={3}
+        autoHideDuration={3000}
+      >
         {children}
       </SnackbarProvider>
     </SocketContext.Provider>

@@ -47,6 +47,26 @@ const Page_2 = () => {
     }
   };
 
+  let handleShowProduct = async product => {
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+
+      const data = await response.json();
+      router.push(
+        `/productDetails/${data.product._id}/${data.product.name.replace(
+          /\s+/g,
+          '-'
+        )}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px]">
@@ -66,15 +86,16 @@ const Page_2 = () => {
             {Category[2]?.Product?.slice(0, 8).map((pro, indx) => (
               <div
                 key={indx}
+                onClick={() => handleShowProduct(pro._id)}
                 className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] hover:border-[#F1A31C] rounded-[4px]"
               >
                 <img
-                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] cursor-pointer tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
                   src={pro.photo?.[0]}
                   alt="product"
                 />
                 <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
-                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
+                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold cursor-pointer laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
                     {pro.name}
                   </h3>
                   <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium tablet:font-medium laptop:font-normal truncate computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">

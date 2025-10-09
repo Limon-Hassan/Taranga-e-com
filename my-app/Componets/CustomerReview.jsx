@@ -14,13 +14,6 @@ const CustomerReview = ({ product }) => {
   const [hover, setHover] = useState(0);
 
   let handleCommentSubmit = async () => {
-    const reviewData = {
-      name: name,
-      productId: product._id,
-      rating: rating,
-      comment: Comment,
-    };
-    console.log(reviewData);
     try {
       const response = await fetch(
         `https://taranga-e-com.onrender.com/api/v3/product/CreateReviews`,
@@ -29,13 +22,17 @@ const CustomerReview = ({ product }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(reviewData),
+          body: JSON.stringify({
+            name,
+            productId: product._id,
+            rating,
+            comment: Comment,
+          }),
         }
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
       const data = await response.json();
-      console.log('gese', data);
       settoggleShow(false);
       setName('');
       setRating(0);
@@ -53,7 +50,6 @@ const CustomerReview = ({ product }) => {
 
       if (!response.ok) throw new Error('Faild to fetch Review');
       let data = await response.json();
-      console.log('reviewsFound', data);
       setReviews(data.data);
     } catch (error) {
       console.log(error);
@@ -63,14 +59,14 @@ const CustomerReview = ({ product }) => {
   useEffect(() => {
     FetchReviews();
     socket.emit('joinProduct', { productId: product._id });
-    socket.on('reviewAdded', newReviews => {
-      console.log('newReview', newReviews);
-      setReviews(prev =>
-        Array.isArray(prev)
-          ? [...prev, newReviews.reviews]
-          : [newReviews.reviews]
-      );
-    });
+   socket.on('reviewAdded', newReviewData => {
+     const newReview = newReviewData.review; 
+
+     setReviews(prev => {
+       const prevArray = Array.isArray(prev) ? prev : [];
+       return [...prevArray, newReview];
+     });
+   });
 
     return () => socket.off('reviewAdded');
   }, [product._id, socket]);
@@ -328,7 +324,10 @@ const CustomerReview = ({ product }) => {
                   >
                     <div className="space-y-0.5">
                       <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                        <FaUser /> {rev.name}
+                        <FaUser />
+                        <span className="mobile:w-[160px] tablet:w-full laptop:w-full computer:w-full truncate">
+                          {rev.name}
+                        </span>
                       </p>
                     </div>
                     <p className="text-sm font-medium text-gray-900 ">

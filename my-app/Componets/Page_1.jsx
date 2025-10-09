@@ -4,9 +4,13 @@ import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import socket from '../utills/socket';
+import { v4 as uuidv4 } from 'uuid';
+import { useSnackbar } from 'notistack';
 
 const Page_1 = () => {
   const [category, setCategory] = useState([]);
+  let { enqueueSnackbar } = useSnackbar();
+
   const router = useRouter();
 
   async function Fetch() {
@@ -28,7 +32,6 @@ const Page_1 = () => {
   useEffect(() => {
     Fetch();
     socket.on('CategoryCreated', newCategory => {
-      console.log('New Category Received:', newCategory);
       setCategory(prev => [...prev, newCategory]);
     });
 
@@ -74,6 +77,72 @@ const Page_1 = () => {
     }
   };
 
+  let handleCart = async proID => {
+    const isMobile = window.innerWidth < 768;
+    let productId = proID;
+    let savedCartId = JSON.parse(localStorage.getItem('CARTID'));
+    if (!savedCartId) {
+      savedCartId = `CRT-${uuidv4().split('-')[0].toUpperCase()}`;
+      localStorage.setItem('CARTID', JSON.stringify(savedCartId));
+    }
+
+    try {
+      const response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/addCart`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId,
+            cartId: savedCartId,
+          }),
+        }
+      );
+      let data = await response.json();
+      if (!response.ok) {
+        enqueueSnackbar(data.msg, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#D32F2F',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        return;
+      }
+      if (data.msg === 'Product added to cart!') {
+        enqueueSnackbar(data.msg, {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        localStorage.setItem('CartCount', JSON.stringify(data.subTotal));
+      }
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px]">
@@ -114,7 +183,10 @@ const Page_1 = () => {
                   <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
                     {pro.price}.00৳
                   </h2>
-                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                  <button
+                    onClick={() => handleCart(pro._id)}
+                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer"
+                  >
                     <FaCartShopping className="mr-[10px]" />
                     Order Now
                   </button>

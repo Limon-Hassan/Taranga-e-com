@@ -6,12 +6,12 @@ import { FaCartShopping } from 'react-icons/fa6';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import ProductDetails from '../../../../Componets/ProductDetails';
 import CustomerReview from '../../../../Componets/CustomerReview';
-import { useParams } from 'next/navigation';
-import socket from '../../../../utills/socket';
+import { useParams, useRouter } from 'next/navigation';
 
 const Page = () => {
   const [product, setProduct] = useState('');
   const [RelatedProduct, setRelatedProduct] = useState([]);
+  let router = useRouter();
   const { id } = useParams();
   const images = product && Array.isArray(product.photo) ? product.photo : [];
   let [active, setActive] = useState({
@@ -69,7 +69,6 @@ const Page = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      console.log(data);
       setProduct(data.product);
       setRelatedProduct(data.relatedProduct);
     } catch (error) {
@@ -78,17 +77,32 @@ const Page = () => {
   }
 
   useEffect(() => {
-    fetchProduct();
-    socket.emit('joinProduct', { productId: product._id });
+    const interval = setInterval(() => {
+      fetchProduct();
+    }, 5000);
 
-    socket.on('reviewAdded', data => {
-      if (data.productId === product._id) {
-        setProduct(prev => ({ ...prev, Totalreviews: data.Totalreviews }));
-      }
-    });
+    return () => clearInterval(interval);
+  }, []);
 
-    return () => socket.off('reviewAdded');
-  }, [product._id]);
+  let handleShowProduct = async product => {
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+
+      const data = await response.json();
+      router.push(
+        `/productDetails/${data.product._id}/${data.product.name.replace(
+          /\s+/g,
+          '-'
+        )}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -179,10 +193,10 @@ const Page = () => {
             </div>
           </div>
           <div className="bottom_part">
-            <div className="flex items-center gap-[50px] mt-[30px]">
+            <div className="flex items-center mobile:gap-[65px] tablet:gap-[50px] laptop:gap-[50px] computer:gap-[50px] mt-[30px]">
               <button
                 onClick={() => handleActive('a')}
-                className={`text-[16px] font-bold ${
+                className={`mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold ${
                   active.a && 'border-t-4 border-[#f1a31c] border-solid'
                 } font-nunito text-[#515151] cursor-pointer border-dotted border-t border-r py-[10px] px-[20px]`}
               >
@@ -191,7 +205,7 @@ const Page = () => {
 
               <button
                 onClick={() => handleActive('b')}
-                className={`text-[16px] font-bold ${
+                className={`mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold ${
                   active.b && 'border-t-4 border-[#f1a31c] border-solid'
                 } font-nunito text-[#515151] cursor-pointer border-t border-dotted border-r  py-[10px] px-[20px]`}
               >
@@ -211,10 +225,11 @@ const Page = () => {
               {RelatedProduct?.map((pro, idx) => (
                 <div
                   key={idx}
+                  onClick={() => handleShowProduct(pro._id)}
                   className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-[#000]/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px]  rounded-[4px]"
                 >
                   <img
-                    className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] cursor-pointer tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
+                    className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] cursor-pointer tablet:h-[160px] laptop:h-[250px]  computer:h-[250px]"
                     src={pro.photo[0]}
                     alt="product"
                   />
