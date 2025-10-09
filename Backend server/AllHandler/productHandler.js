@@ -51,7 +51,7 @@ async function getProduct(req, res) {
         .findById(id)
         .populate('category')
         .populate({
-          path: 'reviews',
+          path: 'review',
           populate: { select: 'name' },
         });
 
@@ -80,7 +80,7 @@ async function getProduct(req, res) {
   } catch (error) {
     console.log(error.message);
     console.error(error.message);
-    return res.status(500).json({ msg: 'error', error: error });
+    return res.status(500).json({ msg: 'error', error: error.message });
   }
 }
 
