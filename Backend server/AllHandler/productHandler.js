@@ -50,10 +50,7 @@ async function getProduct(req, res) {
       let singleProduct = await productSchema
         .findById(id)
         .populate('category')
-        .populate({
-          path: 'review',
-          populate: { select: 'name' },
-        });
+        .populate('reviews', 'name comment rating');
 
       let totalReview = singleProduct.reviews.length;
       const relatedProduct = await productSchema
