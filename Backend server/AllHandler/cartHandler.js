@@ -91,6 +91,7 @@ async function readCart(req, res) {
   } catch (error) {
     console.log(error.message);
     console.error(error.message);
+    return res.status(500).json({ msg: 'server error', error: error.message });
   }
 }
 
@@ -231,6 +232,7 @@ async function deletedcart(req, res) {
   } catch (error) {
     console.log(error.message);
     console.error(error.message);
+    return res.status(500).json({ msg: 'server error', error: error.message });
   }
 }
 

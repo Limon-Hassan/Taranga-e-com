@@ -11,7 +11,8 @@ async function makeReviews(req, res) {
       comment,
       rating,
     });
-    await productSchema.findByIdAndUpdate(
+
+    const updatedProduct = await productSchema.findByIdAndUpdate(
       productId,
       {
         $push: { reviews: reviews._id },
@@ -46,6 +47,7 @@ async function getReviews(req, res) {
   } catch (error) {
     console.log(error.message);
     console.error(error.message);
+    return res.status(500).json({ msg: 'server error', error: error.message });
   }
 }
 
