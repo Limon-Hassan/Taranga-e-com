@@ -11,13 +11,18 @@ async function makeReviews(req, res) {
       comment,
       rating,
     });
-    await productSchema.findByIdAndUpdate(productId, {
-      $push: { reviews: reviews._id },
-      $inc: { Totalreviews: 1 },
-    });
-    getIO().to(productId).emit('newReview', {
+    await productSchema.findByIdAndUpdate(
       productId,
-      reviews: reviews,
+      {
+        $push: { reviews: reviews._id },
+        $inc: { Totalreviews: 1 },
+      },
+      { new: true }
+    );
+    getIO().to(productId).emit('reviewAdded', {
+      productId,
+      review: reviews,
+      Totalreviews: updatedProduct.Totalreviews,
     });
     res.status(200).json({
       msg: 'review added successfully',

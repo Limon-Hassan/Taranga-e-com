@@ -55,7 +55,6 @@ const Page_1 = () => {
   };
 
   let handleShowProduct = async product => {
-    console.log(product)
     try {
       let response = await fetch(
         `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
@@ -64,7 +63,6 @@ const Page_1 = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      console.log(data);
       router.push(
         `/productDetails/${data.product._id}/${data.product.name.replace(
           /\s+/g,

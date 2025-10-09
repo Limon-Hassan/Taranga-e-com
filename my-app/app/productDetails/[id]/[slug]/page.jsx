@@ -7,6 +7,7 @@ import { FaMagnifyingGlass } from 'react-icons/fa6';
 import ProductDetails from '../../../../Componets/ProductDetails';
 import CustomerReview from '../../../../Componets/CustomerReview';
 import { useParams } from 'next/navigation';
+import socket from '../../../../utills/socket';
 
 const Page = () => {
   const [product, setProduct] = useState('');
@@ -55,29 +56,40 @@ const Page = () => {
     });
   };
 
-  useEffect(() => {
+  async function fetchProduct() {
     let product = id;
-    async function fetchProduct() {
-      try {
-        let response = await fetch(
-          `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`,
-          {
-            cache: 'no-store',
-          }
-        );
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`,
+        {
+          cache: 'no-store',
+        }
+      );
 
-        if (!response.ok) throw new Error('Failed to fetch product');
+      if (!response.ok) throw new Error('Failed to fetch product');
 
-        const data = await response.json();
-        setProduct(data.product);
-        setRelatedProduct(data.relatedProduct);
-      } catch (error) {
-        console.log(error);
-      }
+      const data = await response.json();
+      console.log(data)
+      setProduct(data.product);
+      setRelatedProduct(data.relatedProduct);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
+  useEffect(() => {
     fetchProduct();
-  }, []);
+    socket.on('productCreated', newProduct => {
+      if (newProduct._id === product._id) {
+        setProduct(prev => ({
+          ...prev,
+          Totalreviews: newProduct.Totalreviews,
+        }));
+      }
+    });
+
+    return () => socket.off('productCreated');
+  }, [socket]);
 
   return (
     <>
@@ -184,7 +196,7 @@ const Page = () => {
                   active.b && 'border-t-4 border-[#f1a31c] border-solid'
                 } font-nunito text-[#515151] cursor-pointer border-t border-dotted border-r  py-[10px] px-[20px]`}
               >
-                Reviews (1)
+                Reviews ({product.Totalreviews || 0})
               </button>
             </div>
             <div className="mt-8 relative">
