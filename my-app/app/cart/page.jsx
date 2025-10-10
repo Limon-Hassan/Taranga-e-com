@@ -1,14 +1,82 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RxCross1 } from 'react-icons/rx';
 import Container from '../../Componets/Container/Container';
 import CheckBox from '../../Componets/CheckBox';
+import socket from '../../utills/socket';
+import { useSnackbar } from 'notistack';
 
 const page = () => {
+  let { enqueueSnackbar } = useSnackbar();
   let [Selectpayment, setSelectpayment] = useState(null);
+  let [cartData, setCartData] = useState([]);
   let handlePaymentChange = paymentMethod => {
     setSelectpayment(paymentMethod);
+  };
+
+  async function FetchCart() {
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/reatCart?cartId=${cartId}`
+      );
+      if (!response.ok) throw new Error('Failed to fetch Cart');
+      let data = await response.json();
+      setCartData(data.data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    FetchCart();
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    socket.emit('joinCart', { cartId: cartId });
+    socket.on('cartFetched', newCartData => {
+      console.log(newCartData);
+      setCartData(newCartData.items);
+    });
+
+    return () => socket.off('cartFetched');
+  }, [socket]);
+
+  let handleCartDelete = async () => {
+    const isMobile = window.innerWidth < 768;
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/deleteCart?cartId=${cartId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      if (!response.ok) throw new Error('Failed to Delete cart');
+      let data = await response.json();
+      if (data.msg === 'cart delete Successfully !') {
+        localStorage.removeItem('CARTID');
+        localStorage.removeItem('cartInfo');
+        window.dispatchEvent(new Event('storage'));
+        setCartData([]);
+        enqueueSnackbar(data.msg, {
+          variant: 'info',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -39,129 +107,54 @@ const page = () => {
                 </div>
               </div>
               <div className="mobile:h-[250px] tablet:h-[300px] laptop:h-[450px] computer:h-[450px] overflow-y-scroll">
-                <div className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30">
-                  <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
-                    <span className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer">
-                      <RxCross1 />
-                    </span>
-                    <img
-                      className="mobile:hidden tablet:hidden laptop:block computer:bloxk max-w-[100px] h-auto cursor-pointer"
-                      src="/THT15246.webp"
-                      alt="product"
-                    />
-                    <h4 className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]">
-                      Smartec 20V Cordless Impact Drill Machine Metal Chuck With
-                      24ps Accessories
-                    </h4>
-                  </div>
-                  <div className="flex items-center mobile:gap-[20px] tablet:gap-[10px] laptop:gap-[30px] computer:gap-[30px]">
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
+                {cartData?.map((items, indx) => (
+                  <div
+                    key={indx}
+                    className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30"
+                  >
+                    <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
+                      <span
+                        onClick={handleCartDelete}
+                        className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer"
+                      >
+                        <RxCross1 />
                       </span>
-                    </h4>
-                    <div className="flex items-center">
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        -
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        1
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        +
-                      </button>
+                      <img
+                        className="mobile:hidden tablet:hidden laptop:block computer:bloxk max-w-[100px] h-auto cursor-pointer"
+                        src={items.productId.photo?.[0]}
+                        alt="product"
+                      />
+                      <h4 className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]">
+                        {items.productId.name}
+                      </h4>
                     </div>
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
-                      </span>
-                    </h4>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30">
-                  <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
-                    <span className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer">
-                      <RxCross1 />
-                    </span>
-                    <img
-                      className="mobile:hidden tablet:hidden laptop:block computer:bloxk max-w-[100px] h-auto cursor-pointer"
-                      src="/THT15246.webp"
-                      alt="product"
-                    />
-                    <h4 className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]">
-                      Smartec 20V Cordless Impact Drill Machine Metal Chuck With
-                      24ps Accessories
-                    </h4>
-                  </div>
-                  <div className="flex items-center mobile:gap-[20px] tablet:gap-[10px] laptop:gap-[30px] computer:gap-[30px]">
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
-                      </span>
-                    </h4>
-                    <div className="flex items-center">
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        -
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        1
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        +
-                      </button>
+                    <div className="flex items-center mobile:gap-[20px] tablet:gap-[10px] laptop:gap-[30px] computer:gap-[30px]">
+                      <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
+                        {items.productId.price}
+                        <span className="mobile:hidden tablet:block laptop:block computer:block">
+                          .00৳
+                        </span>
+                      </h4>
+                      <div className="flex items-center">
+                        <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
+                          -
+                        </button>
+                        <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
+                          {items.quantity}
+                        </button>
+                        <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
+                          +
+                        </button>
+                      </div>
+                      <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
+                        {items.singleSubtotal}
+                        <span className="mobile:hidden tablet:block laptop:block computer:block">
+                          .00৳
+                        </span>
+                      </h4>
                     </div>
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
-                      </span>
-                    </h4>
                   </div>
-                </div>
-                <div className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30">
-                  <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
-                    <span className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer">
-                      <RxCross1 />
-                    </span>
-                    <img
-                      className="mobile:hidden tablet:hidden laptop:block computer:bloxk max-w-[100px] h-auto cursor-pointer"
-                      src="/THT15246.webp"
-                      alt="product"
-                    />
-                    <h4 className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]">
-                      Smartec 20V Cordless Impact Drill Machine Metal Chuck With
-                      24ps Accessories
-                    </h4>
-                  </div>
-                  <div className="flex items-center mobile:gap-[20px] tablet:gap-[10px] laptop:gap-[30px] computer:gap-[30px]">
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
-                      </span>
-                    </h4>
-                    <div className="flex items-center">
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        -
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        1
-                      </button>
-                      <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                        +
-                      </button>
-                    </div>
-                    <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
-                      4,650
-                      <span className="mobile:hidden tablet:block laptop:block computer:block">
-                        .00৳
-                      </span>
-                    </h4>
-                  </div>
-                </div>
+                ))}
               </div>
               <div className="mobile:p-[8px] tablet:p-[15px] laptop:p-[15px] computer:p-[15px] mt-[30px] border-t border-[#000]/30">
                 <input

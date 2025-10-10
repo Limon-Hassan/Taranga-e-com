@@ -220,20 +220,47 @@ async function IncrementCart(req, res) {
   }
 }
 
-async function deletedcart(req, res) {
-  let { cartId } = req.query;
-  try {
-    let deleteCart = await cartSchema.findOneAndDelete({ cartId });
+async function deleteSingleCartItem(req, res) {
+  const { cartId, productId } = req.query;
 
-    getIO().to(cartId).emit('deletedcart', { cartId });
-    return res
-      .status(200)
-      .json({ msg: 'cart delete Successfully !', data: deleteCart });
+  try {
+    const cart = await cartSchema.findOne({ cartId });
+    if (!cart) return res.status(404).json({ msg: 'Cart not found' });
+
+    cart.items = cart.items.filter(
+      item => item.productId.toString() !== productId
+    );
+
+    if (cart.items.length === 0) {
+      await cartSchema.findOneAndDelete({ cartId });
+      getIO().to(cartId).emit('deletedcart', { cartId });
+      return res.status(200).json({ msg: 'Cart deleted successfully!' });
+    }
+
+    cart.subTotal = cart.items.reduce(
+      (acc, item) => acc + Number(item.singleSubtotal),
+      0
+    );
+    cart.totalPrice = cart.subTotal;
+
+    await cart.save();
+
+    getIO().to(cartId).emit('itemDeleted', { cartId, productId });
+
+    return res.status(200).json({
+      msg: 'Item deleted successfully!',
+      data: cart,
+    });
   } catch (error) {
-    console.log(error.message);
     console.error(error.message);
-    return res.status(500).json({ msg: 'server error', error: error.message });
+    return res.status(500).json({ msg: 'Server error', error: error.message });
   }
 }
 
-module.exports = { addCart, readCart, cartSummary, IncrementCart, deletedcart };
+module.exports = {
+  addCart,
+  readCart,
+  cartSummary,
+  IncrementCart,
+  deleteSingleCartItem,
+};

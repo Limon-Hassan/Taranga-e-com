@@ -135,7 +135,14 @@ const Page_1 = () => {
             borderRadius: '8px',
           },
         });
-        localStorage.setItem('CartCount', JSON.stringify(data.subTotal));
+        localStorage.setItem(
+          'cartInfo',
+          JSON.stringify({
+            cartLength: data.data.items.length,
+            totalPrice: data.data.totalPrice,
+          })
+        );
+        window.dispatchEvent(new Event('storage'));
       }
     } catch (error) {
       console.log(error);

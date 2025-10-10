@@ -13,9 +13,26 @@ import socket from '../utills/socket';
 const Navber_1 = () => {
   let [open, setOpen] = useState(false);
   let router = useRouter();
+  let [cartCount, setCartCount] = useState(0);
+  let [TotalPrice, setTotalPrice] = useState(0);
   let [search, setSearch] = useState('');
   let [suggestions, setSuggestions] = useState([]);
   const debounceRef = useRef(null);
+
+  useEffect(() => {
+    const updateCartInfo = () => {
+      const cartData = JSON.parse(localStorage.getItem('cartInfo')) || {
+        cartLength: 0,
+        totalPrice: 0,
+      };
+      setCartCount(cartData.cartLength);
+      setTotalPrice(cartData.totalPrice);
+    };
+
+    updateCartInfo();
+    window.addEventListener('storage', updateCartInfo);
+    return () => window.removeEventListener('storage', updateCartInfo);
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -159,11 +176,14 @@ const Navber_1 = () => {
                   />
                 </Link>
                 <Link href="/cart">
-                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden  mobile:items-center table:items-center gap-[8px]">
+                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-[8px]">
                     <LuShoppingBag className="text-[25px] text-[#69727d]" />
                     <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
-                      00.0
+                      {(TotalPrice && TotalPrice) || 0}.0
                       <FaBangladeshiTakaSign />
+                    </span>
+                    <span className="absolute top-[-10px] right-[60px] bg-[#E6963A] text-white rounded-full w-[20px] flex justify-center items-center h-[20px] text-sm ">
+                      {cartCount}
                     </span>
                   </div>
                 </Link>
@@ -200,11 +220,14 @@ const Navber_1 = () => {
               </div>
             </div>
             <Link href="/cart">
-              <div className="computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-[8px] laptop:gap-[8px] mobile:hidden tablet:hidden">
+              <div className="relative computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-[8px] laptop:gap-[8px] mobile:hidden tablet:hidden">
                 <LuShoppingBag className="text-[25px] text-[#69727d]" />
                 <span className="flex items-center  text-[20px] text-[#69727d]">
-                  00.0
+                  {(TotalPrice && TotalPrice) || 0}.0
                   <FaBangladeshiTakaSign />
+                </span>
+                <span className="absolute top-[-12px] right-[75px] bg-[#E6963A] text-white rounded-full w-[24px] flex justify-center items-center h-[24px] text-sm ">
+                  {cartCount}
                 </span>
               </div>
             </Link>
