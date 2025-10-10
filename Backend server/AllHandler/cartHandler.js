@@ -83,7 +83,7 @@ async function readCart(req, res) {
     getIO().to(cartId).emit('cartFetched', {
       cartId,
       items: getCart.items,
-      subTotal: cart.subTotal,
+      subTotal: getCart.subTotal,
     });
     return res.status(200).json({
       msg: 'Cart fetched successfully',

@@ -60,25 +60,42 @@ const page = () => {
       setLoding(false);
     }
   }
+  
   useEffect(() => {
     FetchCart();
-  }, [setLoding]);
+  }, []);
 
   useEffect(() => {
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     socket.emit('joinCart', { cartId });
 
-    socket.on('itemDeleted', ({ updatedCart }) => {
+    const handleItemDeleted = ({ updatedCart }) => {
       setCartData(updatedCart.items);
-    });
-    socket.on('cartFetched', ({ items }) => {
+    };
+
+    const handleCartFetched = ({ items }) => {
       setCartData(items);
-    });
+    };
+    const handleSummery = data => {
+      setSummeryData(data);
+    };
+
+    const handleDeletedCart = ({ cartId }) => {
+      localStorage.removeItem('CARTID');
+      localStorage.removeItem('cartInfo');
+      setCartData([]);
+    };
+
+    socket.on('itemDeleted', handleItemDeleted);
+    socket.on('cartFetched', handleCartFetched);
+    socket.on('deletedcart', handleDeletedCart);
+    socket.on('cartSummery', handleSummery);
 
     return () => {
       socket.off('itemDeleted', handleItemDeleted);
-      socket.off('cartSummery', handleCartSummery);
+      socket.off('cartFetched', handleCartFetched);
       socket.off('deletedcart', handleDeletedCart);
+      socket.off('cartSummery', handleSummery);
     };
   }, []);
 
