@@ -208,8 +208,12 @@ async function IncrementCart(req, res) {
       (acc, item) => acc + item.singleSubtotal,
       0
     );
+    cartItems.shippingCost = cartItems.items.reduce(
+      (acc, item) => acc + item.shippingCost,
+      0
+    );
 
-    cartItems.totalPrice = cartItems.subTotal;
+    cartItems.totalPrice = cartItems.subTotal + cartItems.shippingCost;
     await cartItems.save();
     getIO().to(cartId).emit('IncrementCart', { cartItems });
     return res.status(200).json({

@@ -5,13 +5,14 @@ import Container from '../../Componets/Container/Container';
 import CheckBox from '../../Componets/CheckBox';
 import socket from '../../utills/socket';
 import { useSnackbar } from 'notistack';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import { ImSpinner6 } from 'react-icons/im';
 
 const page = () => {
   let { enqueueSnackbar } = useSnackbar();
   let [Selectpayment, setSelectpayment] = useState('insideDhaka');
   let [cartData, setCartData] = useState([]);
-  let [SummeryData, setSummeryData] = useState('');
+  let [SummeryData, setSummeryData] = useState({});
   let [loding, setLoding] = useState(false);
 
   let handlePaymentChange = paymentMethod => {
@@ -60,7 +61,7 @@ const page = () => {
       setLoding(false);
     }
   }
-  
+
   useEffect(() => {
     FetchCart();
   }, []);
@@ -79,6 +80,10 @@ const page = () => {
     const handleSummery = data => {
       setSummeryData(data);
     };
+    const handleIncrement = data => {
+      setCartData(data.cartItems.items);
+      setSummeryData(data.cartItems);
+    };
 
     const handleDeletedCart = ({ cartId }) => {
       localStorage.removeItem('CARTID');
@@ -90,12 +95,14 @@ const page = () => {
     socket.on('cartFetched', handleCartFetched);
     socket.on('deletedcart', handleDeletedCart);
     socket.on('cartSummery', handleSummery);
+    socket.on('IncrementCart', handleIncrement);
 
     return () => {
       socket.off('itemDeleted', handleItemDeleted);
       socket.off('cartFetched', handleCartFetched);
       socket.off('deletedcart', handleDeletedCart);
       socket.off('cartSummery', handleSummery);
+      socket.off('IncrementCart', handleIncrement);
     };
   }, []);
 
@@ -114,6 +121,21 @@ const page = () => {
       let data = await response.json();
 
       if (data.msg === 'Item deleted successfully!') {
+        const cartInfo = JSON.parse(localStorage.getItem('cartInfo')) || {};
+        const updatedItems = (cartInfo.items || []).filter(
+          item => item.productId !== proId
+        );
+        const updatedTotalPrice = updatedItems.reduce(
+          (acc, i) => acc + i.price * i.quantity,
+          0
+        );
+        const updatedCartInfo = {
+          items: updatedItems,
+          cartLength: updatedItems.length,
+          totalPrice: updatedTotalPrice,
+        };
+        localStorage.setItem('cartInfo', JSON.stringify(updatedCartInfo));
+        window.dispatchEvent(new Event('storage'));
         enqueueSnackbar(data.msg, {
           variant: 'info',
           anchorOrigin: {
@@ -138,6 +160,43 @@ const page = () => {
         localStorage.removeItem('cartInfo');
         setCartData([]);
         window.dispatchEvent(new Event('storage'));
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoding(false);
+    }
+  };
+
+  let HandleIncrement = async action => {
+    setLoding(true);
+    const isMobile = window.innerWidth < 768;
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}`,
+        { method: 'PUT' }
+      );
+
+      if (!response.ok) throw new Error('Failed to Delete Increment');
+      let data = await response.json();
+      setCartData(data.data.items);
+      if (data.msg) {
+        enqueueSnackbar(data.msg, {
+          variant: 'info',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
       }
     } catch (error) {
       console.log(error);
@@ -221,14 +280,20 @@ const page = () => {
                             </span>
                           </h4>
                           <div className="flex items-center">
-                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                              -
+                            <button
+                              onClick={() => HandleIncrement('Decrement')}
+                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
+                            >
+                              <FaMinus />
                             </button>
-                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
+                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center">
                               {cartProduct.quantity}
                             </button>
-                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:py-[4px] mobile:px-[8px] tablet:py-2.5 tablet:px-5 laptop:py-2.5 laptop:px-5 computer:py-2.5 computer:px-5">
-                              +
+                            <button
+                              onClick={() => HandleIncrement('Increment')}
+                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
+                            >
+                              <FaPlus />
                             </button>
                           </div>
                           <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
@@ -253,64 +318,63 @@ const page = () => {
                   </button>
                 </div>
               </div>
-              {cartData.length > 0 &&
-                SummeryData &&
-                Object.keys(SummeryData).length > 0 && (
-                  <div className="border border-[#000]/30 px-[10px] mobile:w-full tablet:w-full laptop:w-[47%] computer:w-[47%] mobile:float-none tablet:float-none laptop:float-right computer:float-right ">
-                    <div className="border-b border-[#000]/30 p-[20px] bg-[#fbfbfb]">
-                      <h4 className="mobile:text-[15px] tablet:text-[20px] laptop:text-[30px] computer:text-[30px] font-nunito font-bold text-[#1e293b]">
-                        Cart totals
-                      </h4>
-                    </div>
-                    <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
-                      <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
-                        Subtotal
-                      </h4>
-                      <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
-                        {SummeryData?.subTotal || 0}.00৳
-                      </h4>
-                    </div>
-                    <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
-                      <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
-                        Shipping
-                      </h4>
-                      <div className="my-[10px]">
-                        <CheckBox
-                          label={`Inside Dhaka: ${
-                            Selectpayment === 'insideDhaka'
-                              ? SummeryData?.shippingCost || 0
-                              : 0
-                          }.00৳ `}
-                          checked={Selectpayment === 'insideDhaka'}
-                          className="rounded-full mb-2.5"
-                          onChange={() => handlePaymentChange('insideDhaka')}
-                        />
-
-                        <CheckBox
-                          label={`Outside Dhaka: ${
-                            Selectpayment === 'outsideDhaka'
-                              ? SummeryData?.shippingCost || 0
-                              : 0
-                          }.00৳ `}
-                          checked={Selectpayment === 'outsideDhaka'}
-                          className="rounded-full"
-                          onChange={() => handlePaymentChange('outsideDhaka')}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
-                      <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
-                        Total
-                      </h4>
-                      <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
-                        {SummeryData?.totalPrice || 0}.00৳
-                      </h4>
-                    </div>
-                    <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-[14px] mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-[20px] rounded-[6px] mb-[30px] cursor-pointer">
-                      Proceed to checkout
-                    </button>
+              {(cartData?.length > 0 ||
+                Object.keys(SummeryData || {})?.length > 0) && (
+                <div className="border border-[#000]/30 px-[10px] mobile:w-full tablet:w-full laptop:w-[47%] computer:w-[47%] mobile:float-none tablet:float-none laptop:float-right computer:float-right ">
+                  <div className="border-b border-[#000]/30 p-[20px] bg-[#fbfbfb]">
+                    <h4 className="mobile:text-[15px] tablet:text-[20px] laptop:text-[30px] computer:text-[30px] font-nunito font-bold text-[#1e293b]">
+                      Cart totals
+                    </h4>
                   </div>
-                )}
+                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
+                      Subtotal
+                    </h4>
+                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
+                      {SummeryData?.subTotal || 0}.00৳
+                    </h4>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                      Shipping
+                    </h4>
+                    <div className="my-[10px]">
+                      <CheckBox
+                        label={`Inside Dhaka: ${
+                          Selectpayment === 'insideDhaka'
+                            ? SummeryData?.shippingCost || 0
+                            : 0
+                        }.00৳ `}
+                        checked={Selectpayment === 'insideDhaka'}
+                        className="rounded-full mb-2.5"
+                        onChange={() => handlePaymentChange('insideDhaka')}
+                      />
+
+                      <CheckBox
+                        label={`Outside Dhaka: ${
+                          Selectpayment === 'outsideDhaka'
+                            ? SummeryData?.shippingCost || 0
+                            : 0
+                        }.00৳ `}
+                        checked={Selectpayment === 'outsideDhaka'}
+                        className="rounded-full"
+                        onChange={() => handlePaymentChange('outsideDhaka')}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                      Total
+                    </h4>
+                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                      {SummeryData?.totalPrice || 0}.00৳
+                    </h4>
+                  </div>
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-[14px] mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-[20px] rounded-[6px] mb-[30px] cursor-pointer">
+                    Proceed to checkout
+                  </button>
+                </div>
+              )}
             </div>
           </Container>
         </section>
