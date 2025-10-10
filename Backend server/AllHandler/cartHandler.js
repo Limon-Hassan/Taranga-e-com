@@ -245,7 +245,9 @@ async function deleteSingleCartItem(req, res) {
 
     await cart.save();
 
-    getIO().to(cartId).emit('itemDeleted', { cartId, productId });
+    getIO()
+      .to(cartId)
+      .emit('itemDeleted', { cartId, productId, updatedCart: cart });
 
     return res.status(200).json({
       msg: 'Item deleted successfully!',

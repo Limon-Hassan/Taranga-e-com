@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import { RxCross1 } from 'react-icons/rx';
 import Container from '../../Componets/Container/Container';
@@ -34,30 +33,46 @@ const page = () => {
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     socket.emit('joinCart', { cartId: cartId });
     socket.on('cartFetched', newCartData => {
-      console.log(newCartData);
       setCartData(newCartData.items);
     });
 
     return () => socket.off('cartFetched');
   }, [socket]);
 
-  let handleCartDelete = async () => {
+  let handleCartDelete = async proId => {
     const isMobile = window.innerWidth < 768;
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/deleteCart?cartId=${cartId}`,
+        `https://taranga-e-com.onrender.com/api/v3/cart/deleteCart?cartId=${cartId}&productId=${proId}`,
         {
           method: 'DELETE',
         }
       );
       if (!response.ok) throw new Error('Failed to Delete cart');
       let data = await response.json();
-      if (data.msg === 'cart delete Successfully !') {
-        localStorage.removeItem('CARTID');
-        localStorage.removeItem('cartInfo');
+      if (data.msg === 'Item deleted successfully!') {
+        setCartData(prev => prev.filter(item => item.productId !== proId));
+
+        const cartInfo = JSON.parse(localStorage.getItem('cartInfo')) || {};
+        const updatedItems = (cartInfo.items || []).filter(
+          item => item.productId !== proId
+        );
+
+        const updatedTotalPrice = updatedItems.reduce(
+          (acc, i) => acc + i.price * i.quantity,
+          0
+        );
+
+        const updatedCartInfo = {
+          items: updatedItems,
+          cartLength: updatedItems.length,
+          totalPrice: updatedTotalPrice,
+        };
+
+        localStorage.setItem('cartInfo', JSON.stringify(updatedCartInfo));
         window.dispatchEvent(new Event('storage'));
-        setCartData([]);
+
         enqueueSnackbar(data.msg, {
           variant: 'info',
           anchorOrigin: {
@@ -73,6 +88,13 @@ const page = () => {
             borderRadius: '8px',
           },
         });
+      }
+
+      if (data.msg === 'Cart deleted successfully!') {
+        localStorage.removeItem('CARTID');
+        localStorage.removeItem('cartInfo');
+        setCartData([]);
+        window.dispatchEvent(new Event('storage'));
       }
     } catch (error) {
       console.log(error);
@@ -114,7 +136,13 @@ const page = () => {
                   >
                     <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
                       <span
-                        onClick={handleCartDelete}
+                        onClick={() =>
+                          handleCartDelete(
+                            typeof items.productId === 'string'
+                              ? items.productId
+                              : items.productId._id
+                          )
+                        }
                         className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer"
                       >
                         <RxCross1 />

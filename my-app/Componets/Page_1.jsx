@@ -138,6 +138,7 @@ const Page_1 = () => {
         localStorage.setItem(
           'cartInfo',
           JSON.stringify({
+            items: data.data.items,
             cartLength: data.data.items.length,
             totalPrice: data.data.totalPrice,
           })

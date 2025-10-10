@@ -84,6 +84,8 @@ const Page = () => {
     return () => clearInterval(interval);
   }, []);
 
+
+
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
