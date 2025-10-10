@@ -167,7 +167,7 @@ async function cartSummary(req, res) {
 }
 
 async function IncrementCart(req, res) {
-  let { cartId, action } = req.query;
+  let { cartId, action, productId } = req.query;
   try {
     let cartItems = await cartSchema
       .findOne({ cartId })
@@ -176,27 +176,24 @@ async function IncrementCart(req, res) {
     if (!cartItems) {
       return res.status(404).json({ msg: 'cart not found!' });
     }
+    let item = cartItems.items.find(
+      i => i.productId._id.toString() === productId
+    );
+    if (!item)
+      return res.status(404).json({ msg: 'Product not found in cart' });
 
     if (action === 'Increment') {
-      if (cartItems.items[0].quantity >= 30) {
-        return res.status(400).json({ msg: 'Max quantity of 30 reached' });
-      } else if (
-        cartItems.items[0].productId.stock <= cartItems.items[0].quantity
-      ) {
-        return res.status(400).json({ msg: 'Not enough stock available' });
-      } else {
-        cartItems.items[0].quantity += 1;
-      }
+      if (item.quantity >= 30)
+        return res.status(400).json({ msg: 'Max quantity reached' });
+      if (item.productId.stock <= item.quantity)
+        return res.status(400).json({ msg: 'Not enough stock' });
+      item.quantity += 1;
     } else if (action === 'Decrement') {
-      if (cartItems.items[0].quantity <= 1) {
+      if (item.quantity <= 1)
         return res.status(400).json({ msg: 'Quantity cannot go below 1' });
-      } else {
-        cartItems.items[0].quantity -= 1;
-      }
+      item.quantity -= 1;
     } else {
-      return res
-        .status(400)
-        .json({ msg: 'Invalid action or quantity cannot go below 1' });
+      return res.status(400).json({ msg: 'Invalid action' });
     }
 
     cartItems.items = cartItems.items.map(item => {
