@@ -115,19 +115,25 @@ async function cartSummary(req, res) {
 
     cart.items = cart.items.map(item => {
       const price = Number(item.productId.price) || 0;
-      const weight = Number(item.productId.weight) || 1;
+      const rawWeight = item.productId.weight;
+      const weight =
+        typeof rawWeight === 'number' ? rawWeight : Number(rawWeight) || 0;
       item.singleSubtotal = price * item.quantity;
 
       let shippingCost = 0;
-      if (area === 'insideDhaka') {
-        if (weight <= 1) shippingCost = 60;
-        else if (weight <= 2) shippingCost = 80;
-        else shippingCost = 100;
-      } else if (area === 'outsideDhaka') {
-        if (weight <= 1) shippingCost = 120;
-        else if (weight <= 2) shippingCost = 150;
-        else shippingCost = 200;
+
+      if (weight > 0) {
+        if (area === 'insideDhaka') {
+          if (weight <= 1) shippingCost = 60;
+          else if (weight <= 2) shippingCost = 80;
+          else shippingCost = 100;
+        } else if (area === 'outsideDhaka') {
+          if (weight <= 1) shippingCost = 120;
+          else if (weight <= 2) shippingCost = 150;
+          else shippingCost = 200;
+        }
       }
+
       item.shippingCost = shippingCost;
       return item;
     });

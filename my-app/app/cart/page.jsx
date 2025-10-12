@@ -31,6 +31,7 @@ const page = () => {
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
       let SumaaryData = await res.json();
+      console.log(SumaaryData);
       setSummeryData(SumaaryData.data);
     } catch (error) {
       console.log(error);
@@ -89,6 +90,7 @@ const page = () => {
       localStorage.removeItem('CARTID');
       localStorage.removeItem('cartInfo');
       setCartData([]);
+      setSummeryData({});
     };
 
     socket.on('itemDeleted', handleItemDeleted);
@@ -121,6 +123,8 @@ const page = () => {
       let data = await response.json();
 
       if (data.msg === 'Item deleted successfully!') {
+        await FetchCart();
+        await FetchSummery();
         const cartInfo = JSON.parse(localStorage.getItem('cartInfo')) || {};
         const updatedItems = (cartInfo.items || []).filter(
           item => item.productId !== proId
@@ -151,8 +155,6 @@ const page = () => {
             borderRadius: '8px',
           },
         });
-
-        await FetchCart();
       }
 
       if (data.msg === 'Cart deleted successfully!') {
@@ -168,13 +170,13 @@ const page = () => {
     }
   };
 
-  let HandleIncrement = async action => {
+  let HandleIncrement = async (action, productId) => {
     setLoding(true);
     const isMobile = window.innerWidth < 768;
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}`,
+        `https://taranga-e-com.onrender.com/api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}&productId=${productId}`,
         { method: 'PUT' }
       );
 
@@ -281,7 +283,12 @@ const page = () => {
                           </h4>
                           <div className="flex items-center">
                             <button
-                              onClick={() => HandleIncrement('Decrement')}
+                              onClick={() =>
+                                HandleIncrement(
+                                  'Decrement',
+                                  cartProduct.productId._id
+                                )
+                              }
                               className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
                             >
                               <FaMinus />
@@ -290,7 +297,12 @@ const page = () => {
                               {cartProduct.quantity}
                             </button>
                             <button
-                              onClick={() => HandleIncrement('Increment')}
+                              onClick={() =>
+                                HandleIncrement(
+                                  'Increment',
+                                  cartProduct.productId._id
+                                )
+                              }
                               className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
                             >
                               <FaPlus />

@@ -7,9 +7,11 @@ import { FaMagnifyingGlass } from 'react-icons/fa6';
 import ProductDetails from '../../../../Componets/ProductDetails';
 import CustomerReview from '../../../../Componets/CustomerReview';
 import { useParams, useRouter } from 'next/navigation';
+import { useSnackbar } from 'notistack';
 
 const Page = () => {
   const [product, setProduct] = useState('');
+  let { enqueueSnackbar } = useSnackbar();
   const [RelatedProduct, setRelatedProduct] = useState([]);
   let router = useRouter();
   const { id } = useParams();
@@ -84,8 +86,6 @@ const Page = () => {
     return () => clearInterval(interval);
   }, []);
 
-
-
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
@@ -103,6 +103,80 @@ const Page = () => {
       );
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  let handleCart = async proID => {
+    const isMobile = window.innerWidth < 768;
+    let productId = proID;
+    let savedCartId = JSON.parse(localStorage.getItem('CARTID'));
+    if (!savedCartId) {
+      savedCartId = `CRT-${uuidv4().split('-')[0].toUpperCase()}`;
+      localStorage.setItem('CARTID', JSON.stringify(savedCartId));
+    }
+
+    try {
+      const response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/addCart`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId,
+            cartId: savedCartId,
+          }),
+        }
+      );
+      let data = await response.json();
+      if (!response.ok) {
+        enqueueSnackbar(data.msg, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#D32F2F',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        return;
+      }
+      if (data.msg === 'Product added to cart!') {
+        enqueueSnackbar(data.msg, {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        localStorage.setItem(
+          'cartInfo',
+          JSON.stringify({
+            items: data.data.items,
+            cartLength: data.data.items.length,
+            totalPrice: data.data.totalPrice,
+          })
+        );
+        window.dispatchEvent(new Event('storage'));
+      }
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
@@ -188,7 +262,10 @@ const Page = () => {
                 <p className="text-[15px] text-[#555]">
                   Brand: {product.brand}
                 </p>
-                <button className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] px-[30px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition">
+                <button
+                  onClick={() => handleCart(product._id)}
+                  className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] px-[30px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition"
+                >
                   Order Now
                 </button>
               </div>
