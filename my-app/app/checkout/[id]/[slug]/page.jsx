@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import Container from '../../../../Componets/Container/Container';
 import { useSnackbar } from 'notistack';
-import socket from '../../../../utills/socket';
+import { useRouter } from 'next/navigation';
 
 const page = () => {
+  let router = useRouter();
   let [name, SetName] = useState('');
   let { enqueueSnackbar } = useSnackbar();
   let [phone, SetPhone] = useState('');
   let [Address, SetAddress] = useState('');
   let [saveInfo, setSaveInfo] = useState(false);
-  let [SummeryData, setSummeryData] = useState({});
+  let [SummeryData, setSummeryData] = useState([]);
 
   const [error, setError] = useState({
     name: false,
@@ -19,21 +20,20 @@ const page = () => {
   });
 
   async function FetchSummery() {
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let CartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/FinalSummery`,
+        `https://taranga-e-com.onrender.com/api/v3/cart/FinalSummery?CartId=${CartId}`,
         {
           method: 'GET',
-          body: JSON.stringify(cartId),
         }
       );
 
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
-      let SumaaryData = await res.json();
-      console.log(SumaaryData);
-      // setSummeryData(SumaaryData.data);
+      let data = await res.json();
+      console.log(data);
+      setSummeryData(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -126,6 +126,25 @@ const page = () => {
     }
   };
 
+  let handleShowProduct = async product => {
+    try {
+      let response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+
+      const data = await response.json();
+      router.push(
+        `/productDetails/${data.product._id}/${data.product.name.replace(
+          /\s+/g,
+          '-'
+        )}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <section className="mobile:py-[50px] tablet:py-[100px] laptop:py-[100px] computer:py-[100px]">
@@ -202,7 +221,7 @@ const page = () => {
                   </label>
                 </div>
               </div>
-              <div className="mobile:mt-[30px] tablet:mt-[30px] laptop:mt-[30px] computer:mt-0 mobile:p-[20px] tablet:p-[30px] laptop:p-[30px] computer:p-[30px] computer:w-[500px] bg-[#69727d]/10 border border-[#000]/20 shadow-md rounded-[6px]">
+              <div className="mobile:mt-[30px] tablet:mt-[30px] laptop:mt-[30px] computer:mt-0 mobile:p-[15px] tablet:p-[30px] laptop:p-[30px] computer:p-[30px] computer:w-[500px] bg-[#69727d]/10 border border-[#000]/20 shadow-md rounded-[6px]">
                 <h4 className="text-[26px] font-noto-bengali font-bold text-[#000] mb-[30px]">
                   অর্ডার লিস্ট
                 </h4>
@@ -214,28 +233,29 @@ const page = () => {
                     Subtotals
                   </h4>
                 </div>
-                <div className="flex items-center justify-between mb-[10px]">
-                  <h4 className="text-[16px] font-bold font-nunito text-gray-500">
-                    Smartec 20V cord
-                  </h4>
-                  <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    1000tk
-                  </h4>
-                </div>
-                <div className="flex items-center justify-between mb-[20px]">
-                  <h4 className="text-[16px] font-bold font-nunito text-gray-500">
-                    Smartec 20V cord
-                  </h4>
-                  <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    1000tk
-                  </h4>
-                </div>
+                {SummeryData.items?.map((item, indx) => (
+                  <div
+                    key={indx}
+                    className="flex items-center justify-between mb-[10px]"
+                  >
+                    <h4
+                      onClick={() => handleShowProduct(item.productId._id)}
+                      className="text-[16px] mobile:w-[220px] tablet:w-[415px] laptop:w-[478px] hover:text-[#4169e1] computer:w-[360px] truncate font-bold font-nunito text-[#f1a31c] cursor-pointer"
+                    >
+                      ({item.quantity}) {item.productId.name}
+                    </h4>
+                    <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
+                      {item.productId.price}
+                    </h4>
+                  </div>
+                ))}
+
                 <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
                     Subtotal
                   </h4>
                   <h4 className="mt-[10px] text-[16px] font-bold font-noto-bengali text-gray-600">
-                    4000tk
+                    (+) {SummeryData.subTotal || 0}
                   </h4>
                 </div>
                 <div className="flex items-center justify-between mb-[20px]">
@@ -243,7 +263,7 @@ const page = () => {
                     Shipping cost
                   </h4>
                   <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    200tk
+                    {SummeryData.shippingCost || 0}
                   </h4>
                 </div>
                 <div className="flex items-center justify-between mb-[30px]">
@@ -251,7 +271,7 @@ const page = () => {
                     Total
                   </h4>
                   <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    2000tk
+                    {SummeryData.totalPrice || 0}
                   </h4>
                 </div>
 
