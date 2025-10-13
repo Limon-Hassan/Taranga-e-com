@@ -173,7 +173,7 @@ async function cartSummary(req, res) {
 }
 
 async function FinalSummery(req, res) {
-  let { CartId } = req.body;
+  let { CartId } = req.query;
   try {
     let cartSummary = await cartSchema
       .findOne({ cartId: CartId })

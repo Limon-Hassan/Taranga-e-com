@@ -24,36 +24,23 @@ const page = () => {
       let res = await fetch(
         `https://taranga-e-com.onrender.com/api/v3/cart/FinalSummery`,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          method: 'GET',
           body: JSON.stringify(cartId),
         }
       );
 
-      if (!res.ok) throw new Error(res.msg || 'Failed to fetch CartSummery');
+      if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
       let SumaaryData = await res.json();
       console.log(SumaaryData);
       // setSummeryData(SumaaryData.data);
     } catch (error) {
-      console.log(error.msg);
+      console.log(error);
     }
   }
 
-
-  
   useEffect(() => {
     FetchSummery();
-    const handleSummery = data => {
-      console.log(data);
-      // setSummeryData(data);
-    };
-    socket.on('cartSummery', handleSummery);
-    return () => {
-      socket.off('cartSummery', handleSummery);
-    };
   }, []);
 
   // localStorage.removeItem('cartInfo');
