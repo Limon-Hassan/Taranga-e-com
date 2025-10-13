@@ -1,7 +1,135 @@
-import React from 'react';
-import Container from '../../Componets/Container/Container';
+'use client';
+import React, { useEffect, useState } from 'react';
+import Container from '../../../../Componets/Container/Container';
+import { useSnackbar } from 'notistack';
+import socket from '../../../../utills/socket';
 
 const page = () => {
+  let [name, SetName] = useState('');
+  let { enqueueSnackbar } = useSnackbar();
+  let [phone, SetPhone] = useState('');
+  let [Address, SetAddress] = useState('');
+  let [saveInfo, setSaveInfo] = useState(false);
+  let [SummeryData, setSummeryData] = useState({});
+
+  const [error, setError] = useState({
+    name: false,
+    phone: false,
+    address: false,
+  });
+
+  async function FetchSummery() {
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    try {
+      let res = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/CartSummery?cartId=${cartId}`
+      );
+
+      if (!res.ok) throw new Error(res.msg || 'Failed to fetch CartSummery');
+
+      let SumaaryData = await res.json();
+      console.log(SumaaryData);
+      // setSummeryData(SumaaryData.data);
+    } catch (error) {
+      console.log(error.msg);
+    }
+  }
+
+  useEffect(() => {
+    FetchSummery();
+    const handleSummery = data => {
+      console.log(data);
+      // setSummeryData(data);
+    };
+    socket.on('cartSummery', handleSummery);
+    return () => {
+      socket.off('cartSummery', handleSummery);
+    };
+  }, []);
+
+  // localStorage.removeItem('cartInfo');
+  // setCartData([]);
+  // window.dispatchEvent(new Event('storage'));
+
+  let handleSubmit = async () => {
+    const isMobile = window.innerWidth < 768;
+    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    try {
+      if (!name || !phone || !Address) {
+        setError({
+          name: !name,
+          phone: !phone,
+          address: !Address,
+        });
+
+        enqueueSnackbar('দয়া করে সবগুলোই পূরণ করুন', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#D32F2F',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        return;
+      }
+
+      if (phone.length < 11) {
+        setError(prev => ({ ...prev, phone: true }));
+
+        enqueueSnackbar('মোবাইল নাম্বার সঠিক নয় (১১ ডিজিট দিতে হবে)', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#D32F2F',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        return;
+      }
+
+      setError({ name: false, phone: false, address: false });
+
+      const bodyData = {
+        cartId,
+        name,
+        phone,
+        address: Address,
+        saveInfo,
+      };
+
+      const response = await fetch(
+        'https://taranga-e-com.onrender.com/api/v3/checkout/makeCheckout',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodyData),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.msg || 'Checkout failed');
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <section className="mobile:py-[50px] tablet:py-[100px] laptop:py-[100px] computer:py-[100px]">
@@ -23,8 +151,12 @@ const page = () => {
                     আপনার নাম *
                   </label>
                   <input
-                    className="w-full h-[50px] text-[16px] border border-[#000]/20 outline-none font-noto-bengali font-bold text-gray-500 shadow-md px-3 "
+                    className={`w-full h-[50px] text-[16px] border border-[#000]/20 outline-none ${
+                      error.name ? 'border-red-500' : 'border-[#000]/20'
+                    } font-noto-bengali border font-bold text-gray-500 shadow-md px-3 `}
                     type="text"
+                    value={name}
+                    onChange={e => SetName(e.target.value)}
                     placeholder="আপনার নাম..."
                   />
                 </div>
@@ -36,12 +168,16 @@ const page = () => {
                     আপনার পূর্ণ ঠিকানা *
                   </label>
                   <input
-                    className="w-full h-[50px] text-[16px] border border-[#000]/20 outline-none font-noto-bengali font-bold text-gray-500 shadow-md px-3 "
+                    className={`w-full ${
+                      error.address ? 'border-red-500' : 'border-[#000]/20'
+                    } h-[50px] text-[16px] border outline-none font-noto-bengali font-bold text-gray-500 shadow-md px-3 `}
                     type="text"
+                    value={Address}
+                    onChange={e => SetAddress(e.target.value)}
                     placeholder="আপনার পূর্ণ ঠিকানা..."
                   />
                 </div>
-                <div className="mobile:w-[270px] tablet:w-[510px] laptop:w-[570px] computer:w-[570px] mb-[20px] ">
+                <div className="mobile:w-[270px] tablet:w-[510px] laptop:w-[570px] computer:w-[570px] mb-[20px]">
                   <label
                     className="text-[16px] font-noto-bengali font-medium text-[#000] mb-[10px]"
                     htmlFor="text"
@@ -49,8 +185,12 @@ const page = () => {
                     মোবাইল নাম্বার *
                   </label>
                   <input
-                    className="w-full h-[50px] text-[16px] border border-[#000]/20 outline-none font-noto-bengali font-bold text-gray-500 shadow-md px-3 "
+                    className={`w-full h-[50px] ${
+                      error.phone ? 'border-red-500' : 'border-[#000]/20'
+                    } text-[16px] border outline-none font-noto-bengali font-bold text-gray-500 shadow-md px-3 `}
                     type="text"
+                    value={phone}
+                    onChange={e => SetPhone(e.target.value)}
                     placeholder="মোবাইল নাম্বার..."
                   />
                 </div>
@@ -59,8 +199,8 @@ const page = () => {
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      // checked={saveInfo}
-                      // onChange={e => setSaveInfo(e.target.checked)}
+                      checked={saveInfo}
+                      onChange={e => setSaveInfo(e.target.checked)}
                     />
                     <span>দ্বিতীয়বার অডারের জন্য আপনার তথ্য সেভ করুন </span>
                   </label>
@@ -122,7 +262,10 @@ const page = () => {
                 <h4 className="text-[18px] font-bold font-noto-bengali text-gray-600">
                   # Cash On Delivery
                 </h4>
-                <button className="mobile:text-[20px] tablet:text-[28px] laptop:text-[28px] computer:text-[28px] font-bold font-noto-bengali text-white bg-[#C67D09] py-[12px] mobile:px-[82px] tablet:px-[185px] laptop:px-[145px] computer:px-[145px] cursor-pointer rounded-[4px] mt-[30px]">
+                <button
+                  onClick={handleSubmit}
+                  className="mobile:text-[20px] tablet:text-[28px] laptop:text-[28px] computer:text-[28px] font-bold font-noto-bengali text-white bg-[#C67D09] py-[12px] mobile:px-[82px] tablet:px-[185px] laptop:px-[145px] computer:px-[145px] cursor-pointer rounded-[4px] mt-[30px]"
+                >
                   অর্ডার করুন
                 </button>
               </div>

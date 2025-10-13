@@ -5,11 +5,14 @@ import Container from '../../Componets/Container/Container';
 import CheckBox from '../../Componets/CheckBox';
 import socket from '../../utills/socket';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/navigation';
+
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { ImSpinner6 } from 'react-icons/im';
 
 const page = () => {
   let { enqueueSnackbar } = useSnackbar();
+  let router = useRouter();
   let [Selectpayment, setSelectpayment] = useState('insideDhaka');
   let [cartData, setCartData] = useState([]);
   let [SummeryData, setSummeryData] = useState({});
@@ -31,7 +34,6 @@ const page = () => {
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
       let SumaaryData = await res.json();
-      console.log(SumaaryData);
       setSummeryData(SumaaryData.data);
     } catch (error) {
       console.log(error);
@@ -205,6 +207,20 @@ const page = () => {
     } finally {
       setLoding(false);
     }
+  };
+
+  let handleCheckout = () => {
+    let CARTID = JSON.parse(localStorage.getItem('CARTID'));
+    if (!cartData) {
+      return enqueueSnackbar('cart is empty', { variant: 'info' });
+    }
+
+    router.push(
+      `/checkout/${cartData.map(item => item.productId._id)}/${CARTID.replace(
+        /\s+/g,
+        '-'
+      )}`
+    );
   };
 
   return (
@@ -382,7 +398,10 @@ const page = () => {
                       {SummeryData?.totalPrice || 0}.00৳
                     </h4>
                   </div>
-                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-[14px] mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-[20px] rounded-[6px] mb-[30px] cursor-pointer">
+                  <button
+                    onClick={handleCheckout}
+                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-[14px] mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-[20px] rounded-[6px] mb-[30px] cursor-pointer"
+                  >
                     Proceed to checkout
                   </button>
                 </div>

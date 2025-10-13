@@ -50,6 +50,7 @@ const page = () => {
       console.log(error);
     }
   };
+  
   let handleCart = async proID => {
     const isMobile = window.innerWidth < 768;
     let productId = proID;

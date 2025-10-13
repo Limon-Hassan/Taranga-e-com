@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 const Page_3 = () => {
   const [category, setCategory] = useState([]);

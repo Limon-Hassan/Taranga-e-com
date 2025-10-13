@@ -8,11 +8,15 @@ import socket from '../../utills/socket';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FaBars } from 'react-icons/fa6';
 import { ImCross } from 'react-icons/im';
+import { useSnackbar } from 'notistack';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const page = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get('search');
-  let router = useRouter;
+  let router = useRouter();
+  let { enqueueSnackbar } = useSnackbar();
   let [minPrice, SetminPrice] = useState(0);
   let [maxPrice, SetmaxPrice] = useState(0);
   const [sortOrder, setSortOrder] = useState('');
@@ -51,12 +55,10 @@ const page = () => {
       params.append('limit', 12);
 
       const url = `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${params.toString()}`;
-      console.log('Fetching URL:', url);
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
-      console.log(data);
       const allProducts =
         currentPage === 1
           ? [...data.mainProducts, ...data.related]
@@ -117,6 +119,80 @@ const page = () => {
       );
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  let handleCart = async proID => {
+    const isMobile = window.innerWidth < 768;
+    let productId = proID;
+    let savedCartId = JSON.parse(localStorage.getItem('CARTID'));
+    if (!savedCartId) {
+      savedCartId = `CRT-${uuidv4().split('-')[0].toUpperCase()}`;
+      localStorage.setItem('CARTID', JSON.stringify(savedCartId));
+    }
+
+    try {
+      const response = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/cart/addCart`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId,
+            cartId: savedCartId,
+          }),
+        }
+      );
+      let data = await response.json();
+      if (!response.ok) {
+        enqueueSnackbar(data.msg, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#D32F2F',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        return;
+      }
+      if (data.msg === 'Product added to cart!') {
+        enqueueSnackbar(data.msg, {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        localStorage.setItem(
+          'cartInfo',
+          JSON.stringify({
+            items: data.data.items,
+            cartLength: data.data.items.length,
+            totalPrice: data.data.totalPrice,
+          })
+        );
+        window.dispatchEvent(new Event('storage'));
+      }
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
@@ -347,7 +423,7 @@ const page = () => {
                 >
                   <img
                     className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full cursor-pointer mobile:h-[140px] tablet:h-[160px] laptop:h-[250px] computer:h-[250px]"
-                    src={pro.photo}
+                    src={pro.photo?.[0]}
                     alt="product"
                   />
                   <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
@@ -363,7 +439,10 @@ const page = () => {
                     <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
                       {pro.price}.00৳
                     </h2>
-                    <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer">
+                    <button
+                      onClick={() => handleCart(pro._id)}
+                      className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-[4px] mobile:px-[25px] tablet:py-[4px] tablet:px-[36px] laptop:py-[6px] laptop:px-[70px] computer:py-[6px] computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer"
+                    >
                       <FaCartShopping className="mr-[10px]" />
                       Order Now
                     </button>

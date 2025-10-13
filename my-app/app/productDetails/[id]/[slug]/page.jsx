@@ -8,6 +8,7 @@ import ProductDetails from '../../../../Componets/ProductDetails';
 import CustomerReview from '../../../../Componets/CustomerReview';
 import { useParams, useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
+import { v4 as uuidv4 } from 'uuid';
 
 const Page = () => {
   const [product, setProduct] = useState('');

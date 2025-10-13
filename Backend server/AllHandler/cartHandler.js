@@ -172,6 +172,32 @@ async function cartSummary(req, res) {
   }
 }
 
+async function FinalSummery(req, res) {
+  let { CartId } = req.body;
+  try {
+    let cartSummary = await cartSchema
+      .findOne({ cartId: CartId })
+      .populate('items.productId');
+
+    if (!cart) {
+      return res.status(404).json({ msg: 'Cart not found' });
+    }
+    return res.status(200).json({
+      msg: 'Final summary fetched successfully',
+      data: {
+        cartId: cartSummary.cartId,
+        subTotal: cartSummary.subTotal,
+        shippingCost: cartSummary.shippingCost,
+        totalPrice: cartSummary.totalPrice,
+        items: cartSummary.items,
+      },
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ msg: 'Server error', error: String(error) });
+  }
+}
+
 async function IncrementCart(req, res) {
   let { cartId, action, productId } = req.query;
   try {
@@ -276,5 +302,6 @@ module.exports = {
   readCart,
   cartSummary,
   IncrementCart,
+  FinalSummery,
   deleteSingleCartItem,
 };
