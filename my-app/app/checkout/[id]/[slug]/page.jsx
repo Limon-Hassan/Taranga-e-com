@@ -22,7 +22,14 @@ const page = () => {
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/CartSummery?cartId=${cartId}`
+        `https://taranga-e-com.onrender.com/api/v3/cart/FinalSummery`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(cartId),
+        }
       );
 
       if (!res.ok) throw new Error(res.msg || 'Failed to fetch CartSummery');
@@ -35,6 +42,8 @@ const page = () => {
     }
   }
 
+
+  
   useEffect(() => {
     FetchSummery();
     const handleSummery = data => {

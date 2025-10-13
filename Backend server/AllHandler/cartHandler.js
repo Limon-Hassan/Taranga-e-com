@@ -179,7 +179,7 @@ async function FinalSummery(req, res) {
       .findOne({ cartId: CartId })
       .populate('items.productId');
 
-    if (!cart) {
+    if (!cartSummary) {
       return res.status(404).json({ msg: 'Cart not found' });
     }
     return res.status(200).json({
