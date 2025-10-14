@@ -171,7 +171,7 @@ const Navber_1 = () => {
                 <Link href="/">
                   <img
                     className="computer:w-[250px] laptop:w-[250px] mobile:w-[170px] tablet:w-[250px]  computer:mb-0 laptop:mb-0"
-                    src="/headimage.webp"
+                    src="/HeaderImage.png"
                     alt="headimage"
                   />
                 </Link>

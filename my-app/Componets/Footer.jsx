@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="mobile:flex-none mobile:gap-0 tablet:flex-none tablet:gap-0 laptop:flex computer:flex laptop:items-center computer:items-center laptop:gap-[165px] computer:gap-[200px] py-[50px]">
             <div className="mobile:mb-[30px] tablet:mb-[30px] laptop:mb-0 computer:mb-0">
               <h1 className="mobile:text-[28px] tablet:text-[30px] laptop:text-[35px] computer:text-[40px] font-bold font-nunito text-white leading-6 mb-[20px]">
-                Taranga Traders
+                Deluxe X Deal
               </h1>
               <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px]  font-normal font-nunito text-white mobile:w-auto tablet:w-[280px] laptop:w-[280px] computer:w-[280px] mb-[20px]">
                 We believe—“Your Trust, Our Commitment.” Shop from the comfort
@@ -72,7 +72,7 @@ const Footer = () => {
           </div>
           <div className="text-center ">
             <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-white mobile:mb-[5px] tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
-              © All Rights Reserved - Tarangatraders LTD
+              © All Rights Reserved - Deluxe X Deals LTD
             </p>
             <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-white ">
               Made By Mahammud Hassan Limon_🖤_

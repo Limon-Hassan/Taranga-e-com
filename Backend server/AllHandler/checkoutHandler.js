@@ -67,6 +67,25 @@ async function makeCheckout(req, res) {
   }
 }
 
+async function getSavedInfo(req, res) {
+  try {
+    const { phone } = req.query;
+    if (!phone) return res.status(400).json({ msg: 'Phone number required' });
+
+    const info = await Save_info.findOne({ phone: Number(phone) });
+
+    if (!info)
+      return res
+        .status(404)
+        .json({ msg: 'No saved info found for this number' });
+
+    return res.status(200).json({ msg: 'Saved info found', data: info });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error', error: err.message });
+  }
+}
+
 async function AdminReadCheckout(req, res) {
   try {
     let allCheckout = await checkoutSchema.find({});
@@ -103,4 +122,9 @@ async function deleteCheckout(req, res) {
   }
 }
 
-module.exports = { makeCheckout, AdminReadCheckout, deleteCheckout };
+module.exports = {
+  makeCheckout,
+  AdminReadCheckout,
+  deleteCheckout,
+  getSavedInfo,
+};

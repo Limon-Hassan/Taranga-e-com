@@ -43,10 +43,6 @@ const page = () => {
     FetchSummery();
   }, []);
 
-  // localStorage.removeItem('cartInfo');
-  // setCartData([]);
-  // window.dispatchEvent(new Event('storage'));
-
   let handleSubmit = async () => {
     const isMobile = window.innerWidth < 768;
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
@@ -120,7 +116,33 @@ const page = () => {
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.msg || 'Checkout failed');
-      console.log(data);
+      if (data.msg === 'Checkout successful') {
+        localStorage.removeItem('cartInfo');
+        localStorage.removeItem('CARTID');
+        setSummeryData([]);
+
+        window.dispatchEvent(new Event('storage'));
+        enqueueSnackbar('ধন্যবাদ আপনাকে সফলভাবে চেকআউট করার জন্য', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: isMobile ? 'center' : 'right',
+          },
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
+          },
+        });
+        SetName('');
+        SetAddress('');
+        SetPhone('');
+        setSaveInfo(false);
+        router.push('/');
+      }
     } catch (error) {
       console.log(error);
     }
