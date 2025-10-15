@@ -25,7 +25,7 @@ async function createCategory(req, res) {
       .json({ msg: 'category created successfully', data: category });
   } catch (error) {
     console.log(error.message);
-    console.error(error.message);
+    res.status(500).json({ msg: 'server Error', error: error.message });
   }
 }
 
@@ -59,7 +59,7 @@ async function readCategory(req, res) {
     }
   } catch (error) {
     console.log(error.message);
-    console.error(error.message);
+    res.status(500).json({ msg: 'server Error', error: error.message });
   }
 }
 
@@ -90,7 +90,7 @@ async function updateCategory(req, res) {
     return res.json({ msg: 'update successfully', data: updatecategory });
   } catch (error) {
     console.log(error.message);
-    console.error(error.message);
+    res.status(500).json({ msg: 'server Error', error: error.message });
   }
 }
 
@@ -124,7 +124,7 @@ async function deleteCategory(req, res) {
     return res.json({ msg: 'Delete Successfully', data: deleteCategory });
   } catch (error) {
     console.log(error.message);
-    console.error(error.message);
+    res.status(500).json({ msg: 'server Error', error: error.message });
   }
 }
 

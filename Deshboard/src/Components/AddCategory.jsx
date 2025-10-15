@@ -32,11 +32,11 @@ const AddCategory = () => {
         fromdata.append("image", Image);
       }
       for (let [key, value] of fromdata.entries()) {
-        console.log(key + " : " + value);
+        // console.log(key + " : " + value);
       }
       await axios
         .post(
-          "https://taranga-e-com.onrender.com/api/v3/product/AddProduct",
+          "https://taranga-e-com.onrender.com/api/v3/category/createCategory",
           fromdata,
           {
             headers: {
@@ -46,6 +46,7 @@ const AddCategory = () => {
           },
         )
         .then((respone) => {
+          console.log(respone);
           setCategoryName("");
           setDescription("");
           setImageupload("");
@@ -93,7 +94,7 @@ const AddCategory = () => {
                 maxLength={50}
               />
             </div>
-            <div className="w-full">
+            <div className="w-full overflow-hidden">
               <Typography variant="small" className="mb-3">
                 Description *
               </Typography>
@@ -103,8 +104,8 @@ const AddCategory = () => {
                 label="Description"
                 className="h-[200px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-4 text-[16px] font-normal text-black/50 outline-none"
                 theme="snow"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={description || ""}
+                onChange={setDescription}
                 required
                 maxLength={500}
               />
@@ -117,7 +118,7 @@ const AddCategory = () => {
 
             <div class="flex w-full items-center justify-center">
               <label
-                for="dropzone-file"
+                htmlFor="dropzone-file"
                 class="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
               >
                 <div class="flex flex-col items-center justify-center pb-6 pt-5">
@@ -132,7 +133,11 @@ const AddCategory = () => {
                 </div>
                 <input
                   id="dropzone-file"
-                  onChange={(e) => setImageupload(e.target.files[0])}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setImageupload(e.target.files[0]);
+                    }
+                  }}
                   type="file"
                   class="hidden"
                 />
