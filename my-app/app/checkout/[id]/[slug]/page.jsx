@@ -19,6 +19,32 @@ const page = () => {
     address: false,
   });
 
+  async function FetchInfo() {
+    let phone = JSON.parse(localStorage.getItem('userInfo'));
+    if (!phone) return;
+    try {
+      const res = await fetch(
+        `https://taranga-e-com.onrender.com/api/v3/checkout/getSavedInfo?phone=${phone}`
+      );
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      if (data?.data) {
+        SetName(data.data.name || '');
+        SetAddress(data.data.address || '');
+        SetPhone(data.data.phone?.toString() || '');
+        setSaveInfo(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    FetchInfo();
+  }, []);
+
   async function FetchSummery() {
     let CartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
@@ -32,7 +58,6 @@ const page = () => {
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
       let data = await res.json();
-      console.log(data);
       setSummeryData(data.data);
     } catch (error) {
       console.log(error);
@@ -113,14 +138,13 @@ const page = () => {
           body: JSON.stringify(bodyData),
         }
       );
-
       const data = await response.json();
       if (!response.ok) throw new Error(data.msg || 'Checkout failed');
       if (data.msg === 'Checkout successful') {
         localStorage.removeItem('cartInfo');
         localStorage.removeItem('CARTID');
         setSummeryData([]);
-
+        localStorage.setItem('userInfo', JSON.stringify(phone));
         window.dispatchEvent(new Event('storage'));
         enqueueSnackbar('ধন্যবাদ আপনাকে সফলভাবে চেকআউট করার জন্য', {
           variant: 'success',

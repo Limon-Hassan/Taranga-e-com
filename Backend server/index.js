@@ -16,6 +16,8 @@ app.use(
 
 Connection();
 app.use(router);
+app.use('/uploads', express.static('uploads'));
+app.use('/productImage', express.static('productImage'));
 let http = require('http');
 const { init: initSocket } = require('./socket_server');
 let server = http.createServer(app);

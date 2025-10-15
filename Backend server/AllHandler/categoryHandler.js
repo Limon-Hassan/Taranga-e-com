@@ -1,17 +1,21 @@
-const { cloudinary } = require('../Helper/Cloudinary');
 const categorySchema = require('../models/categorySchema');
 const productSchema = require('../models/productSchema');
+let fs = require('fs');
+let path = require('path');
 const { getIO } = require('../socket_server');
 
 async function createCategory(req, res) {
   let { name, description } = req.body;
-  let imageURL =
-    req.files && req.files.length > 0 ? req.files.map(file => file.path) : [];
+  let fileName = req.files;
+  let fileNames = [];
+  fileName.forEach(element => {
+    fileNames.push(process.env.HOST_NAME + element.filename);
+  });
   try {
     let category = new categorySchema({
       name,
       description,
-      image: imageURL,
+      image: fileNames,
     });
 
     await category.save();
@@ -62,15 +66,22 @@ async function readCategory(req, res) {
 async function updateCategory(req, res) {
   try {
     let { id } = req.query;
-    let imageURL =
-      req.files && req.files.length > 0 ? req.files.map(file => file.path) : [];
+    let fileName = req.files;
+    let fileNames = [];
+    if (Array.isArray(fileName)) {
+      fileName.forEach(element => {
+        fileNames.push(process.env.HOST_NAME + element.filename);
+      });
+    } else {
+      fileNames.push(process.env.HOST_NAME + fileName.filename);
+    }
     let { changeName, changeDescription } = req.body;
 
     let updatecategory = await categorySchema.findByIdAndUpdate(
       {
         _id: id,
       },
-      { name: changeName, description: changeDescription, image: imageURL },
+      { name: changeName, description: changeDescription, image: fileNames },
       { new: true }
     );
 
@@ -91,15 +102,24 @@ async function deleteCategory(req, res) {
       return res.json({ msg: 'category not found !' });
     }
     await deleteCategory.deleteOne();
-    let deletePromise = deleteCategory.image.map(async url => {
-      try {
-        const publicId = url.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(`Taranga_Category/${publicId}`);
-      } catch (err) {
-        console.error('Failed to delete image from Cloudinary:', err);
-      }
+    const deletePromises = category.Image.map(imagePath => {
+      return new Promise((resolve, reject) => {
+        const imagePathOnServer = path.join(
+          __dirname,
+          '../uploads',
+          imagePath.split('/').pop()
+        );
+
+        fs.unlink(imagePathOnServer, err => {
+          if (err) {
+            return reject('Failed to delete image');
+          } else {
+            resolve();
+          }
+        });
+      });
     });
-    await Promise.all(deletePromise);
+    await Promise.all(deletePromises);
     getIO().emit('categoryDeleted', id);
     return res.json({ msg: 'Delete Successfully', data: deleteCategory });
   } catch (error) {

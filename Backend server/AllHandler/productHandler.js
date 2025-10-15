@@ -1,7 +1,8 @@
-const { cloudinary } = require('../Helper/Cloudinary');
 const categorySchema = require('../models/categorySchema');
 const productSchema = require('../models/productSchema');
 let { getIO } = require('../socket_server');
+let path = require('path');
+let fs = require('fs');
 
 async function createProduct(req, res) {
   let { name, description, price, category, stock, brand, weight } = req.body;
@@ -9,14 +10,17 @@ async function createProduct(req, res) {
     return res.status(400).send({ msg: 'please fill all the fields' });
   }
   try {
-    let photo =
-      req.files && req.files.length > 0 ? req.files.map(file => file.path) : [];
+    const fileName = req.files;
+
+    const fileNames = fileName.map(
+      element => `${process.env.local_host}${element.filename}`
+    );
 
     let product = new productSchema({
       name,
       description,
       price,
-      photo,
+      photo: fileNames,
       category,
       stock,
       brand,
@@ -110,8 +114,15 @@ async function updateProduct(req, res) {
     Changestock,
   } = req.body;
   try {
-    let photoURL =
-      req.files && req.files.length > 0 ? req.files.map(file => file) : [];
+    let fileName = req.files;
+    let fileNames = [];
+    if (Array.isArray(fileName)) {
+      fileName.forEach(element => {
+        fileNames.push(process.env.local_host + element.filename);
+      });
+    } else {
+      fileNames.push(process.env.local_host + fileName.filename);
+    }
     let updateProduct = await productSchema.findByIdAndUpdate(
       { _id: id },
       {
@@ -120,7 +131,7 @@ async function updateProduct(req, res) {
         price: ChangePrice,
         category: ChangeCategory,
         stock: Changestock,
-        photo: photoURL,
+        photo: fileNames,
       },
       { new: true }
     );
@@ -144,15 +155,24 @@ async function deleteProduct(req, res) {
       return res.json({ msg: 'product Not found !' });
     }
     await deleteProduct.deleteOne();
-    let Deletepromise = deleteProduct.photo.map(async url => {
-      try {
-        const publicId = url.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(`Taranga_Photos/${publicId}`);
-      } catch (err) {
-        console.error('Failed to delete image from Cloudinary:', err);
-      }
+    const deletePromises = product.Photo.map(imagePath => {
+      return new Promise((resolve, reject) => {
+        const PhotoPathOnServer = path.join(
+          __dirname,
+          '../productImage',
+          imagePath.split('/').pop()
+        );
+
+        fs.unlink(PhotoPathOnServer, err => {
+          if (err) {
+            return reject('Failed to delete image');
+          }
+          resolve();
+        });
+      });
     });
-    await Promise.all(Deletepromise);
+
+    await Promise.all(deletePromises);
     getIO().emit('productDeleted', id);
     return res.json({ msg: 'Product delete successfully !', id });
   } catch (error) {

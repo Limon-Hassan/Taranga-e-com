@@ -1,34 +1,33 @@
 let express = require('express');
+const multer = require('multer');
+const path = require('path');
+let router = express.Router();
 const {
   createCategory,
   readCategory,
   updateCategory,
   deleteCategory,
 } = require('../../AllHandler/categoryHandler');
-let cloudinary = require('../../Helper/Cloudinary');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const multer = require('multer');
-let router = express.Router();
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'Taranga_Category',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const extension = path.extname(file.originalname);
+    cb(null, file.fieldname + uniqueName + extension);
   },
 });
 
-const categoryImage = multer({
+const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.post(
-  '/createCategory',
-  categoryImage.array('image', 12),
-  createCategory
-);
+router.post('/createCategory', upload.array('image', 12), createCategory);
 router.get('/getCategory', readCategory);
-router.put('/updateCategory', categoryImage.array('image', 12), updateCategory);
+router.put('/updateCategory', upload.array('image', 12), updateCategory);
 router.delete('/deleteCategory', deleteCategory);
 
 module.exports = router;
