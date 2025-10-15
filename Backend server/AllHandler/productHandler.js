@@ -13,7 +13,7 @@ async function createProduct(req, res) {
     const fileName = req.files;
 
     const fileNames = fileName.map(
-      element => `${process.env.local_host}${element.filename}`
+      element => `${process.env.HOST_NAME}${element.filename}`
     );
 
     let product = new productSchema({
@@ -118,10 +118,10 @@ async function updateProduct(req, res) {
     let fileNames = [];
     if (Array.isArray(fileName)) {
       fileName.forEach(element => {
-        fileNames.push(process.env.local_host + element.filename);
+        fileNames.push(process.env.HOST_NAME + element.filename);
       });
     } else {
-      fileNames.push(process.env.local_host + fileName.filename);
+      fileNames.push(process.env.HOST_NAME + fileName.filename);
     }
     let updateProduct = await productSchema.findByIdAndUpdate(
       { _id: id },
