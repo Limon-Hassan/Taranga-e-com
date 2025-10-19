@@ -11,11 +11,10 @@ import { ImCross } from 'react-icons/im';
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 
-
 const page = () => {
-  const searchParams = useSearchParams();
-  const query = searchParams.get('search');
   let router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState('');
   let { enqueueSnackbar } = useSnackbar();
   let [minPrice, SetminPrice] = useState(0);
   let [maxPrice, SetmaxPrice] = useState(0);
@@ -29,6 +28,10 @@ const page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [ActiveSidebar, setActiveSidebar] = useState(false);
+
+  useEffect(() => {
+    setQuery(searchParams.get('search') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     function handleClickOutside(e) {
