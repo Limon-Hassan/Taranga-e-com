@@ -2,7 +2,7 @@
 
 import { io } from 'socket.io-client';
 
-const socket = io('https://taranga-e-com.onrender.com/', {
+const socket = io('http://localhost:7000/', {
   transports: ['websocket'],
   withCredentials: true,
 });

@@ -82,7 +82,7 @@ const Navber_1 = () => {
 
       try {
         const res = await fetch(
-          `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${queryParams.toString()}`,
+          `http://localhost:7000/api/v3/product/product/searchProduct?${queryParams.toString()}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -110,7 +110,7 @@ const Navber_1 = () => {
         limit: 20,
       }).toString();
       const res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${params}`,
+        `http://localhost:7000/api/v3/product/product/searchProduct?${params}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -134,7 +134,7 @@ const Navber_1 = () => {
     }).toString();
     try {
       const res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/product/searchProduct?${params}`,
+        `http://localhost:7000/api/v3/product/product/searchProduct?${params}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },

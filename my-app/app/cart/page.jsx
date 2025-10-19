@@ -28,7 +28,7 @@ const page = () => {
     try {
       if (!Selectpayment) return;
       let res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/CartSummery?cartId=${cartId}&area=${Selectpayment}`
+        `http://localhost:7000/api/v3/cart/CartSummery?cartId=${cartId}&area=${Selectpayment}`
       );
 
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
@@ -51,7 +51,7 @@ const page = () => {
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/reatCart?cartId=${cartId}`
+        `http://localhost:7000/api/v3/cart/reatCart?cartId=${cartId}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch Cart');
@@ -117,7 +117,7 @@ const page = () => {
 
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/deleteCart?cartId=${cartId}&productId=${proId}`,
+        `http://localhost:7000/api/v3/cart/deleteCart?cartId=${cartId}&productId=${proId}`,
         { method: 'DELETE' }
       );
 
@@ -178,7 +178,7 @@ const page = () => {
     let cartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}&productId=${productId}`,
+        `http://localhost:7000/api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}&productId=${productId}`,
         { method: 'PUT' }
       );
 

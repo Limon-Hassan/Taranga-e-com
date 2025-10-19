@@ -16,7 +16,7 @@ const CustomerReview = ({ product }) => {
   let handleCommentSubmit = async () => {
     try {
       const response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/CreateReviews`,
+        `http://localhost:7000/api/v3/product/CreateReviews`,
         {
           method: 'POST',
           headers: {
@@ -45,7 +45,7 @@ const CustomerReview = ({ product }) => {
   async function FetchReviews() {
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/getReviews?productId=${product._id}`
+        `http://localhost:7000/api/v3/product/getReviews?productId=${product._id}`
       );
 
       if (!response.ok) throw new Error('Faild to fetch Review');

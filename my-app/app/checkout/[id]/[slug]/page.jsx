@@ -24,7 +24,7 @@ const page = () => {
     if (!phone) return;
     try {
       const res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/checkout/getSavedInfo?phone=${phone}`
+        `http://localhost:7000/api/v3/checkout/getSavedInfo?phone=${phone}`
       );
 
       if (!res.ok) return;
@@ -49,7 +49,7 @@ const page = () => {
     let CartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/FinalSummery?CartId=${CartId}`,
+        `http://localhost:7000/api/v3/cart/FinalSummery?CartId=${CartId}`,
         {
           method: 'GET',
         }
@@ -129,7 +129,7 @@ const page = () => {
       };
 
       const response = await fetch(
-        'https://taranga-e-com.onrender.com/api/v3/checkout/makeCheckout',
+        'http://localhost:7000/api/v3/checkout/makeCheckout',
         {
           method: 'POST',
           headers: {
@@ -175,7 +175,7 @@ const page = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
+        `http://localhost:7000/api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');

@@ -14,7 +14,7 @@ const Page_3 = () => {
     async function Fetch() {
       try {
         const res = await fetch(
-          'https://taranga-e-com.onrender.com/api/v3/category/getCategory',
+          'http://localhost:7000/api/v3/category/getCategory',
           {
             cache: 'no-store',
           }
@@ -32,7 +32,7 @@ const Page_3 = () => {
   let handleSubmit = async category => {
     try {
       const res = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/category/getCategory?id=${encodeURIComponent(
+        `http://localhost:7000/api/v3/category/getCategory?id=${encodeURIComponent(
           category
         )}`,
         {
@@ -53,7 +53,7 @@ const Page_3 = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/product/getProduct?id=${product}`
+        `http://localhost:7000/api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -81,7 +81,7 @@ const Page_3 = () => {
 
     try {
       const response = await fetch(
-        `https://taranga-e-com.onrender.com/api/v3/cart/addCart`,
+        `http://localhost:7000/api/v3/cart/addCart`,
         {
           method: 'POST',
           headers: {
