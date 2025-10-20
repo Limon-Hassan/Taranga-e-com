@@ -9,7 +9,13 @@ app.use(express.urlencoded({ extended: true }));
 let cors = require('cors');
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://deluxexdeal.com',
+      'http://dashboard.deluxexdeal.com',
+      'http://api.deluxexdeal.com',
+    ],
     credentials: true,
   })
 );
