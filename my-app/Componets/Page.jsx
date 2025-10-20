@@ -26,7 +26,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/compressed.webp"
+                    src="/images.jpg"
                     alt="benner"
                   />
                 </div>
@@ -35,7 +35,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/INGCO-MOBILE.webp"
+                    src="/images.jpg"
                     alt="benner"
                   />
                 </div>
@@ -44,7 +44,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/MOBILE.webp"
+                    src="/images.jpg"
                     alt="benner"
                   />
                 </div>
