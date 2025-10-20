@@ -12,11 +12,12 @@ const Page_1 = () => {
   let { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
+  console.log(process.env.NEXT_PUBLIC_SERVER_PORT);
 
   async function Fetch() {
     try {
       const res = await fetch(
-        `${process.env.SERVER_PORT}api/v3/category/getCategory`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory`,
         {
           cache: 'no-store',
         }
@@ -42,7 +43,7 @@ const Page_1 = () => {
     try {
       const res = await fetch(
         `${
-          process.env.SERVER_PORT
+          process.env.NEXT_PUBLIC_SERVER_PORT
         }api/v3/category/getCategory?id=${encodeURIComponent(category)}`,
         {
           cache: 'no-store',
@@ -60,7 +61,7 @@ const Page_1 = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -88,7 +89,7 @@ const Page_1 = () => {
 
     try {
       const response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/cart/addCart`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/addCart`,
         {
           method: 'POST',
           headers: {

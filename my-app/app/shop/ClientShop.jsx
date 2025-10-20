@@ -59,7 +59,7 @@ const ClientShop = () => {
       params.append('limit', 12);
 
       const url = `${
-        process.env.SERVER_PORT
+        process.env.NEXT_PUBLIC_SERVER_PORT
       }api/v3/product/product/searchProduct?${params.toString()}`;
 
       const response = await fetch(url);
@@ -111,7 +111,7 @@ const ClientShop = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -139,7 +139,7 @@ const ClientShop = () => {
 
     try {
       const response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/cart/addCart`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/addCart`,
         {
           method: 'POST',
           headers: {

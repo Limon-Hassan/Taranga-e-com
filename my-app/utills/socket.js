@@ -2,7 +2,7 @@
 
 import { io } from 'socket.io-client';
 
-const socket = io(process.env.SERVER_PORT, {
+const socket = io(process.env.NEXT_PUBLIC_SERVER_PORT, {
   transports: ['websocket'],
   withCredentials: true,
 });

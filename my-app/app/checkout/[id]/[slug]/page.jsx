@@ -24,7 +24,7 @@ const page = () => {
     if (!phone) return;
     try {
       const res = await fetch(
-        `${process.env.SERVER_PORT}api/v3/checkout/getSavedInfo?phone=${phone}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/getSavedInfo?phone=${phone}`
       );
 
       if (!res.ok) return;
@@ -49,7 +49,7 @@ const page = () => {
     let CartId = JSON.parse(localStorage.getItem('CARTID'));
     try {
       let res = await fetch(
-        `${process.env.SERVER_PORT}api/v3/cart/FinalSummery?CartId=${CartId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/FinalSummery?CartId=${CartId}`,
         {
           method: 'GET',
         }
@@ -129,7 +129,7 @@ const page = () => {
       };
 
       const response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/checkout/makeCheckout`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/makeCheckout`,
         {
           method: 'POST',
           headers: {
@@ -175,7 +175,7 @@ const page = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');

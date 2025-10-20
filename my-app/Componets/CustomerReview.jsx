@@ -16,7 +16,7 @@ const CustomerReview = ({ product }) => {
   let handleCommentSubmit = async () => {
     try {
       const response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/product/CreateReviews`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/CreateReviews`,
         {
           method: 'POST',
           headers: {
@@ -45,7 +45,7 @@ const CustomerReview = ({ product }) => {
   async function FetchReviews() {
     try {
       let response = await fetch(
-        `${process.env.SERVER_PORT}api/v3/product/getReviews?productId=${product._id}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getReviews?productId=${product._id}`
       );
 
       if (!response.ok) throw new Error('Faild to fetch Review');
