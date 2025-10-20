@@ -1,5 +1,5 @@
 import React from "react";
-import SalesCard from "../Components/salesCard";
+import SalesCard from "../Components/SalesCard";
 import Totalincome from "../Components/Totalincome";
 import Totalpaid from "../Components/Totalpaid";
 import Totalvisitors from "../Components/Totalvisitors";
