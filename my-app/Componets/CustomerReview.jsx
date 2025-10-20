@@ -16,7 +16,7 @@ const CustomerReview = ({ product }) => {
   let handleCommentSubmit = async () => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/v3/product/CreateReviews`,
+        `${process.env.SERVER_PORT}api/v3/product/CreateReviews`,
         {
           method: 'POST',
           headers: {
@@ -45,7 +45,7 @@ const CustomerReview = ({ product }) => {
   async function FetchReviews() {
     try {
       let response = await fetch(
-        `http://localhost:7000/api/v3/product/getReviews?productId=${product._id}`
+        `${process.env.SERVER_PORT}api/v3/product/getReviews?productId=${product._id}`
       );
 
       if (!response.ok) throw new Error('Faild to fetch Review');
@@ -59,14 +59,14 @@ const CustomerReview = ({ product }) => {
   useEffect(() => {
     FetchReviews();
     socket.emit('joinProduct', { productId: product._id });
-   socket.on('reviewAdded', newReviewData => {
-     const newReview = newReviewData.review; 
+    socket.on('reviewAdded', newReviewData => {
+      const newReview = newReviewData.review;
 
-     setReviews(prev => {
-       const prevArray = Array.isArray(prev) ? prev : [];
-       return [...prevArray, newReview];
-     });
-   });
+      setReviews(prev => {
+        const prevArray = Array.isArray(prev) ? prev : [];
+        return [...prevArray, newReview];
+      });
+    });
 
     return () => socket.off('reviewAdded');
   }, [product._id, socket]);

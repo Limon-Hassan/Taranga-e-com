@@ -2,7 +2,7 @@
 
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:7000/', {
+const socket = io(process.env.SERVER_PORT, {
   transports: ['websocket'],
   withCredentials: true,
 });

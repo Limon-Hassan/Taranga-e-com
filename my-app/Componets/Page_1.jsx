@@ -16,7 +16,7 @@ const Page_1 = () => {
   async function Fetch() {
     try {
       const res = await fetch(
-        'http://localhost:7000/api/v3/category/getCategory',
+        `${process.env.SERVER_PORT}api/v3/category/getCategory`,
         {
           cache: 'no-store',
         }
@@ -41,9 +41,9 @@ const Page_1 = () => {
   let handleSubmit = async category => {
     try {
       const res = await fetch(
-        `http://localhost:7000/api/v3/category/getCategory?id=${encodeURIComponent(
-          category
-        )}`,
+        `${
+          process.env.SERVER_PORT
+        }api/v3/category/getCategory?id=${encodeURIComponent(category)}`,
         {
           cache: 'no-store',
         }
@@ -60,7 +60,7 @@ const Page_1 = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `http://localhost:7000/api/v3/product/getProduct?id=${product}`
+        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -88,7 +88,7 @@ const Page_1 = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:7000/api/v3/cart/addCart`,
+        `${process.env.SERVER_PORT}api/v3/cart/addCart`,
         {
           method: 'POST',
           headers: {

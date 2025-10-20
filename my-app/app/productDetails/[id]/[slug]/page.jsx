@@ -63,7 +63,7 @@ const Page = () => {
     let product = id;
     try {
       let response = await fetch(
-        `http://localhost:7000/api/v3/product/getProduct?id=${product}`,
+        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`,
         {
           cache: 'no-store',
         }
@@ -90,7 +90,7 @@ const Page = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `http://localhost:7000/api/v3/product/getProduct?id=${product}`
+        `${process.env.SERVER_PORT}api/v3/product/getProduct?id=${product}`
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -118,7 +118,7 @@ const Page = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:7000/api/v3/cart/addCart`,
+        `${process.env.SERVER_PORT}api/v3/cart/addCart`,
         {
           method: 'POST',
           headers: {
