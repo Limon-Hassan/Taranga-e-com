@@ -12,9 +12,10 @@ app.use(
     origin: [
       'http://localhost:3000',
       'http://localhost:5173',
-      'http://deluxexdeal.com',
-      'http://dashboard.deluxexdeal.com',
-      'http://api.deluxexdeal.com',
+      'https://deluxexdeal.com',
+      'https://www.deluxexdeal.com',
+      'https://dashboard.deluxexdeal.com',
+      'https://api.deluxexdeal.com',
     ],
     credentials: true,
   })
