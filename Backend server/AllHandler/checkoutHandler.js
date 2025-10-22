@@ -88,7 +88,7 @@ async function getSavedInfo(req, res) {
 
 async function AdminReadCheckout(req, res) {
   try {
-    let allCheckout = await checkoutSchema.find({});
+    let allCheckout = await checkoutSchema.find({}).populate('items.productId');
     if (!allCheckout) {
       return res.status(404).json({ msg: 'checkout not found !' });
     } else {

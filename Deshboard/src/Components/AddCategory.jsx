@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   Input,
   Button,
   Typography,
-  Textarea,
 } from "@material-tailwind/react";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,9 +13,25 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 
 const AddCategory = () => {
+  const api = import.meta.env.VITE_SERVER_URL;
   const [CategoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
-  const [Image, setImageupload] = useState("");
+  const [images, setImages] = useState([]);
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length + images.length > 4) {
+      alert("You can only upload up to 4 images.");
+      return;
+    }
+
+    setImages((prev) => [...prev, ...files]);
+  };
+
+  const handleDeleteImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
@@ -28,28 +43,24 @@ const AddCategory = () => {
       let fromdata = new FormData();
       fromdata.append("name", CategoryName);
       fromdata.append("description", description);
-      if (Image) {
-        fromdata.append("image", Image);
+      if (images) {
+        fromdata.append("image", images);
       }
       for (let [key, value] of fromdata.entries()) {
-        // console.log(key + " : " + value);
+        console.log(key + " : " + value);
       }
       await axios
-        .post(
-          "https://taranga-e-com.onrender.com/api/v3/category/createCategory",
-          fromdata,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true,
+        .post(`${api}api/v3/category/createCategory`, fromdata, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-        )
-        .then((respone) => {
-          console.log(respone);
+          withCredentials: true,
+        })
+        .then((response) => {
+          console.log(response);
           setCategoryName("");
           setDescription("");
-          setImageupload("");
+          setImages([]);
           toast.success("Category added SuccessFully!", {
             position: "top-right",
             autoClose: 3000,
@@ -72,6 +83,7 @@ const AddCategory = () => {
         });
     }
   };
+
   return (
     <>
       <Card className="mx-auto w-full max-w-5xl p-6 shadow-lg">
@@ -116,34 +128,52 @@ const AddCategory = () => {
               Upload Images
             </Typography>
 
-            <div class="flex w-full items-center justify-center">
+            <div className="flex w-full flex-col items-center justify-center gap-4">
               <label
                 htmlFor="dropzone-file"
-                class="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
+                className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
               >
-                <div class="flex flex-col items-center justify-center pb-6 pt-5">
-                  <i class="fa-light fa-cloud-arrow-up mb-3 text-[30px] text-blue-600"></i>
-                  <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span class="font-semibold">Click to upload</span> or drag
-                    and drop
+                <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                  <i className="fa-light fa-cloud-arrow-up mb-3 text-[30px] text-blue-600"></i>
+                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="font-semibold">Click to upload</span> or
+                    drag and drop
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     SVG, PNG, JPG or GIF (MAX. 800x400px)
                   </p>
                 </div>
                 <input
                   id="dropzone-file"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      setImageupload(e.target.files[0]);
-                    }
-                  }}
                   type="file"
-                  class="hidden"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="hidden"
                 />
               </label>
+
+              <div className="mt-4 flex flex-wrap gap-4">
+                {images.map((img, index) => (
+                  <div key={index} className="relative h-40 w-40">
+                    <img
+                      src={URL.createObjectURL(img)}
+                      alt={`upload-${index}`}
+                      className="h-full w-full rounded object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteImage(index)}
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
           <div className="mt-6 flex gap-4">
             <Button color="blue" onClick={handleAddCategory}>
               Add Category

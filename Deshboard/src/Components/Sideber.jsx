@@ -99,12 +99,17 @@ export function SideBer() {
                 </ListItem>
                 <AccordionBody className="py-1">
                   <List className="p-0 pl-6">
-                    <ListItem>
-                      <ListItemPrefix>
-                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                      </ListItemPrefix>
-                      <Link>Order List</Link>
-                    </ListItem>
+                    <Link to="/orderlist">
+                      <ListItem>
+                        <ListItemPrefix>
+                          <ChevronRightIcon
+                            strokeWidth={3}
+                            className="h-3 w-5"
+                          />
+                        </ListItemPrefix>
+                        Order List
+                      </ListItem>
+                    </Link>
                     <ListItem>
                       <ListItemPrefix>
                         <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />

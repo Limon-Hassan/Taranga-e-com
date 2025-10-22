@@ -1,21 +1,44 @@
 import { Input } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
+  const api = import.meta.env.VITE_SERVER_URL;
   const [GetallProducts, setGetallProducts] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:5990/api/v1/products/getProducts")
+      .get(`${api}api/v3/product/getProduct`)
       .then((response) => {
-        console.log(response.data.data);
-        setGetallProducts(response.data.data);
+        console.log(response.data);
+        setGetallProducts(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  const handleProDeleted = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${api}api/v3/product/deleteProduct?id=${id}`,
+        { withCredentials: true },
+      );
+
+      setGetallProducts((prev) => prev.filter((item) => item._id !== id));
+
+      console.log(res.data.msg);
+
+      setTimeout(() => {
+        axios
+          .get(`${api}api/v3/product/getProduct`)
+          .then((res) => setGetallProducts(res.data));
+      }, 1500);
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
+  };
 
   return (
     <>
@@ -27,9 +50,12 @@ const ProductList = () => {
               <div className="w-[450px]">
                 <Input color="blue" label="Search..." />
               </div>
-              <button className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white">
+              <Link
+                to="/addproduct"
+                className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white"
+              >
                 <span>+</span> Add Product
-              </button>
+              </Link>
             </div>
 
             <div className="overflow-x-auto">
@@ -50,16 +76,16 @@ const ProductList = () => {
                       <tr key={index} className="border-b">
                         <td className="flex items-center gap-2 px-4 py-3">
                           <img
-                            src={product.Photo?.[0] || "/default-image.png"}
+                            src={product.photo?.[0] || "/default-image.png"}
                             alt={product.name}
                             className="h-10 w-10 rounded-lg"
                           />
                           {product.name}
                         </td>
                         <td className="px-4 py-3">#{product._id.slice(-5)}</td>
-                        <td className="px-4 py-3">${product.price}</td>
+                        <td className="px-4 py-3">৳{product.price}</td>
                         <td className="px-4 py-3">
-                          {product.stock > 0 ? product.stock : "Out of Stock"}
+                          {product.stock > 0 ? product.stock : "out of stock"}
                         </td>
                         <td className="px-4 py-3">
                           {Array.isArray(product.category) &&
@@ -76,8 +102,10 @@ const ProductList = () => {
                         </td>
 
                         <td className="px-4 py-3">
-                          <i className="fa-light fa-pen-line mr-[20px] cursor-pointer text-[24px] text-green-500"></i>
-                          <i className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"></i>
+                          <i
+                            onClick={() => handleProDeleted(product._id)}
+                            className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"
+                          ></i>
                         </td>
                       </tr>
                     ))

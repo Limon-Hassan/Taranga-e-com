@@ -155,7 +155,7 @@ async function deleteProduct(req, res) {
       return res.json({ msg: 'product Not found !' });
     }
     await deleteProduct.deleteOne();
-    const deletePromises = product.Photo.map(imagePath => {
+    const deletePromises = deleteProduct.photo.map(imagePath => {
       return new Promise((resolve, reject) => {
         const PhotoPathOnServer = path.join(
           __dirname,

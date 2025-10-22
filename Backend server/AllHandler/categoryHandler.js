@@ -102,7 +102,7 @@ async function deleteCategory(req, res) {
       return res.json({ msg: 'category not found !' });
     }
     await deleteCategory.deleteOne();
-    const deletePromises = category.Image.map(imagePath => {
+    const deletePromises = deleteCategory.image.map(imagePath => {
       return new Promise((resolve, reject) => {
         const imagePathOnServer = path.join(
           __dirname,

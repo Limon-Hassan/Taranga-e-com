@@ -6,24 +6,56 @@ import {
   Option,
   Button,
   Typography,
-  Textarea,
 } from "@material-tailwind/react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 const AddProduct = () => {
+  const api = import.meta.env.VITE_SERVER_URL;
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("");
   const [categoriesFromBackend, setcategoriesFromBackend] = useState([]);
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null);
+  const [stock, setStock] = useState("");
+  const [weight, setWeight] = useState("");
+  const [images, setImages] = useState([]);
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length + images.length > 4) {
+      alert("You can only upload up to 4 images.");
+      return;
+    }
+
+    setImages((prev) => [...prev, ...files]);
+  };
+
+  const handleDeleteImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     axios
-      .get("http://localhost:5990/api/v1/category/getAllCategories")
+      .get(`${api}api/v3/category/getCategory`, { withCredentials: true })
       .then((response) => {
-        setcategoriesFromBackend(response.data.data);
+        console.log(response);
+        let data = response.data?.data || response.data || [];
+        const safeArray = Array.isArray(data) ? data : [data];
+        setcategoriesFromBackend(safeArray);
       })
       .catch((error) => {
         console.error("Error fetching categoriesFromBackend:", error);
@@ -32,32 +64,35 @@ const AddProduct = () => {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("name", productName);
     formData.append("category", category);
     formData.append("brand", brand);
+    formData.append("stock", stock);
+    formData.append("weight", weight);
     formData.append("description", description);
     formData.append("price", price);
-
-    if (image) {
-      formData.append("photo", image);
+    if (images) {
+      formData.append("photo", images);
     }
     for (let [key, value] of formData.entries()) {
       console.log(key + " : " + value);
     }
     await axios
-      .post("http://localhost:5990/api/v1/products/addProducts", formData, {
+      .post(`${api}api/v3/product/AddProduct`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       })
       .then((response) => {
+        console.log(response);
         setProductName("");
         setCategory("");
         setBrand("");
         setDescription("");
         setPrice("");
-        setImage("");
+        setStock("");
+        setWeight("");
+        setImages([]);
         toast.success("Product added SuccessFully!", {
           position: "top-right",
           autoClose: 3000,
@@ -101,7 +136,6 @@ const AddProduct = () => {
               maxLength={50}
             />
           </div>
-
           <div>
             <Typography variant="small" className="mb-3">
               Category *
@@ -109,7 +143,6 @@ const AddProduct = () => {
             <Select
               value={category}
               onChange={(value) => {
-                console.log("Selected Category:", value);
                 setCategory(value);
               }}
               required
@@ -125,7 +158,6 @@ const AddProduct = () => {
               )}
             </Select>
           </div>
-
           <div>
             <Typography variant="small" className="mb-3">
               Brand *
@@ -140,7 +172,6 @@ const AddProduct = () => {
               <Option value="Brand C">Brand C</Option>
             </Select>
           </div>
-
           <div>
             <Typography variant="small" className="mb-3">
               Price *
@@ -155,20 +186,48 @@ const AddProduct = () => {
               min="1"
             />
           </div>
-
-          <div className="w-full">
+          <div>
+            <Typography variant="small" className="mb-3">
+              stock *
+            </Typography>
+            <Input
+              color="blue"
+              type="number"
+              label="stock"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              required
+              min="1"
+            />
+          </div>
+          <div>
+            <Typography variant="small" className="mb-3">
+              weight *
+            </Typography>
+            <Input
+              color="blue"
+              type="number"
+              label="weight"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              required
+              min="1"
+            />
+          </div>
+          <div className="w-full overflow-hidden">
             <Typography variant="small" className="mb-3">
               Description *
             </Typography>
-            <Textarea
-              color="blue"
-              type="text"
-              label="Description"
-              className="h-[200px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-4 text-[16px] font-normal text-black/50 outline-none"
+            <ReactQuill
+              theme="snow"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              modules={modules}
+              onChange={(content, delta, source, editor) => {
+                setDescription(content);
+              }}
               required
-              maxLength={500}
+              maxLength={400}
+              className="h-[200px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-4 text-[16px] font-normal text-black/50 outline-none"
             />
           </div>
         </div>
@@ -177,7 +236,8 @@ const AddProduct = () => {
           <Typography variant="small" className="mb-3">
             Upload Images
           </Typography>
-          <div className="flex w-full items-center justify-center">
+
+          <div className="flex w-full flex-col items-center justify-center gap-4">
             <label
               htmlFor="dropzone-file"
               className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
@@ -194,12 +254,32 @@ const AddProduct = () => {
               </div>
               <input
                 id="dropzone-file"
-                onChange={(e) => setImage(e.target.files[0])}
                 type="file"
                 accept="image/*"
+                multiple
+                onChange={handleImageChange}
                 className="hidden"
               />
             </label>
+
+            <div className="mt-4 flex flex-wrap gap-4">
+              {images.map((img, index) => (
+                <div key={index} className="relative h-40 w-40">
+                  <img
+                    src={URL.createObjectURL(img)}
+                    alt={`upload-${index}`}
+                    className="h-full w-full rounded object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteImage(index)}
+                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

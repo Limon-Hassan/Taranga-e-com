@@ -1,18 +1,18 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const CategoryList = () => {
+  const api = import.meta.env.VITE_SERVER_URL;
   let [GetallCategories, setGetallCategories] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await Axios.get(
-          "http://localhost:5990/api/v1/category/getAllCategories",
-        );
-        console.log(response.data.data);
-        setGetallCategories(response.data.data);
+        const response = await axios.get(`${api}api/v3/category/getCategory`);
+        console.log(response.data);
+        setGetallCategories(response.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -20,6 +20,27 @@ const CategoryList = () => {
 
     fetchCategories();
   }, []);
+
+  const handleCateDeleted = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${api}api/v3/category/deleteCategory?id=${id}`,
+        { withCredentials: true },
+      );
+
+      setGetallCategories((prev) => prev.filter((item) => item._id !== id));
+
+      console.log(res.data);
+
+      setTimeout(() => {
+        axios
+          .get(`${api}api/v3/category/getCategory`)
+          .then((res) => setGetallCategories(res.data));
+      }, 1500);
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
+  };
 
   return (
     <>
@@ -35,9 +56,12 @@ const CategoryList = () => {
                   className="fant placeholder:font-Oi_kiree"
                 />
               </div>
-              <button className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white">
+              <Link
+                to="/addcategory"
+                className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white"
+              >
                 <span>+</span> Add category
-              </button>
+              </Link>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left">
@@ -45,8 +69,7 @@ const CategoryList = () => {
                   <tr className="border-b">
                     <th className="px-4 py-2">Categorys</th>
                     <th className="px-4 py-2">Category ID</th>
-                    <th className="px-4 py-2">Quantity</th>
-                    <th className="px-4 py-2">Sale</th>
+                    <th className="px-4 py-2">In Products</th>
                     <th className="px-4 py-2">Action</th>
                   </tr>
                 </thead>
@@ -56,7 +79,7 @@ const CategoryList = () => {
                       <tr key={category._id} className="border-b">
                         <td className="flex items-center gap-[20px] px-4 py-3">
                           <img
-                            src={category.Image || "/mans.png"} 
+                            src={category.image?.[0] || "/mans.png"}
                             alt={category.name}
                             className="h-10 w-10 rounded-lg"
                           />
@@ -64,12 +87,13 @@ const CategoryList = () => {
                         </td>
                         <td className="px-4 py-3">{category._id}</td>
                         <td className="px-4 py-3">
-                          {category.quantity || "N/A"}
+                          itmes({category.totalproducts || "N/A"})
                         </td>
-                        <td className="px-4 py-3">{category.sale || "0"}</td>
                         <td className="px-4 py-3">
-                          <i className="fa-light fa-pen-line mr-[20px] cursor-pointer text-[24px] text-green-500"></i>
-                          <i className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"></i>
+                          <i
+                            onClick={() => handleCateDeleted(category._id)}
+                            className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"
+                          ></i>
                         </td>
                       </tr>
                     ))
@@ -88,15 +112,7 @@ const CategoryList = () => {
             </div>
             <div className="mb-5 mt-8 flex items-center justify-between text-sm text-gray-600">
               <p>Showing {GetallCategories.length} entries</p>
-              <div className="flex items-center gap-2">
-                <button className="rounded bg-gray-200 px-3 py-1">◀</button>
-                <button className="rounded bg-gray-200 px-3 py-1">1</button>
-                <button className="rounded bg-blue-500 px-3 py-1 text-white">
-                  2
-                </button>
-                <button className="rounded bg-gray-200 px-3 py-1">3</button>
-                <button className="rounded bg-gray-200 px-3 py-1">▶</button>
-              </div>
+              <p>Page 1 of 1</p>
             </div>
           </div>
         </div>
