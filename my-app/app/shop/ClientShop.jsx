@@ -275,30 +275,6 @@ const ClientShop = () => {
                   </div>
                 </div>
               </div>
-              <div className="mb-[20px] border border-[#e2e2e2] rounded-[8px]">
-                <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
-                  Product Categories
-                </h5>
-                <div className="p-[20px]">
-                  <ul>
-                    <li className="list-disc text-[14px] font-nunito  font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] ">
-                      <a href="#">Potato</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           ) : (
             <div className="w-[260px] mobile:hidden tablet:hidden computer:block laptop:block">
@@ -436,9 +412,12 @@ const ClientShop = () => {
                     <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] cursor-pointer  laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium font-nunito text-[#1e293b] mb-[5px]">
                       {pro.name}
                     </h3>
-                    <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium tablet:font-medium laptop:font-normal truncate computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
-                      {pro.description}
-                    </p>
+                    <div
+                      className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
+                   font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal 
+                   text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] truncate mx-auto"
+                      dangerouslySetInnerHTML={{ __html: pro.description }}
+                    ></div>
                     <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">
                       {pro.category[0]?.name}
                     </h5>

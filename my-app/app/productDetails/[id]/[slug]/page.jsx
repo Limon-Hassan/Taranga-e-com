@@ -317,9 +317,12 @@ const Page = () => {
                     <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px]">
                       {pro.name}
                     </h3>
-                    <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium tablet:font-medium laptop:font-normal truncate computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
-                      {pro.description}
-                    </p>
+                    <div
+                      className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
+                   font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal 
+                   text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] truncate mx-auto"
+                      dangerouslySetInnerHTML={{ __html: pro.description }}
+                    ></div>
                     <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">
                       {pro.category[0]?.name}
                     </h5>

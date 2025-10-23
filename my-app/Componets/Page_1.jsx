@@ -185,9 +185,8 @@ const Page_1 = () => {
                   </h3>
                   <div
                     className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
-                   font-nunito mobile:font-medium tablet:font-medium           laptop:font-normal computer:font-normal 
-                text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px]  computer:w-[250px] 
-                mx-auto my-4 p-4 border rounded bg-gray-50 overflow-hidden"
+                   font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal 
+                   text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] truncate mx-auto"
                     dangerouslySetInnerHTML={{ __html: pro.description }}
                   ></div>
 
