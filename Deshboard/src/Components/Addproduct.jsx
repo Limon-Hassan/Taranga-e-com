@@ -72,8 +72,10 @@ const AddProduct = () => {
     formData.append("weight", weight);
     formData.append("description", description);
     formData.append("price", price);
-    if (images) {
-      formData.append("photo", images);
+    if (images.length > 0) {
+      images.forEach((img) => {
+        formData.append("photo", img);
+      });
     }
     for (let [key, value] of formData.entries()) {
       console.log(key + " : " + value);

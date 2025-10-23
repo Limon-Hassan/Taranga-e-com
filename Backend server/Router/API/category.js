@@ -25,9 +25,9 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.post('/createCategory', upload.array('image', 12), createCategory);
+router.post('/createCategory', upload.array('image', 4), createCategory);
 router.get('/getCategory', readCategory);
-router.put('/updateCategory', upload.array('image', 12), updateCategory);
+router.put('/updateCategory', upload.array('image', 4), updateCategory);
 router.delete('/deleteCategory', deleteCategory);
 
 module.exports = router;

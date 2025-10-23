@@ -110,12 +110,17 @@ export function SideBer() {
                         Order List
                       </ListItem>
                     </Link>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                      </ListItemPrefix>
-                      Order Details
-                    </ListItem>
+                    <Link to="/orderDetails">
+                      <ListItem>
+                        <ListItemPrefix>
+                          <ChevronRightIcon
+                            strokeWidth={3}
+                            className="h-3 w-5"
+                          />
+                        </ListItemPrefix>
+                        Order Details
+                      </ListItem>
+                    </Link>
                     <ListItem>
                       <ListItemPrefix>
                         <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />

@@ -26,7 +26,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/images.jpg"
+                    src="/benner_1.jpg"
                     alt="benner"
                   />
                 </div>
@@ -35,7 +35,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/images.jpg"
+                    src="/Benner_2.jpg"
                     alt="benner"
                   />
                 </div>
@@ -53,7 +53,7 @@ const Page = () => {
           </div>
           <div>
             <a
-              href="https://wa.me/8801887604100"
+              href="https://wa.me/8801813336311"
               target="_blank"
               rel="noopener noreferrer"
               className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition z-50"

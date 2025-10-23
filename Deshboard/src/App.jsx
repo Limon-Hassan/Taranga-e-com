@@ -10,6 +10,7 @@ import Account from "./Components/Account";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Orderlist from "./Components/Orderlist";
+import OrderDetails from "./Components/OrderDetails";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/CategoryList" element={<CategoryList />} />
           <Route path="/Account" element={<Account />} />
           <Route path="/orderlist" element={<Orderlist />} />
+          <Route path="/orderDetails" element={<OrderDetails />} />
         </Route>
       </Routes>
       <ToastContainer />

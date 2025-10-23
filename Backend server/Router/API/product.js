@@ -28,13 +28,13 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.post('/AddProduct', upload.array('photo', 12), createProduct);
+router.post('/AddProduct', upload.array('photo', 4), createProduct);
 router.get('/getProduct', getProduct);
 router.get('/product/searchProduct', searchProduct);
 router.post('/CreateReviews', makeReviews);
 router.get('/getReviews', getReviews);
 router.get('/topProduct', topProduct);
-router.put('/updateProduct', upload.array('photo', 12), updateProduct);
+router.put('/updateProduct', upload.array('photo', 4), updateProduct);
 router.delete('/deleteProduct', deleteProduct);
 
 module.exports = router;

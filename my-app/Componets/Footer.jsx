@@ -12,11 +12,12 @@ const Footer = () => {
                 Deluxe X Deal
               </h1>
               <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px]  font-normal font-nunito text-white mobile:w-auto tablet:w-[280px] laptop:w-[280px] computer:w-[280px] mb-[20px]">
-                We believe—“Your Trust, Our Commitment.” Shop from the comfort
-                of your home with confidence!
+                আমাদের কাছে সকল প্রকার মেশিনারি ও পাওয়ার টুলস পাইকারি ও খুচরা
+                বিক্রয় করা হয়।
               </p>
               <h5 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-normal font-nunito text-white mobile:w-auto tablet:w-[280px] laptop:w-[280px] computer:w-[280px] ">
-                306, Bara Moghbazar, Dhaka, Ramna, Bangladesh
+                ঢাকা, নবাবপুর, রায়সা বাজার মোড়, নবাবপুর কমপ্লেক্স মার্কেট, ৩য়
+                তলা সিঁড়ির মুখে দোকান, দোকান নং 107, দোকানের নাম: বিসমিল্লাহ মেশিনারী এন্ড টুলস
               </h5>
             </div>
             <div className="mobile:flex-none mobile:gap-0 tablet:flex tablet:gap-[100px] laptop:flex laptop:gap-[50px] computer:flex computer:gap-[100px]">

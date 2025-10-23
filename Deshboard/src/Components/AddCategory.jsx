@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Input,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -43,8 +38,10 @@ const AddCategory = () => {
       let fromdata = new FormData();
       fromdata.append("name", CategoryName);
       fromdata.append("description", description);
-      if (images) {
-        fromdata.append("image", images);
+      if (images.length > 0) {
+        images.forEach((img) => {
+          fromdata.append("image", img);
+        });
       }
       for (let [key, value] of fromdata.entries()) {
         console.log(key + " : " + value);
@@ -123,6 +120,7 @@ const AddCategory = () => {
               />
             </div>
           </div>
+
           <div className="mt-6">
             <Typography variant="small" className="mb-3">
               Upload Images

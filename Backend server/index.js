@@ -15,7 +15,9 @@ app.use(
       'https://deluxexdeal.com',
       'https://www.deluxexdeal.com',
       'https://dashboard.deluxexdeal.com',
+      'https://www.dashboard.deluxexdeal.com',
       'https://api.deluxexdeal.com',
+      'https://www.api.deluxexdeal.com',
     ],
     credentials: true,
   })
