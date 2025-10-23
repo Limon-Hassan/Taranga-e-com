@@ -158,17 +158,17 @@ const Page_1 = () => {
         <Container>
           <div className="flex items-center justify-between border-b border-dashed border-[#000]">
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px]">
-              {category[1]?.name}
+              {category[0]?.name}
             </h3>
             <h3
-              onClick={() => handleSubmit(category[1]._id)}
+              onClick={() => handleSubmit(category[0]._id)}
               className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-[20px] cursor-pointer underline"
             >
               See all
             </h3>
           </div>
           <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-[10px] tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
-            {category[1]?.Product?.slice(0, 8).map((pro, idx) => (
+            {category[0]?.Product?.slice(0, 8).map((pro, idx) => (
               <div
                 key={idx}
                 onClick={() => handleShowProduct(pro._id)}
@@ -183,11 +183,16 @@ const Page_1 = () => {
                   <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-[10px] mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px]">
                     {pro.name}
                   </h3>
-                  <p className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito mobile:font-medium tablet:font-medium laptop:font-normal truncate computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto">
-                    {pro.description}
-                  </p>
+                  <div
+                    className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
+                   font-nunito mobile:font-medium tablet:font-medium           laptop:font-normal computer:font-normal 
+                text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px]  computer:w-[250px] 
+                mx-auto my-4 p-4 border rounded bg-gray-50 overflow-hidden"
+                    dangerouslySetInnerHTML={{ __html: pro.description }}
+                  ></div>
+
                   <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">
-                    {category[1]?.name}
+                    {category[0]?.name}
                   </h5>
                   <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
                     {pro.price}.00৳
