@@ -176,9 +176,8 @@ const Page_2 = () => {
                     {pro.name}
                   </h3>
                   <div
-                    className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
-                   font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal 
-                   text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] truncate mx-auto"
+                    className="truncate-html prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
+                    font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto"
                     dangerouslySetInnerHTML={{ __html: pro.description }}
                   ></div>
                   <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-normal text-[#1e293b] mb-[10px]">

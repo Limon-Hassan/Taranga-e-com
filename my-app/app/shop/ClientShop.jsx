@@ -334,25 +334,6 @@ const ClientShop = () => {
                 <h5 className="text-[20px] font-nunito font-bold text-[#2C3C28] border-b border-[#e2e2e2] py-[30px] pl-[30px] pr-[20px]">
                   Product Categories
                 </h5>
-                <div className="p-[20px]">
-                  <ul>
-                    <li className="list-disc text-[14px] font-nunito  font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] mb-[13px]">
-                      <a href="#">Potato</a>
-                    </li>
-                    <li className="list-disc text-[14px] font-nunito font-medium text-[#2C3C28] leading-[17px] ml-[25px] ">
-                      <a href="#">Potato</a>
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           )}
@@ -413,9 +394,8 @@ const ClientShop = () => {
                       {pro.name}
                     </h3>
                     <div
-                      className="prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
-                   font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal 
-                   text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] truncate mx-auto"
+                      className="truncate-html prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
+                    font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto"
                       dangerouslySetInnerHTML={{ __html: pro.description }}
                     ></div>
                     <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[10px]">

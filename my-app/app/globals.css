@@ -21,3 +21,11 @@
   --breakpoint-laptop: 64rem;
   --breakpoint-computer: 100rem;
 }
+
+.truncate-html {
+  display: -webkit-box;
+  -webkit-line-clamp: 1; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

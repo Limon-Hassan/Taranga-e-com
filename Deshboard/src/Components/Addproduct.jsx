@@ -164,15 +164,15 @@ const AddProduct = () => {
             <Typography variant="small" className="mb-3">
               Brand *
             </Typography>
-            <Select
+            <Input
+              color="blue"
+              type="text"
+              label="Product Brand"
               value={brand}
-              onChange={(value) => setBrand(value)}
+              onChange={(e) => setBrand(e.target.value)}
               required
-            >
-              <Option value="Brand A">Brand A</Option>
-              <Option value="Brand B">Brand B</Option>
-              <Option value="Brand C">Brand C</Option>
-            </Select>
+              maxLength={50}
+            />
           </div>
           <div>
             <Typography variant="small" className="mb-3">
