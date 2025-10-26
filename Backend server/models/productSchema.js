@@ -48,7 +48,7 @@ let productSchema = new mongoose.Schema(
       type: String,
     },
     oldPrice: {
-      type: String,
+      type: Number,
     },
     weight: {
       type: Number,
