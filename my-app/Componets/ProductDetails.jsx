@@ -16,7 +16,7 @@ const ProductDetails = ({ product }) => {
               </h3>
             </span>
             <div
-              className="product-description mt-6 text-[15px] text-[#444]"
+              className="mt-6 prose-content"
               dangerouslySetInnerHTML={{ __html: product.description }}
             />
           </div>

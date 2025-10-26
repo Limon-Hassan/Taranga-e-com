@@ -5,14 +5,12 @@ import Container from '../../Componets/Container/Container';
 import CheckBox from '../../Componets/CheckBox';
 import socket from '../../utills/socket';
 import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/navigation';
 
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { ImSpinner6 } from 'react-icons/im';
 
 const page = () => {
   let { enqueueSnackbar } = useSnackbar();
-  let router = useRouter();
   let [Selectpayment, setSelectpayment] = useState('insideDhaka');
   let [cartData, setCartData] = useState([]);
   let [SummeryData, setSummeryData] = useState({});
@@ -223,6 +221,23 @@ const page = () => {
     );
   };
 
+  let handleShowProduct = async product => {
+    try {
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+
+      const data = await response.json();
+      window.location.href = `/productDetails/${
+        data.product._id
+      }/${data.product.name.replace(/\s+/g, '-')}`;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {loding === true ? (
@@ -282,11 +297,16 @@ const page = () => {
                             <RxCross1 />
                           </span>
                           <img
-                            className="mobile:hidden tablet:hidden laptop:block computer:bloxk max-w-[100px] h-auto cursor-pointer"
+                            className="mobile:hidden tablet:hidden laptop:block computer:block max-w-[100px] max-h-[100px] cursor-pointer"
                             src={cartProduct.productId.photo?.[0]}
                             alt="product"
                           />
-                          <h4 className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]">
+                          <h4
+                            onClick={() =>
+                              handleShowProduct(cartProduct.productId._id)
+                            }
+                            className="mobile:text-[13px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px]  font-bold font-nunito text-[#f1a31c] hover:text-[#4169e1] ease-in-out duration-300 cursor-pointer truncate mobile:w-[100px] tablet:w-[150px] laptop:w-[350px] computer:w-[500px]"
+                          >
                             {cartProduct.productId.name}
                           </h4>
                         </div>

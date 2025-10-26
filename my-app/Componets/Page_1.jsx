@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
-import { useRouter } from 'next/navigation';
 import socket from '../utills/socket';
 import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
@@ -10,9 +9,6 @@ import { useSnackbar } from 'notistack';
 const Page_1 = () => {
   const [category, setCategory] = useState([]);
   let { enqueueSnackbar } = useSnackbar();
-
-  const router = useRouter();
-  console.log(process.env.NEXT_PUBLIC_SERVER_PORT);
 
   async function Fetch() {
     try {
@@ -67,12 +63,9 @@ const Page_1 = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      router.push(
-        `/productDetails/${data.product._id}/${data.product.name.replace(
-          /\s+/g,
-          '-'
-        )}`
-      );
+      window.location.href = `/productDetails/${
+        data.product._id
+      }/${data.product.name.replace(/\s+/g, '-')}`;
     } catch (error) {
       console.log(error);
     }
@@ -154,7 +147,7 @@ const Page_1 = () => {
 
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-5 laptop:mb-[30px] computer:mb-[30px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[30px] tablet:mb-5 laptop:mb-[30px] computer:mb-[30px]">
         <Container>
           <div className="flex items-center justify-between border-b border-dashed border-black">
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-5">
@@ -167,37 +160,48 @@ const Page_1 = () => {
               See all
             </h3>
           </div>
-          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mt-[50px]">
+          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[20px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
             {category[0]?.Product?.slice(0, 10).map((pro, idx) => (
               <div
                 key={idx}
                 onClick={() => handleShowProduct(pro._id)}
-                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-0 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[150px] tablet:w-[200px] laptop:w-[280px] computer:w-[280px] hover:border-[#F1A31C] rounded-sm"
+                className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:max-w-[200px] tablet:max-w-[200px] laptop:max-w-[280px] computer:max-w-[280px] hover:border-[#F1A31C] rounded-sm"
               >
-                <img
-                  className="mobile:w-auto tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] cursor-pointer tablet:h-40 laptop:h-[250px] computer:h-[250px]"
-                  src={pro.photo[0]}
-                  alt="product"
-                />
-                <div className="bg-[#eeeeee] text-center w-full pb-[15px]">
-                  <h3 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium truncate mobile:w-[120px] tablet:w-[140px] laptop:w-[185px] computer:w-[185px] mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px]">
+                <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[140px] tablet:h-40 laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                  <img
+                    className="w-full h-full object-cover cursor-pointer"
+                    src={pro.photo[0]}
+                    alt="product"
+                  />
+                </div>
+
+                <div className="bg-[#eeeeee] text-center w-full max-h-[220px] pb-[15px]">
+                  <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-[170px] tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                     {pro.name}
                   </h3>
-                  <div
-                    className="truncate-html prose mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] 
-                    font-nunito mobile:font-medium tablet:font-medium laptop:font-normal computer:font-normal text-[#1e293b] mobile:w-auto tablet:w-auto laptop:w-[250px] computer:w-[250px] mx-auto"
-                    dangerouslySetInnerHTML={{ __html: pro.description }}
-                  ></div>
-
-                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-2.5">
+                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]">
                     {category[0]?.name}
                   </h5>
-                  <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38] mobile:mb-[5px]  tablet:mb-2.5 laptop:mb-2.5 computer:mb-2.5">
-                    {pro.price}.00৳
-                  </h2>
+                  <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
+                    <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
+                      {pro.oldPrice}৳
+                    </h2>
+                    <h2 className="mobile:text-[18px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38]">
+                      {pro.price}৳
+                    </h2>
+                  </div>
+                  <h5
+                    className={`text-sm font-semibold my-1.5 h-[20px] ${
+                      pro.stock < 1 ? 'text-green-600' : 'text-red-400'
+                    }`}
+                  >
+                    {pro.stock >= 5 ? 'In stock' : 'Out of stock'}
+                  </h5>
+
                   <button
                     onClick={() => handleCart(pro._id)}
-                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:py-1 mobile:px-[25px] tablet:py-1 tablet:px-9 laptop:py-1.5 laptop:px-[70px] computer:py-1.5 computer:px-[70px] mobile:rounded-[15px] tablet:rounded-[18px] laptop:rounded-[20px] computer:rounded-[20px] flex items-center mx-auto cursor-pointer"
+                    disabled={pro.stock < 1}
+                    className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-noto-bengali font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:w-[180px] tablet:w-full laptop:w-full computer:w-full mobile:h-[36px] tablet:h-[40px] laptop:h-[40px] computer:h-[40px] rounded-full flex items-center justify-center mx-auto cursor-pointer"
                   >
                     <FaCartShopping className="mr-2.5" />
                     অডার করুন

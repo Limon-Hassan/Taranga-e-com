@@ -156,11 +156,11 @@ const Navber_1 = () => {
 
   return (
     <>
-      <section className="mobile:w-full tablet:w-full bg-[#ededed] py-5">
+      <section className="mobile:w-full tablet:w-full bg-[#ededed] mobile:py-0 tablet:py-5 laptop:py-5 computer:py-5">
         <Container>
           <div className=" mobile:relative tablet:relative laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
             <div className="computer:flex laptop:flex computer:items-center laptop:items-center mobile:gap-0 tablet:gap-0 laptop:gap-[30px] computer:gap-[50px]">
-              <div className="mobile:mb-[30px] tablet:mb-5 mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
+              <div className="mobile:mb-0 tablet:mb-5 mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
                 <button
                   onClick={() => setOpen(prev => !prev)}
                   aria-expanded={open}
@@ -170,14 +170,14 @@ const Navber_1 = () => {
                   {open ? <RxCross1 /> : <RxHamburgerMenu />}
                 </button>
 
-                <Link href="/">
+                <a href="/">
                   <img
                     className="computer:w-[250px] laptop:w-[250px] mobile:w-[170px] tablet:w-[250px]  computer:mb-0 laptop:mb-0"
                     src="/HeaderImage.png"
                     alt="headimage"
                   />
-                </Link>
-                <Link href="/cart">
+                </a>
+                <a href="/cart">
                   <div className="mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-2">
                     <LuShoppingBag className="text-[25px] text-[#69727d]" />
                     <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
@@ -188,13 +188,13 @@ const Navber_1 = () => {
                       {cartCount}
                     </span>
                   </div>
-                </Link>
+                </a>
               </div>
-              <div className="relative border border-[#E6963A] rounded-sm flex items-center mobile:gap-2.5 tablet:gap-5 laptop:gap-5 computer:gap-5 p-1.5">
+              <div className="relative border border-[#E6963A] rounded-sm flex items-center mobile:gap-2 tablet:gap-5 laptop:gap-5 w-auto computer:gap-5 p-1.5">
                 <input
                   value={search}
                   onChange={handleSearch}
-                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-[205px] mobile:h-10 border border-[#D1D5DB] bg-white rounded-[5px] p-2.5 text-[18px] font-nunito font-normal text-black "
+                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-full mobile:h-10 border border-[#D1D5DB] bg-white rounded-[5px] p-2.5 text-[18px] font-nunito font-normal text-black "
                   type="search"
                   placeholder="Search..."
                   name="search"

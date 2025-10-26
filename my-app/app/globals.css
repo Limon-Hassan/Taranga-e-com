@@ -24,8 +24,88 @@
 
 .truncate-html {
   display: -webkit-box;
-  -webkit-line-clamp: 1; 
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  --webkit-line-clamp: 1;
+  --webkit-box-orient: vertical;
   text-overflow: ellipsis;
+}
+
+.my-line-through {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px; 
+  text-decoration-color: #424242; 
+}
+
+
+.prose-content {
+  color: #444;
+  line-height: 1.7;
+  word-break: break-word;
+}
+
+.prose-content h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  color: #1e293b;
+}
+
+.prose-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+  color: #334155;
+}
+
+.prose-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #475569;
+}
+
+.prose-content p {
+  margin-bottom: 0.8rem;
+}
+
+.prose-content ul,
+.prose-content ol {
+  margin: 0.8rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose-content ul {
+  list-style-type: disc;
+}
+
+.prose-content ol {
+  list-style-type: decimal;
+}
+
+.prose-content li {
+  margin-bottom: 0.4rem;
+}
+
+.prose-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.prose-content em {
+  font-style: italic;
+}
+
+.prose-content span {
+  color: inherit;
+}
+
+.prose-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.prose-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
 }

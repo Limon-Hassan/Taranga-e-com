@@ -21,6 +21,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [oldPrice, setOldPrice] = useState("");
   const [weight, setWeight] = useState("");
   const [images, setImages] = useState([]);
 
@@ -73,6 +74,7 @@ const AddProduct = () => {
     formData.append("brand", brand);
     formData.append("stock", stock);
     formData.append("weight", weight);
+    formData.append("oldPrice", setOldPrice);
     formData.append("description", description);
     formData.append("price", price);
     if (images.length > 0) {
@@ -97,6 +99,7 @@ const AddProduct = () => {
         setPrice("");
         setStock("");
         setWeight("");
+        setOldPrice("");
         setImages([]);
         toast.success("Product added SuccessFully!", {
           position: "top-right",
@@ -215,6 +218,20 @@ const AddProduct = () => {
               label="weight"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
+              required
+              min="1"
+            />
+          </div>
+          <div>
+            <Typography variant="small" className="mb-3">
+              Old-Price *
+            </Typography>
+            <Input
+              color="blue"
+              type="number"
+              label="Old-Price"
+              value={oldPrice}
+              onChange={(e) => setOldPrice(e.target.value)}
               required
               min="1"
             />

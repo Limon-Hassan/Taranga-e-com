@@ -35,7 +35,7 @@ async function readCategory(req, res) {
     if (id) {
       let SingleCategory = await categorySchema.findById(id).populate({
         path: 'Product',
-        select: 'name price photo description',
+        select: 'name price photo stock description',
         strictPopulate: false,
       });
       let categoryOBJ = SingleCategory.toObject();

@@ -25,6 +25,9 @@ export const metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  alternates: {
+    canonical: 'https://www.deluxexdeal.com',
+  },
 };
 
 export default function RootLayout({ children }) {
