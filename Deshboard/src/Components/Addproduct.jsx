@@ -74,7 +74,7 @@ const AddProduct = () => {
     formData.append("brand", brand);
     formData.append("stock", stock);
     formData.append("weight", weight);
-    formData.append("oldPrice", setOldPrice);
+    formData.append("oldPrice", oldPrice);
     formData.append("description", description);
     formData.append("price", price);
     if (images.length > 0) {

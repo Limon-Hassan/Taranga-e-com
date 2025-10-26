@@ -6,7 +6,6 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { RxCross1 } from 'react-icons/rx';
 import { FaBangladeshiTakaSign, FaChevronDown } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import socket from '../utills/socket';
 
@@ -14,6 +13,8 @@ const Navber_1 = () => {
   let [open, setOpen] = useState(false);
   let router = useRouter();
   let [cartCount, setCartCount] = useState(0);
+  let [cartHint, setcartHint] = useState(false);
+  const [category, setCategory] = useState([]);
   let [TotalPrice, setTotalPrice] = useState(0);
   let [search, setSearch] = useState('');
   let [suggestions, setSuggestions] = useState([]);
@@ -27,12 +28,24 @@ const Navber_1 = () => {
       };
       setCartCount(cartData.cartLength);
       setTotalPrice(cartData.totalPrice);
+      const hintShown = localStorage.getItem('CARTHINT');
+
+      if (hintShown) {
+        setcartHint(true);
+      } else {
+        setcartHint(false);
+      }
     };
 
     updateCartInfo();
     window.addEventListener('storage', updateCartInfo);
     return () => window.removeEventListener('storage', updateCartInfo);
   }, []);
+
+  const handleCartClick = () => {
+    setcartHint(false);
+    localStorage.removeItem('CARTHINT');
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -154,6 +167,36 @@ const Navber_1 = () => {
     }
   };
 
+  async function Fetch() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory`,
+        {
+          cache: 'no-store',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+      setCategory(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    Fetch();
+
+    const handleNewCategory = newCategory => {
+      setCategory(prev => [...prev, newCategory]);
+    };
+
+    socket.on('CategoryCreated', handleNewCategory);
+
+    return () => {
+      socket.off('CategoryCreated', handleNewCategory);
+    };
+  }, []);
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full bg-[#ededed] mobile:py-0 tablet:py-5 laptop:py-5 computer:py-5">
@@ -177,8 +220,8 @@ const Navber_1 = () => {
                     alt="headimage"
                   />
                 </a>
-                <a href="/cart">
-                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-2">
+                <a onClick={handleCartClick} href="/cart">
+                  <div className=" mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-2">
                     <LuShoppingBag className="text-[25px] text-[#69727d]" />
                     <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
                       {(TotalPrice && TotalPrice) || 0}.0
@@ -189,6 +232,17 @@ const Navber_1 = () => {
                     </span>
                   </div>
                 </a>
+                {cartHint && (
+                  <div
+                    className={`absolute mobile:block tablet:hidden laptop:hidden computer:hidden top-[60px] right-[20px] z-10 w-[70px] animate-bounce`}
+                  >
+                    <img
+                      className="w-full"
+                      src="/long-arrow-pointing-up.png"
+                      alt="icon"
+                    />
+                  </div>
+                )}
               </div>
               <div className="relative border border-[#E6963A] rounded-sm flex items-center mobile:gap-2 tablet:gap-5 laptop:gap-5 w-auto computer:gap-5 p-1.5">
                 <input
@@ -221,7 +275,7 @@ const Navber_1 = () => {
                 </button>
               </div>
             </div>
-            <Link href="/cart">
+            <a href="/cart">
               <div className="relative computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-2 laptop:gap-2 mobile:hidden tablet:hidden">
                 <LuShoppingBag className="text-[25px] text-[#69727d]" />
                 <span className="flex items-center  text-[20px] text-[#69727d]">
@@ -232,7 +286,7 @@ const Navber_1 = () => {
                   {cartCount}
                 </span>
               </div>
-            </Link>
+            </a>
           </div>
           <div
             id="mobile-menu"
@@ -246,27 +300,23 @@ const Navber_1 = () => {
             }
           >
             <ul className="mobile:flex-col tablet:flex-col mobile:items-center tablet:items-center mobile:mb-2.5 tablet:mb-[15px] mobile:p-2.5 tablet:p-5">
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 cursor-pointer">
-                Home
-              </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
-                Power Tools
+              {category.slice(0, 8).map((c, i) => (
+                <li
+                  key={i}
+                  className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 cursor-pointer"
+                >
+                  {c.name}
+                </li>
+              ))}
+              <a
+                href="/shop"
+                className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer"
+              >
+                Shop
                 <span>
                   <FaChevronDown />
                 </span>
-              </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
-                Sefety Tools
-                <span>
-                  <FaChevronDown />
-                </span>
-              </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
-                Accessories
-                <span>
-                  <FaChevronDown />
-                </span>
-              </li>
+              </a>
             </ul>
           </div>
         </Container>

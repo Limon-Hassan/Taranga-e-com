@@ -4,10 +4,12 @@ const {
   AdminReadCheckout,
   deleteCheckout,
   getSavedInfo,
+  directCheckout,
 } = require('../../AllHandler/checkoutHandler');
 let router = express.Router();
 
 router.post('/makeCheckout', makeCheckout);
+router.post('/directChdout', directCheckout);
 router.get('/AdminReadCheckout', AdminReadCheckout);
 router.get('/getSavedInfo', getSavedInfo);
 router.delete('/deleteChechout', deleteCheckout);

@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 
 const Page = () => {
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState('');
   let { enqueueSnackbar } = useSnackbar();
   const [RelatedProduct, setRelatedProduct] = useState([]);
   let router = useRouter();
@@ -102,6 +102,7 @@ const Page = () => {
   let handleCart = async proID => {
     const isMobile = window.innerWidth < 768;
     let productId = proID;
+    localStorage.setItem('CARTHINT', JSON.stringify('true'));
     let savedCartId = JSON.parse(localStorage.getItem('CARTID'));
     if (!savedCartId) {
       savedCartId = `CRT-${uuidv4().split('-')[0].toUpperCase()}`;
@@ -170,6 +171,22 @@ const Page = () => {
     } catch (error) {
       console.log(error);
       enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
+
+  let handleDirectCheckout = async proID => {
+    try {
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`
+      );
+
+      if (!response.ok) throw new Error('Failed to fetch product');
+      let data = await response.json();
+      window.location.href = `/checkout/${
+        data.product._id
+      }/${data.product.name.replace(/\s+/g, '-')}`;
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -298,11 +315,11 @@ const Page = () => {
                 <div
                   key={idx}
                   onClick={() => handleShowProduct(pro._id)}
-                  className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[23%] computer:w-[18%] hover:border-[#F1A31C] rounded-sm"
+                  className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[25%] computer:w-[25%] hover:border-[#F1A31C] rounded-sm"
                 >
-                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[200px] tablet:h-40 laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
                     <img
-                      className="w-full h-full object-cover cursor-pointer"
+                      className="w-full h-full bg-white object-cover cursor-pointer"
                       src={pro.photo[0]}
                       alt="product"
                     />
@@ -332,14 +349,14 @@ const Page = () => {
                     </div>
                     <h5
                       className={`text-sm font-semibold my-1.5 h-[20px] ${
-                        pro.stock < 1 ? 'text-green-600' : 'text-red-400'
+                        pro.stock >= 1 ? 'text-green-600' : 'text-red-400'
                       }`}
                     >
-                      {pro.stock >= 5 ? 'In stock' : 'Out of stock'}
+                      {pro.stock >= 1 ? 'In stock' : 'Out of stock'}
                     </h5>
 
                     <button
-                      onClick={() => handleCart(pro._id)}
+                      onClick={() => handleDirectCheckout(pro._id)}
                       disabled={pro.stock < 1}
                       className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-noto-bengali font-bold text-[#FFF] bg-[#F1A31C] border-b-4 border-[#BD8017] mobile:w-full tablet:w-full laptop:w-full computer:w-full mobile:h-[36px] tablet:h-[40px] laptop:h-[40px] computer:h-[40px] rounded-full flex items-center justify-center mx-auto cursor-pointer"
                     >
