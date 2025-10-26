@@ -157,7 +157,7 @@ const CustomerReview = ({ product }) => {
               </p>
               <button
                 onClick={() => settoggleShow(true)}
-                className="mb-2 me-2 mobile:text-[12px] tablet:text-[16px]  laptop:text-[16px] computer:text-[16px] font-display font-bold text-white bg-[#629D23] py-[10px] mobile:px-[15px] tablet:px-[24px] laptop:px-[24px] computer:px-[24px] rounded-[6px] cursor-pointer"
+                className="mb-2 me-2 mobile:text-[12px] tablet:text-[16px]  laptop:text-[16px] computer:text-[16px] font-display font-bold text-white bg-[#629D23] py-2.5 mobile:px-[15px] tablet:px-6 laptop:px-6 computer:px-6 rounded-md cursor-pointer"
               >
                 Write a review
               </button>
@@ -320,12 +320,12 @@ const CustomerReview = ({ product }) => {
                   </div>
                   <div
                     className="tablet:w-full laptop:w-full computer:w-full flex items-center tablet:gap-0 mobile:justify-between 
-                    tablet:justify-between laptop:justify-between computer:justify-between mb-[10px]"
+                    tablet:justify-between laptop:justify-between computer:justify-between mb-2.5"
                   >
                     <div className="space-y-0.5">
                       <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
                         <FaUser />
-                        <span className="mobile:w-[160px] tablet:w-full laptop:w-full computer:w-full truncate">
+                        <span className="mobile:w-40 tablet:w-full laptop:w-full computer:w-full truncate">
                           {rev.name}
                         </span>
                       </p>
@@ -334,7 +334,7 @@ const CustomerReview = ({ product }) => {
                       Verified purchase
                     </p>
                   </div>
-                  <p className="mobile:break-words mobile:w-[300px] tablet:break-words tablet:w-[410px] laptop:break-words laptop:w-[620px] computer:break-words computer:w-[620px]  text-sm font-medium text-gray-900 whitespace-normal">
+                  <p className="mobile:wrap-break-word mobile:w-[300px] tablet:wrap-break-word tablet:w-[410px] laptop:wrap-break-word laptop:w-[620px] computer:wrap-break-word computer:w-[620px]  text-sm font-medium text-gray-900 whitespace-normal">
                     {rev.comment}
                   </p>
                 </div>
@@ -351,10 +351,10 @@ const CustomerReview = ({ product }) => {
             </button>
           </div>
           {toggleShow === true ? (
-            <div className="w-full h-screen mobile:bg-white tablet:bg-white laptop:bg-[#000]/30 computer:bg-[#000]/30 absolute top-0 left-0 z-20 flex justify-center items-center rounded-2xl">
-              <div className="w-[800px] bg-[#fff] mobile:p-[15px] tablet:p-[30px] laptop:p-[30px] computer:p-[30px] rounded-md">
+            <div className="w-full h-screen mobile:bg-white tablet:bg-white laptop:bg-black/30 computer:bg-black/30 absolute top-0 left-0 z-20 flex justify-center items-center rounded-2xl">
+              <div className="w-[800px] bg-white mobile:p-[15px] tablet:p-[30px] laptop:p-[30px] computer:p-[30px] rounded-md">
                 <div className="border-b border-[#dee2e6]">
-                  <div className="flex items-center justify-between mb-[20px]">
+                  <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center gap-2">
                       <h5 className="mobile:text-[15px] tablet:text-[20px] laptop:text-[20px] computer:text-[20px] font-display font-medium text-[#2C3C28]">
                         Add a review for :
@@ -371,7 +371,7 @@ const CustomerReview = ({ product }) => {
                     </span>
                   </div>
                 </div>
-                <div className="mt-[20px] mb-[10px]">
+                <div className="mt-5 mb-2.5">
                   <label
                     className="text-[16px] font-medium font-display text-[#6E777D]"
                     htmlFor="text"
@@ -379,7 +379,7 @@ const CustomerReview = ({ product }) => {
                     Your Rating*
                   </label>
                 </div>
-                <div className="flex gap-1 mb-[20px]">
+                <div className="flex gap-1 mb-5">
                   {[...Array(5)].map((_, index) => {
                     const starValue = index + 1;
                     return (
@@ -451,13 +451,13 @@ const CustomerReview = ({ product }) => {
                 <div className="flex items-center gap-4 mt-[30px]">
                   <button
                     onClick={handleCommentSubmit}
-                    className="text-[16px] font-display font-medium text-[#2C3C28] border border-[#dee2e6] hover:text-white hover:bg-[#629D23] transition-all ease-in-out duration-300 cursor-pointer py-[10px] px-[24px] rounded-[6px]"
+                    className="text-[16px] font-display font-medium text-[#2C3C28] border border-[#dee2e6] hover:text-white hover:bg-[#629D23] transition-all ease-in-out duration-300 cursor-pointer py-2.5 px-6 rounded-md"
                   >
                     Add Review
                   </button>
                   <button
                     onClick={() => settoggleShow(false)}
-                    className="text-[16px] font-display font-medium text-[#2C3C28] border border-[#dee2e6] hover:text-white hover:bg-red-400  transition-all ease-in-out duration-300 cursor-pointer py-[10px] px-[24px] rounded-[6px]"
+                    className="text-[16px] font-display font-medium text-[#2C3C28] border border-[#dee2e6] hover:text-white hover:bg-red-400  transition-all ease-in-out duration-300 cursor-pointer py-2.5 px-6 rounded-md"
                   >
                     Cancel
                   </button>

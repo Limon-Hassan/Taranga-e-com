@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import JoditEditor from "jodit-react";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
 
 const AddCategory = () => {
   const api = import.meta.env.VITE_SERVER_URL;
+  const editor = useRef(null);
   const [CategoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: "Write your content here...",
+      height: 400,
+      autofocus: true,
+      toolbarAdaptive: false,
+      toolbarSticky: false,
+    }),
+    [],
+  );
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -103,21 +114,19 @@ const AddCategory = () => {
                 maxLength={50}
               />
             </div>
-            <div className="w-full overflow-hidden">
+            <div className="w-full ">
               <Typography variant="small" className="mb-3">
                 Description *
               </Typography>
-              <ReactQuill
-                color="blue"
-                type="text"
-                label="Description"
-                className="h-[200px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-4 text-[16px] font-normal text-black/50 outline-none"
-                theme="snow"
-                value={description || ""}
-                onChange={setDescription}
-                required
-                maxLength={500}
-              />
+              <div className="h-[400px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-2 text-[16px] font-normal text-black/50 outline-none">
+                <JoditEditor
+                  ref={editor}
+                  value={description}
+                  config={config}
+                  tabIndex={1}
+                  onBlur={(newContent) => setDescription(newContent)}
+                />
+              </div>
             </div>
           </div>
 

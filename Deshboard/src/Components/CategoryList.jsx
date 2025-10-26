@@ -12,7 +12,9 @@ const CategoryList = () => {
       try {
         const response = await axios.get(`${api}api/v3/category/getCategory`);
         console.log(response.data);
-        setGetallCategories(response.data);
+         let data = response.data?.data || response.data || [];
+         const safeArray = Array.isArray(data) ? data : [data];
+         setGetallCategories(safeArray);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -53,7 +55,7 @@ const CategoryList = () => {
                 <Input
                   color="blue"
                   label="Search..."
-                  className="fant placeholder:font-Oi_kiree"
+                  className=" placeholder:font-Oi_kiree"
                 />
               </div>
               <Link
@@ -75,7 +77,7 @@ const CategoryList = () => {
                 </thead>
                 <tbody>
                   {GetallCategories.length > 0 ? (
-                    GetallCategories.map((category) => (
+                    GetallCategories?.map((category) => (
                       <tr key={category._id} className="border-b">
                         <td className="flex items-center gap-[20px] px-4 py-3">
                           <img

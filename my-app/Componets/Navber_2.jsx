@@ -12,19 +12,19 @@ const Navber_2 = () => {
             <li className="text-[18px] font-nunito font-medium text-[#484848]  cursor-pointer">
               Home
             </li>
-            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-[10px] cursor-pointer">
+            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-2.5 cursor-pointer">
               Power Tools
               <span>
                 <FaChevronDown />
               </span>
             </li>
-            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-[10px] cursor-pointer">
+            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-2.5 cursor-pointer">
               Sefety Tools
               <span>
                 <FaChevronDown />
               </span>
             </li>
-            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-[10px] cursor-pointer">
+            <li className="text-[18px] font-nunito font-medium text-[#484848] flex items-center gap-2.5 cursor-pointer">
               Accessories
               <span>
                 <FaChevronDown />

@@ -22,57 +22,57 @@ const Footer = () => {
             </div>
             <div className="mobile:flex-none mobile:gap-0 tablet:flex tablet:gap-[100px] laptop:flex laptop:gap-[50px] computer:flex computer:gap-[100px]">
               <ul>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Accessories
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Chainsaw
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Demolition
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Hammer Drill
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Impact Drill
                 </li>
               </ul>
               <ul>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Aspirator Blower
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Heat Gun
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   High Pressure Washer
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Sander
                 </li>
               </ul>
               <ul>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Privacy Policy
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Returns
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Terms & Conditions
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Contact Us
                 </li>
-                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-[#fff] hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
+                <li className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-medium font-nunito text-white hover:text-[#F5DB27] ease-in-out duration-300 mb-[15px] cursor-pointer">
                   Our Sitemap
                 </li>
               </ul>
             </div>
           </div>
           <div className="text-center ">
-            <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-white mobile:mb-[5px] tablet:mb-[10px] laptop:mb-[10px] computer:mb-[10px]">
+            <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-white mobile:mb-[5px] tablet:mb-2.5 laptop:mb-2.5 computer:mb-2.5">
               © All Rights Reserved - Deluxe X Deals LTD
             </p>
             <p className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-white ">

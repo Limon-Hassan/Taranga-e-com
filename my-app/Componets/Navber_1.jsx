@@ -156,11 +156,11 @@ const Navber_1 = () => {
 
   return (
     <>
-      <section className="mobile:w-full tablet:w-full bg-[#ededed] py-[20px]">
+      <section className="mobile:w-full tablet:w-full bg-[#ededed] py-5">
         <Container>
           <div className=" mobile:relative tablet:relative laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
             <div className="computer:flex laptop:flex computer:items-center laptop:items-center mobile:gap-0 tablet:gap-0 laptop:gap-[30px] computer:gap-[50px]">
-              <div className="mobile:mb-[30px] tablet:mb-[20px] mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
+              <div className="mobile:mb-[30px] tablet:mb-5 mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
                 <button
                   onClick={() => setOpen(prev => !prev)}
                   aria-expanded={open}
@@ -178,23 +178,23 @@ const Navber_1 = () => {
                   />
                 </Link>
                 <Link href="/cart">
-                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-[8px]">
+                  <div className="mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-2">
                     <LuShoppingBag className="text-[25px] text-[#69727d]" />
                     <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
                       {(TotalPrice && TotalPrice) || 0}.0
                       <FaBangladeshiTakaSign />
                     </span>
-                    <span className="absolute top-[-10px] right-[60px] bg-[#E6963A] text-white rounded-full w-[20px] flex justify-center items-center h-[20px] text-sm ">
+                    <span className="absolute -top-2.5 right-[60px] bg-[#E6963A] text-white rounded-full w-5 flex justify-center items-center h-5 text-sm ">
                       {cartCount}
                     </span>
                   </div>
                 </Link>
               </div>
-              <div className="relative border border-[#E6963A] rounded-[4px] flex items-center mobile:gap-[10px] tablet:gap-[20px] laptop:gap-[20px] computer:gap-[20px] p-[6px]">
+              <div className="relative border border-[#E6963A] rounded-sm flex items-center mobile:gap-2.5 tablet:gap-5 laptop:gap-5 computer:gap-5 p-1.5">
                 <input
                   value={search}
                   onChange={handleSearch}
-                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-[205px] mobile:h-[40px] border border-[#D1D5DB] bg-white rounded-[5px] p-[10px] text-[18px] font-nunito font-normal text-[#000] "
+                  className="computer:w-[400px] computer:h-[50px] laptop:w-[400px] laptop:h-[50px] tablet:w-[423px] tablet:h-[50px] mobile:w-[205px] mobile:h-10 border border-[#D1D5DB] bg-white rounded-[5px] p-2.5 text-[18px] font-nunito font-normal text-black "
                   type="search"
                   placeholder="Search..."
                   name="search"
@@ -215,20 +215,20 @@ const Navber_1 = () => {
                 )}
                 <button
                   onClick={handleShow}
-                  className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-[#fff] bg-[#E6963A] rounded-[6px] mobile:py-[8px] tablet:py-[12px] laptop:py-[12px] computer:py-[12px] mobile:px-[10px] tablet:px-[24px] laptop:px-[24px] computer:px-[24px] cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-[8px] laptop:gap-[8px] computer:gap-[8px]"
+                  className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-white bg-[#E6963A] rounded-md mobile:py-2 tablet:py-3 laptop:py-3 computer:py-3 mobile:px-2.5 tablet:px-6 laptop:px-6 computer:px-6 cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-2 laptop:gap-2 computer:gap-2"
                 >
                   <IoSearchSharp /> Search
                 </button>
               </div>
             </div>
             <Link href="/cart">
-              <div className="relative computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-[8px] laptop:gap-[8px] mobile:hidden tablet:hidden">
+              <div className="relative computer:flex computer:items-center laptop:items-center laptop:flex computer:gap-2 laptop:gap-2 mobile:hidden tablet:hidden">
                 <LuShoppingBag className="text-[25px] text-[#69727d]" />
                 <span className="flex items-center  text-[20px] text-[#69727d]">
                   {(TotalPrice && TotalPrice) || 0}.0
                   <FaBangladeshiTakaSign />
                 </span>
-                <span className="absolute top-[-12px] right-[75px] bg-[#E6963A] text-white rounded-full w-[24px] flex justify-center items-center h-[24px] text-sm ">
+                <span className="absolute -top-3 right-[75px] bg-[#E6963A] text-white rounded-full w-6 flex justify-center items-center h-6 text-sm ">
                   {cartCount}
                 </span>
               </div>
@@ -245,23 +245,23 @@ const Navber_1 = () => {
                 : 'opacity-0 -translate-y-3 pointer-events-none')
             }
           >
-            <ul className="mobile:flex-col tablet:flex-col mobile:items-center tablet:items-center mobile:mb-[10px] tablet:mb-[15px] mobile:p-[10px] tablet:p-[20px]">
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] cursor-pointer">
+            <ul className="mobile:flex-col tablet:flex-col mobile:items-center tablet:items-center mobile:mb-2.5 tablet:mb-[15px] mobile:p-2.5 tablet:p-5">
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 cursor-pointer">
                 Home
               </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
                 Power Tools
                 <span>
                   <FaChevronDown />
                 </span>
               </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
                 Sefety Tools
                 <span>
                   <FaChevronDown />
                 </span>
               </li>
-              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-[10px] flex items-center justify-between  cursor-pointer">
+              <li className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 flex items-center justify-between  cursor-pointer">
                 Accessories
                 <span>
                   <FaChevronDown />

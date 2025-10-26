@@ -10,17 +10,17 @@ const Navber = () => {
         <Container>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[30px]">
-              <p className="flex items-center gap-[10px] text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
+              <p className="flex items-center gap-2.5 text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
                 <FaPhoneVolume />
                 +880 01813336311
               </p>
 
-              <p className="flex items-center gap-[10px] text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
+              <p className="flex items-center gap-2.5 text-white tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito">
                 <IoMail /> businesssouuce@gmail.com
               </p>
             </div>
-            <div className="relative w-[30px] h-[30px] before:content-[''] before:absolute before:top-0 before:left-0 before:w-[30px] before:h-[30px] before:rounded-full before:bg-[#3b5998] flex items-center justify-center z-[1] cursor-pointer">
-              <FaFacebook className="text-white text-[20px] z-[10]" />
+            <div className="relative w-[30px] h-[30px] before:content-[''] before:absolute before:top-0 before:left-0 before:w-[30px] before:h-[30px] before:rounded-full before:bg-[#3b5998] flex items-center justify-center z-1 cursor-pointer">
+              <FaFacebook className="text-white text-[20px] z-10" />
             </div>
           </div>
         </Container>

@@ -18,12 +18,12 @@ const Page = () => {
   };
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] computer:mb-[40px] laptop:mb-[40px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-5 computer:mb-10 laptop:mb-10">
         <Container>
           <div className="slider-container">
             <Slider {...settings}>
               <div>
-                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
                     src="/benner_1.jpg"
@@ -32,7 +32,7 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
                     src="/Benner_2.jpg"
@@ -41,7 +41,7 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="mobile:mt-1 tablet:mt-[20px] laptop:mt-[40px] computer:mt-[40px] mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
+                <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
                     src="/images.jpg"

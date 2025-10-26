@@ -230,20 +230,20 @@ const page = () => {
           <ImSpinner6 className="animate-spin text-[50px]  mx-auto" />
         </div>
       ) : (
-        <section className="mobile:pt-[50px] tablet:pt-[80px] laptop:pt-[100px] computer:pt-[100px] mobile:pb-[150px] tablet:pb-[200px] laptop:pb-[400px] computer:pb-[500px]">
+        <section className="mobile:pt-[50px] tablet:pt-20 laptop:pt-[100px] computer:pt-[100px] mobile:pb-[150px] tablet:pb-[200px] laptop:pb-[400px] computer:pb-[500px]">
           <Container>
             <div>
-              <h4 className="text-[30px] font-nunito font-bold text-[#1e293b] mb-[20px]">
+              <h4 className="text-[30px] font-nunito font-bold text-[#1e293b] mb-5">
                 Cart
               </h4>
-              <div className="border border-[#000]/30 mb-[50px]">
-                <div className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30 bg-[#fbfbfb]">
+              <div className="border border-black/30 mb-[50px]">
+                <div className="flex items-center justify-between mobile:p-[5px] tablet:p-2.5 laptop:p-[15px] computer:p-[15px] border-b border-black/30 bg-[#fbfbfb]">
                   <div>
                     <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b]">
                       Product
                     </h4>
                   </div>
-                  <div className="flex items-center mobile:gap-[15px] tablet:gap-[80px] laptop:gap-[80px] computer:gap-[80px] ">
+                  <div className="flex items-center mobile:gap-[15px] tablet:gap-20 laptop:gap-20 computer:gap-20 ">
                     <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b]">
                       Price
                     </h4>
@@ -266,9 +266,9 @@ const page = () => {
                     cartData?.map((cartProduct, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between mobile:p-[5px] tablet:p-[10px] laptop:p-[15px] computer:p-[15px] border-b border-[#000]/30"
+                        className="flex items-center justify-between mobile:p-[5px] tablet:p-2.5 laptop:p-[15px] computer:p-[15px] border-b border-black/30"
                       >
-                        <div className="flex items-center mobile:gap-[5px] tablet:gap-[10px] laptop:gap-[20px] computer:gap-[20px]">
+                        <div className="flex items-center mobile:gap-[5px] tablet:gap-2.5 laptop:gap-5 computer:gap-5">
                           <span
                             onClick={() =>
                               handleCartDelete(
@@ -290,7 +290,7 @@ const page = () => {
                             {cartProduct.productId.name}
                           </h4>
                         </div>
-                        <div className="flex items-center mobile:gap-[20px] tablet:gap-[10px] laptop:gap-[30px] computer:gap-[30px]">
+                        <div className="flex items-center mobile:gap-5 tablet:gap-2.5 laptop:gap-[30px] computer:gap-[30px]">
                           <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
                             {cartProduct.productId.price}
                             <span className="mobile:hidden tablet:block laptop:block computer:block">
@@ -305,11 +305,11 @@ const page = () => {
                                   cartProduct.productId._id
                                 )
                               }
-                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
+                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-black/30 mobile:w-[30px] mobile:h-[30px] tablet:w-10 tablet:h-10 laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
                             >
                               <FaMinus />
                             </button>
-                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center">
+                            <button className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold border border-black/30 mobile:w-[30px] mobile:h-[30px] tablet:w-10 tablet:h-10 laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center">
                               {cartProduct.quantity}
                             </button>
                             <button
@@ -319,7 +319,7 @@ const page = () => {
                                   cartProduct.productId._id
                                 )
                               }
-                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-[#000]/30 mobile:w-[30px] mobile:h-[30px] tablet:w-[40px] tablet:h-[40px] laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
+                              className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-black/30 mobile:w-[30px] mobile:h-[30px] tablet:w-10 tablet:h-10 laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
                             >
                               <FaPlus />
                             </button>
@@ -335,26 +335,26 @@ const page = () => {
                     ))
                   )}
                 </div>
-                <div className="mobile:p-[8px] tablet:p-[15px] laptop:p-[15px] computer:p-[15px] mt-[30px] border-t border-[#000]/30">
+                <div className="mobile:p-2 tablet:p-[15px] laptop:p-[15px] computer:p-[15px] mt-[30px] border-t border-black/30">
                   <input
-                    className="text-[16px] font-nunito font-normal text-[#1e293b] border border-[#000]/30 h-[40px] p-[5px] focus:outline-dotted focus:outline-[#000]/30 mobile:w-[150px] tablet:w-[200px] laptop:w-[230px] computer:w-[230px]"
+                    className="text-[16px] font-nunito font-normal text-[#1e293b] border border-black/30 h-10 p-[5px] focus:outline-dotted focus:outline-black/30 mobile:w-[150px] tablet:w-[200px] laptop:w-[230px] computer:w-[230px]"
                     type="text"
                     placeholder="Coupon code..."
                   />
-                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b] cursor-pointer bg-[#f1a31c] mobile:py-[10px] mobile:px-[20px] tablet:py-[10px] tablet:px-[28px] laptop:py-[10px] laptop:px-[28px] computer:py-[10px] computer:px-[28px] rounded-[6px] hover:bg-[#4169e1] hover:text-[#FFF] ease-in-out duration-300 ml-[20px]">
+                  <button className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b] cursor-pointer bg-[#f1a31c] mobile:py-2.5 mobile:px-5 tablet:py-2.5 tablet:px-7 laptop:py-2.5 laptop:px-7 computer:py-2.5 computer:px-7 rounded-md hover:bg-[#4169e1] hover:text-[#FFF] ease-in-out duration-300 ml-5">
                     Apply Coupon
                   </button>
                 </div>
               </div>
               {(cartData?.length > 0 ||
                 Object.keys(SummeryData || {})?.length > 0) && (
-                <div className="border border-[#000]/30 px-[10px] mobile:w-full tablet:w-full laptop:w-[47%] computer:w-[47%] mobile:float-none tablet:float-none laptop:float-right computer:float-right ">
-                  <div className="border-b border-[#000]/30 p-[20px] bg-[#fbfbfb]">
+                <div className="border border-black/30 px-2.5 mobile:w-full tablet:w-full laptop:w-[47%] computer:w-[47%] mobile:float-none tablet:float-none laptop:float-right computer:float-right ">
+                  <div className="border-b border-black/30 p-5 bg-[#fbfbfb]">
                     <h4 className="mobile:text-[15px] tablet:text-[20px] laptop:text-[30px] computer:text-[30px] font-nunito font-bold text-[#1e293b]">
                       Cart totals
                     </h4>
                   </div>
-                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                  <div className="flex items-center justify-between border-b border-black/30 p-2.5">
                     <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
                       Subtotal
                     </h4>
@@ -362,11 +362,11 @@ const page = () => {
                       {SummeryData?.subTotal || 0}.00৳
                     </h4>
                   </div>
-                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                  <div className="flex items-center justify-between border-b border-black/30 p-2.5">
                     <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
                       Shipping
                     </h4>
-                    <div className="my-[10px]">
+                    <div className="my-2.5">
                       <CheckBox
                         label={`Inside Dhaka: ${
                           Selectpayment === 'insideDhaka'
@@ -390,7 +390,7 @@ const page = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between border-b border-[#000]/30 p-[10px]">
+                  <div className="flex items-center justify-between border-b border-black/30 p-2.5">
                     <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
                       Total
                     </h4>
@@ -400,7 +400,7 @@ const page = () => {
                   </div>
                   <button
                     onClick={handleCheckout}
-                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-[14px] mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-[20px] rounded-[6px] mb-[30px] cursor-pointer"
+                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-3.5 mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-5 rounded-md mb-[30px] cursor-pointer"
                   >
                     Proceed to checkout
                   </button>

@@ -12,7 +12,9 @@ const ProductList = () => {
       .get(`${api}api/v3/product/getProduct`)
       .then((response) => {
         console.log(response.data);
-        setGetallProducts(response.data);
+         let data = response.data?.data || response.data || [];
+         const safeArray = Array.isArray(data) ? data : [data];
+         setGetallProducts(safeArray);
       })
       .catch((err) => {
         console.log(err);
@@ -72,7 +74,7 @@ const ProductList = () => {
                 </thead>
                 <tbody>
                   {GetallProducts.length > 0 ? (
-                    GetallProducts.map((product, index) => (
+                    GetallProducts?.map((product, index) => (
                       <tr key={index} className="border-b">
                         <td className="flex items-center gap-2 px-4 py-3">
                           <img
@@ -82,7 +84,7 @@ const ProductList = () => {
                           />
                           {product.name}
                         </td>
-                        <td className="px-4 py-3">#{product._id.slice(-5)}</td>
+                        <td className="px-4 py-3">#{product._id}</td>
                         <td className="px-4 py-3">৳{product.price}</td>
                         <td className="px-4 py-3">
                           {product.stock > 0 ? product.stock : "out of stock"}

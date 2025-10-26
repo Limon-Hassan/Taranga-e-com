@@ -5,7 +5,8 @@ let path = require('path');
 let fs = require('fs');
 
 async function createProduct(req, res) {
-  let { name, description, price, category, stock, brand, weight } = req.body;
+  let { name, description, price, category, stock, brand, weight, oldPrice } =
+    req.body;
   if (!name || !description || !price) {
     return res.status(400).send({ msg: 'please fill all the fields' });
   }
@@ -25,6 +26,7 @@ async function createProduct(req, res) {
       stock,
       brand,
       weight,
+      oldPrice,
     });
 
     await product.save();

@@ -47,6 +47,9 @@ let productSchema = new mongoose.Schema(
     brand: {
       type: String,
     },
+    oldPrice: {
+      type: String,
+    },
     weight: {
       type: Number,
       default: 0,
@@ -54,7 +57,6 @@ let productSchema = new mongoose.Schema(
     Accessories: {
       type: Number,
     },
-   
   },
   {
     timestamps: true,

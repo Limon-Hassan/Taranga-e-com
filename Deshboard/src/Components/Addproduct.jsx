@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Card,
   Input,
@@ -7,13 +7,13 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+import JoditEditor from "jodit-react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 const AddProduct = () => {
   const api = import.meta.env.VITE_SERVER_URL;
+  const editor = useRef(null);
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("");
   const [categoriesFromBackend, setcategoriesFromBackend] = useState([]);
@@ -23,15 +23,18 @@ const AddProduct = () => {
   const [stock, setStock] = useState("");
   const [weight, setWeight] = useState("");
   const [images, setImages] = useState([]);
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      ["clean"],
-    ],
-  };
+
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: "Write your content here...",
+      height: 400,
+      autofocus: true,
+      toolbarAdaptive: false,
+      toolbarSticky: false,
+    }),
+    [],
+  );
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -216,21 +219,19 @@ const AddProduct = () => {
               min="1"
             />
           </div>
-          <div className="w-full overflow-hidden">
+          <div className="w-full">
             <Typography variant="small" className="mb-3">
               Description *
             </Typography>
-            <ReactQuill
-              theme="snow"
-              value={description}
-              modules={modules}
-              onChange={(content, delta, source, editor) => {
-                setDescription(content);
-              }}
-              required
-              maxLength={400}
-              className="h-[200px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-4 text-[16px] font-normal text-black/50 outline-none"
-            />
+            <div className="h-[400px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-2 text-[16px] font-normal text-black/50 outline-none">
+              <JoditEditor
+                ref={editor}
+                value={description}
+                config={config}
+                tabIndex={1}
+                onBlur={(newContent) => setDescription(newContent)}
+              />
+            </div>
           </div>
         </div>
 

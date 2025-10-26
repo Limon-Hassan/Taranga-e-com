@@ -15,7 +15,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
       <button
         onClick={prev}
         disabled={active === 1}
-        className={` mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
+        className={` mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-3 py-2.5 rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
           active === 1
             ? 'text-gray-400 cursor-not-allowed'
             : 'hover:text-[#FFF] text-black hover:bg-[#E6963A]'
@@ -46,7 +46,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
       <button
         onClick={next}
         disabled={active === totalPages}
-        className={`mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-[12px] py-[10px] rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
+        className={`mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-3 py-2.5 rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
           active === totalPages
             ? 'text-gray-400 cursor-not-allowed'
             : 'hover:text-[#FFF] text-black hover:bg-[#E6963A]'
