@@ -317,7 +317,7 @@ const ClientShop = () => {
                 <div
                   key={idx}
                   onClick={() => handleShowProduct(pro._id)}
-                  className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[25%] computer:w-[25%] hover:border-[#F1A31C] rounded-sm"
+                  className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[30%] computer:w-[30%] hover:border-[#F1A31C] rounded-sm"
                 >
                   <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
                     <img
