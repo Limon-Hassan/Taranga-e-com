@@ -127,7 +127,7 @@ async function directCheckout(req, res) {
     });
 
     await directCheckout.save();
-
+    console.log(directCheckout);
     return res.status(200).json({
       msg: 'Checkout successful',
       data: directCheckout,
