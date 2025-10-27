@@ -13,7 +13,6 @@ const Navber_1 = () => {
   let [open, setOpen] = useState(false);
   let router = useRouter();
   let [cartCount, setCartCount] = useState(0);
-  let [cartHint, setcartHint] = useState(false);
   const [category, setCategory] = useState([]);
   let [TotalPrice, setTotalPrice] = useState(0);
   let [search, setSearch] = useState('');
@@ -28,24 +27,12 @@ const Navber_1 = () => {
       };
       setCartCount(cartData.cartLength);
       setTotalPrice(cartData.totalPrice);
-      const hintShown = localStorage.getItem('CARTHINT');
-
-      if (hintShown) {
-        setcartHint(true);
-      } else {
-        setcartHint(false);
-      }
     };
 
     updateCartInfo();
     window.addEventListener('storage', updateCartInfo);
     return () => window.removeEventListener('storage', updateCartInfo);
   }, []);
-
-  const handleCartClick = () => {
-    setcartHint(false);
-    localStorage.removeItem('CARTHINT');
-  };
 
   useEffect(() => {
     if (!socket) return;
@@ -232,17 +219,6 @@ const Navber_1 = () => {
                     </span>
                   </div>
                 </a>
-                {cartHint && (
-                  <div
-                    className={`absolute mobile:block tablet:hidden laptop:hidden computer:hidden top-[60px] right-[20px] z-10 w-[70px] animate-bounce`}
-                  >
-                    <img
-                      className="w-full"
-                      src="/long-arrow-pointing-up.png"
-                      alt="icon"
-                    />
-                  </div>
-                )}
               </div>
               <div className="relative border border-[#E6963A] rounded-sm flex items-center mobile:gap-2 tablet:gap-5 laptop:gap-5 w-auto computer:gap-5 p-1.5">
                 <input
