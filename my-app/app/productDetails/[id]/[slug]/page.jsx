@@ -115,10 +115,14 @@ const Page = () => {
     }
   };
 
-  
-
   return (
     <>
+      <Head>
+        <title>{product.name} | Deluxe X Deal</title>
+        <meta name="description" content={product.description.slice(0, 150)} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      
       <section className="mobile:py-[50px] tablet:py-[80px] laptop:py-[100px] computer:py-[100px]">
         <Container>
           <div className="flex flex-col lg:flex-row gap-[100px]">
