@@ -7,7 +7,6 @@ import socket from '../utills/socket';
 
 const Page_1 = () => {
   const [category, setCategory] = useState([]);
-
   async function Fetch() {
     try {
       const res = await fetch(
