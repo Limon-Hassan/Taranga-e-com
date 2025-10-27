@@ -57,15 +57,20 @@ async function searchProduct(req, res) {
 
     getIO().emit('searchSuggestion', {
       query,
-      suggestions: products.map(p => p.name).slice(0, 5),
+      suggestions: products
+        .map(p => ({
+          name: p.name,
+          photo: p.photo?.[0] || [],
+        }))
+        .slice(0, 8),
     });
 
     return res.status(200).json({
       msg: 'Search results',
-      count: products.length, 
-      mainProducts: products, 
-      related, 
-      totalMainProducts, 
+      count: products.length,
+      mainProducts: products,
+      related,
+      totalMainProducts,
       totalPages: Math.ceil(totalMainProducts / limit),
       currentPage: page,
     });

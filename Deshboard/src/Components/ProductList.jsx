@@ -12,9 +12,9 @@ const ProductList = () => {
       .get(`${api}api/v3/product/getProduct`)
       .then((response) => {
         console.log(response.data);
-         let data = response.data?.data || response.data || [];
-         const safeArray = Array.isArray(data) ? data : [data];
-         setGetallProducts(safeArray);
+        let data = response.data?.data || response.data || [];
+        const safeArray = Array.isArray(data) ? data : [data];
+        setGetallProducts(safeArray);
       })
       .catch((err) => {
         console.log(err);
@@ -68,6 +68,7 @@ const ProductList = () => {
                     <th className="px-4 py-2">Product ID</th>
                     <th className="px-4 py-2">Price</th>
                     <th className="px-4 py-2">Stock</th>
+                    <th className="px-4 py-2">Discount</th>
                     <th className="px-4 py-2">Category</th>
                     <th className="px-4 py-2">Action</th>
                   </tr>
@@ -89,6 +90,7 @@ const ProductList = () => {
                         <td className="px-4 py-3">
                           {product.stock > 0 ? product.stock : "out of stock"}
                         </td>
+                        <td className="px-4 py-3">{product.disCountPrice}%</td>
                         <td className="px-4 py-3">
                           {Array.isArray(product.category) &&
                           product.category.length > 0

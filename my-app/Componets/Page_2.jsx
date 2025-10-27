@@ -27,7 +27,7 @@ const Page_2 = () => {
     Fetch();
   }, []);
 
-  let HandleSubmit = async category => {
+  let handleSubmit = async category => {
     try {
       const res = await fetch(
         `${
@@ -40,9 +40,7 @@ const Page_2 = () => {
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
 
-      setTimeout(() => {
-        router.push(`/category/${category}`);
-      }, [2000]);
+      window.location.href = `/category/${category}`;
     } catch (error) {
       console.error(error.message);
     }
@@ -91,7 +89,7 @@ const Page_2 = () => {
               {Category[1]?.name}
             </h3>
             <h3
-              onClick={() => HandleSubmit(Category[1]?._id)}
+              onClick={() => handleSubmit(Category[1]?._id)}
               className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-5 cursor-pointer underline"
             >
               See all

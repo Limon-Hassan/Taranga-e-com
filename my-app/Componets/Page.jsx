@@ -26,7 +26,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/benner_1.jpg"
+                    src="/Benner_2.jpg"
                     alt="benner"
                   />
                 </div>
@@ -35,7 +35,7 @@ const Page = () => {
                 <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src="/Benner_2.jpg"
+                    src="/Benner_1.jpg"
                     alt="benner"
                   />
                 </div>

@@ -45,7 +45,14 @@ const Navber_1 = () => {
       ) {
         setSuggestions(data.suggestions || []);
       } else if (data?.products) {
-        setSuggestions(data.products.map(p => p.name).slice(0, 5));
+        setSuggestions(
+          data.products
+            .map(p => ({
+              name: p.name,
+              photo: p.photo?.[0] || [],
+            }))
+            .slice(0, 8)
+        );
       }
     };
 
@@ -94,7 +101,13 @@ const Navber_1 = () => {
         if (!res.ok) throw new Error('Failed to fetch search results');
 
         const data = await res.json();
-        const names = (data.products || []).map(p => p.name).slice(0, 8);
+        const names = [...(data.mainProducts || []), ...(data.related || [])]
+          .slice(0, 8)
+          .map(p => ({
+            name: p.name,
+            photo: p.photo?.[0] || [],
+          }));
+
         setSuggestions(names);
       } catch (err) {
         console.error('Search request failed:', err);
@@ -129,23 +142,23 @@ const Navber_1 = () => {
   };
 
   const handleSuggestionClick = async s => {
-    const params = new URLSearchParams({
-      query: s,
-      page: 1,
-      limit: 20,
-    }).toString();
     try {
+      const params = new URLSearchParams({ query: s.name || s }).toString();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/product/searchProduct?${params}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { method: 'GET', headers: { 'Content-Type': 'application/json' } }
       );
 
       if (!res.ok) throw new Error('Failed to fetch search results');
+      const data = await res.json();
 
-      router.push(`/shop?search=${encodeURIComponent(s)}`);
+      const product = data.mainProducts?.[0] || data.related?.[0];
+      if (product?._id) {
+        const productName = encodeURIComponent(
+          product.name.replace(/\s+/g, '-')
+        );
+        window.location.href = `/productDetails/${product._id}/${productName}`;
+      }
 
       setSearch('');
       setSuggestions([]);
@@ -183,6 +196,27 @@ const Navber_1 = () => {
       socket.off('CategoryCreated', handleNewCategory);
     };
   }, []);
+
+  let handleSubmit = async category => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_PORT
+        }api/v3/category/getCategory?id=${encodeURIComponent(category)}`,
+        {
+          cache: 'no-store',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+
+      window.location.href = `/category/${category}`;
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setOpen(false);
+    }
+  };
 
   return (
     <>
@@ -231,6 +265,26 @@ const Navber_1 = () => {
                   id="search"
                 />
                 {suggestions.length > 0 && (
+                  <ul className="absolute left-0 top-[65px] w-full bg-white rounded shadow z-10">
+                    {suggestions.map((s, i) => (
+                      <li
+                        key={i}
+                        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => handleSuggestionClick(s.name)}
+                      >
+                        <img
+                          src={s.photo}
+                          alt={s.name}
+                          className="w-10 h-10 object-cover rounded"
+                        />
+                        <span className=" text-[16px] truncate mobile:w-[300px] tablet:w-[550px] laptop:w-[550px] computer:w-[550px]">
+                          {s.name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {/* {suggestions.length > 0 && (
                   <ul className="absolute left-0 top-[65px] w-full bg-white border rounded shadow  z-10">
                     {suggestions.map((s, i) => (
                       <li
@@ -242,7 +296,7 @@ const Navber_1 = () => {
                       </li>
                     ))}
                   </ul>
-                )}
+                )} */}
                 <button
                   onClick={handleShow}
                   className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-white bg-[#E6963A] rounded-md mobile:py-2 tablet:py-3 laptop:py-3 computer:py-3 mobile:px-2.5 tablet:px-6 laptop:px-6 computer:px-6 cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-2 laptop:gap-2 computer:gap-2"
@@ -279,6 +333,7 @@ const Navber_1 = () => {
               {category.slice(0, 8).map((c, i) => (
                 <li
                   key={i}
+                  onClick={() => handleSubmit(c._id)}
                   className="mobile:text-[15px] tablet:text-[18px] font-nunito font-medium text-[#484848] mobile:mb-2.5 cursor-pointer"
                 >
                   {c.name}

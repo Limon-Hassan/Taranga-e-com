@@ -27,6 +27,7 @@ let CheckoutSchema = new mongoose.Schema(
     },
     shippingCost: Number,
     totalPrice: Number,
+    disCountPrice: Number,
     name: {
       type: String,
       required: true,

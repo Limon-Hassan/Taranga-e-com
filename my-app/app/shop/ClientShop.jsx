@@ -88,7 +88,6 @@ const ClientShop = () => {
 
   useEffect(() => {
     socket.on('productCreated', newProduct => {
-      console.log('New product received:', newProduct);
       setProducts(prev => [...prev, newProduct]);
     });
     return () => socket.off('productCreated');
@@ -99,6 +98,7 @@ const ClientShop = () => {
     SetCurrentPrice(value);
     SetmaxPrice(value);
   };
+  
   let handleFilter = () => {
     setFilteredRange({ min: minPrice, max: maxPrice });
     setActiveSidebar(false);

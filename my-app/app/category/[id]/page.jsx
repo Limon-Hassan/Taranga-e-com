@@ -5,14 +5,14 @@ import Container from '../../../Componets/Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
 import { useParams } from 'next/navigation';
 const page = () => {
-  const params = useParams();
+  const {id} = useParams();
   let [singleCategoryData, setSingleCategoryData] = useState([]);
 
   useEffect(() => {
     async function Fetch() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory?id=${params.id}`,
+          `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory?id=${id}`,
           {
             cache: 'no-store',
           }
@@ -26,7 +26,7 @@ const page = () => {
     }
 
     Fetch();
-  }, [params._id]);
+  }, [id]);
 
   let handleShowProduct = async product => {
     try {

@@ -21,6 +21,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [discount, setDiscount] = useState("");
   const [oldPrice, setOldPrice] = useState("");
   const [weight, setWeight] = useState("");
   const [images, setImages] = useState([]);
@@ -75,6 +76,7 @@ const AddProduct = () => {
     formData.append("stock", stock);
     formData.append("weight", weight);
     formData.append("oldPrice", oldPrice);
+    formData.append("disCountPrice", discount);
     formData.append("description", description);
     formData.append("price", price);
     if (images.length > 0) {
@@ -100,6 +102,7 @@ const AddProduct = () => {
         setStock("");
         setWeight("");
         setOldPrice("");
+        setDiscount("");
         setImages([]);
         toast.success("Product added SuccessFully!", {
           position: "top-right",
@@ -141,7 +144,7 @@ const AddProduct = () => {
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
               required
-              maxLength={50}
+              maxLength={80}
             />
           </div>
           <div>
@@ -196,6 +199,20 @@ const AddProduct = () => {
           </div>
           <div>
             <Typography variant="small" className="mb-3">
+              Discount Percentage
+            </Typography>
+            <Input
+              color="blue"
+              type="number"
+              label="Discount"
+              value={discount}
+              placeholder="Exm: 10 - not required"
+              onChange={(e) => setDiscount(e.target.value)}
+              min="1"
+            />
+          </div>
+          <div>
+            <Typography variant="small" className="mb-3">
               stock *
             </Typography>
             <Input
@@ -210,30 +227,28 @@ const AddProduct = () => {
           </div>
           <div>
             <Typography variant="small" className="mb-3">
-              weight *
+              Product weight
             </Typography>
             <Input
               color="blue"
               type="number"
               label="weight"
               value={weight}
+              placeholder="Exm: 2.5 - not required"
               onChange={(e) => setWeight(e.target.value)}
-              required
-              min="1"
             />
           </div>
           <div>
             <Typography variant="small" className="mb-3">
-              Old-Price *
+              Old-Price
             </Typography>
             <Input
               color="blue"
               type="number"
               label="Old-Price"
+              placeholder="not required"
               value={oldPrice}
               onChange={(e) => setOldPrice(e.target.value)}
-              required
-              min="1"
             />
           </div>
           <div className="w-full">
@@ -246,6 +261,7 @@ const AddProduct = () => {
                 value={description}
                 config={config}
                 tabIndex={1}
+                required
                 onBlur={(newContent) => setDescription(newContent)}
               />
             </div>
@@ -269,7 +285,7 @@ const AddProduct = () => {
                   and drop
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                  SVG, PNG, JPG or GIF (MAX. 768x768px)
                 </p>
               </div>
               <input
@@ -277,6 +293,7 @@ const AddProduct = () => {
                 type="file"
                 accept="image/*"
                 multiple
+                required
                 onChange={handleImageChange}
                 className="hidden"
               />

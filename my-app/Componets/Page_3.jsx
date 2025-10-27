@@ -37,9 +37,7 @@ const Page_3 = () => {
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
 
-      setTimeout(() => {
-        router.push(`/category/${category}`);
-      }, [2000]);
+      window.location.href = `/category/${category}`;
     } catch (error) {
       console.error(error.message);
     }

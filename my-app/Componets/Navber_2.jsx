@@ -38,6 +38,26 @@ const Navber_2 = () => {
       socket.off('CategoryCreated', handleNewCategory);
     };
   }, []);
+
+  let handleSubmit = async category => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_PORT
+        }api/v3/category/getCategory?id=${encodeURIComponent(category)}`,
+        {
+          cache: 'no-store',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+
+      window.location.href = `/category/${category}`;
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <>
       <section className="bg-white shadow-md py-[5px] mobile:hidden tablet:hidden computer:block laptop:block">
@@ -46,6 +66,7 @@ const Navber_2 = () => {
             {category.slice(0, 4).map((item, index) => (
               <li
                 key={index}
+                onClick={() => handleSubmit(item._id)}
                 className="text-[18px] font-nunito font-medium text-[#484848]  cursor-pointer"
               >
                 {item.name}
