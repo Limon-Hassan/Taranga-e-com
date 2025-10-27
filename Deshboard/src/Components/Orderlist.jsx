@@ -43,7 +43,7 @@ const Orderlist = () => {
 
   const handleDelete = async (orderId) => {
     try {
-      await axios.delete(`${api}api/v3/checkout/deleteCheckout/${orderId}`);
+      await axios.delete(`${api}api/v3/checkout/deleteChechout?id=${orderId}`);
       setOrders((prevOrders) =>
         prevOrders.filter((order) => order._id !== orderId),
       );
@@ -110,9 +110,9 @@ const Orderlist = () => {
               <tbody>
                 {currentOrders.length > 0 ? (
                   currentOrders.map((order) => {
-                    const product = order.items?.[0]?.product;
+                    const product = order.items?.[0]?.productId;
                     const productName = product?.name || "Unnamed Product";
-                    const productImage = product?.image || "/mans.png";
+                    const productImage = product?.photo?.[0] || "/mans.png";
                     const price = order.items?.[0]?.price || 0;
                     const quantity = order.items?.[0]?.quantity || 1;
                     const status = order.paymentStatus || "Pending";
@@ -127,8 +127,8 @@ const Orderlist = () => {
                           />
                           <span>{productName}</span>
                         </td>
-                        <td className="p-3 text-sm">{order.cartId}</td>
-                        <td className="p-3">${price}</td>
+                        <td className="p-3 text-sm">{order.uniqueOrderID}</td>
+                        <td className="p-3">{price}৳</td>
                         <td className="p-3">{quantity}</td>
                         <td
                           className={`p-3 font-semibold ${

@@ -12,7 +12,7 @@ const page = () => {
   let { enqueueSnackbar } = useSnackbar();
   let [phone, SetPhone] = useState('');
   let [Address, SetAddress] = useState('');
-  let [Selectpayment, setSelectpayment] = useState('insideDhaka');
+  let [Selectpayment, setSelectpayment] = useState('outsideDhaka');
   let [SummeryData, setSummeryData] = useState({});
   let [saveInfo, setSaveInfo] = useState(false);
 
@@ -306,7 +306,6 @@ const page = () => {
                     Subtotals
                   </h4>
                 </div>
-                {/* {SummeryData.items?.map((item, indx) => ( */}
                 <div className="flex items-center justify-between mb-[10px]">
                   <h4
                     onClick={() => handleShowProduct(item.productId._id)}
@@ -318,7 +317,6 @@ const page = () => {
                     {SummeryData.productPrice}৳
                   </h4>
                 </div>
-                {/* ))} */}
 
                 <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
@@ -330,22 +328,22 @@ const page = () => {
                 </div>
                 <div className="my-2.5">
                   <CheckBox
-                    label={`Inside Dhaka: ${
+                    label={`ঢাকার ভিতরে: ${
                       Selectpayment === 'insideDhaka'
                         ? SummeryData?.shippingCost || 0
                         : 0
-                    }.00৳ `}
+                    }৳ `}
                     checked={Selectpayment === 'insideDhaka'}
                     className="rounded-full mb-2.5"
                     onChange={() => handlePaymentChange('insideDhaka')}
                   />
 
                   <CheckBox
-                    label={`Outside Dhaka: ${
+                    label={`ঢাকার বাহিরে: ${
                       Selectpayment === 'outsideDhaka'
                         ? SummeryData?.shippingCost || 0
                         : 0
-                    }.00৳ `}
+                    }৳ `}
                     checked={Selectpayment === 'outsideDhaka'}
                     className="rounded-full"
                     onChange={() => handlePaymentChange('outsideDhaka')}

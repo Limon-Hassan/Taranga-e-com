@@ -44,6 +44,8 @@ const OrderDetails = () => {
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
                   <th className="p-3">Order ID</th>
+                  <th className="p-3">Shipping Cost</th>
+                  <th className="p-3">Total Price</th>
                   <th className="p-3">Name</th>
                   <th className="p-3">Phone</th>
                   <th className="p-3">Address</th>
@@ -53,9 +55,11 @@ const OrderDetails = () => {
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b hover:bg-gray-50">
-                      <td className="p-3">{order._id}</td>
+                      <td className="p-3">{order.uniqueOrderID}</td>
+                      <td className="p-3">{order.shippingCost}৳</td>
+                      <td className="p-3">{order.totalPrice}৳</td>
                       <td className="p-3">{order.name}</td>
-                      <td className="p-3">{order.phone}</td>
+                      <td className="p-3">0{order.phone}</td>
                       <td className="p-3">{order.address}</td>
                     </tr>
                   ))
