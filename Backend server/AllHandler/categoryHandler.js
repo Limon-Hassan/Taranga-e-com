@@ -44,7 +44,7 @@ async function readCategory(req, res) {
     } else {
       let categories = await categorySchema.find().populate({
         path: 'Product',
-        select: 'name price photo oldPrice stock description',
+        select: 'name price photo oldPrice stock description disCountPrice',
         strictPopulate: false,
       });
 

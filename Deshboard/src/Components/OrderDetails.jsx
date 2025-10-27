@@ -10,7 +10,6 @@ const OrderDetails = () => {
     axios
       .get(`${api}api/v3/checkout/AdminReadCheckout`)
       .then((res) => {
-        console.log(res);
         setOrders(res.data.data);
       })
       .catch((err) => {
@@ -20,7 +19,7 @@ const OrderDetails = () => {
   }, []);
 
   const filteredOrders = orders.filter((order) =>
-    order._id.toLowerCase().includes(search.toLowerCase()),
+    order.uniqueOrderID.toLowerCase().includes(search.toLowerCase().trim()),
   );
 
   return (
@@ -57,16 +56,18 @@ const OrderDetails = () => {
                   filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b hover:bg-gray-50">
                       <img
-                        className="h-10 w-10 rounded object-cover"
+                        className="h-[90px] w-[90px] rounded object-cover px-1 py-3"
                         src={order.items[0].productId?.photo[0]}
                         alt="product"
                       />
-                      <td className="p-3">{order.uniqueOrderID}</td>
-                      <td className="p-3">{order.shippingCost}৳</td>
-                      <td className="p-3">{order.totalPrice}৳</td>
-                      <td className="p-3">{order.name}</td>
-                      <td className="p-3">0{order.phone}</td>
-                      <td className="p-3">{order.address}</td>
+                      <td className="px-1 py-3">{order.uniqueOrderID}</td>
+                      <td className="px-1 py-3">{order.shippingCost}৳</td>
+                      <td className="px-1 py-3">{order.totalPrice}৳</td>
+                      <td className="px-1 py-3">{order.name}</td>
+                      <td className="px-1 py-3">0{order.phone}</td>
+                      <td className="w-[200px] overflow-hidden text-clip text-wrap px-1 py-3">
+                        {order.address}
+                      </td>
                     </tr>
                   ))
                 ) : (

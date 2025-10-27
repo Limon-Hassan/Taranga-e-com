@@ -31,9 +31,11 @@ const Orderlist = () => {
   const filteredOrders = orders.filter((order) => {
     const productName = order.items?.[0]?.product?.name || "";
     const cartId = order.cartId || "";
+    const uniqueOrderID = order.uniqueOrderID || "";
     return (
-      productName.toLowerCase().includes(search.toLowerCase()) ||
-      cartId.toLowerCase().includes(search.toLowerCase())
+      productName.toLowerCase().includes(search.toLowerCase().trim()) ||
+      cartId.toLowerCase().includes(search.toLowerCase().trim()) ||
+      uniqueOrderID.toLowerCase().includes(search.toLowerCase().trim())
     );
   });
 
