@@ -61,10 +61,17 @@ const page = () => {
       const weight = Number(product.weight || 0);
 
       let shippingCost = 0;
+
       if (weight > 0) {
-        if (weight <= 1) shippingCost = 60;
-        else if (weight <= 2) shippingCost = 80;
-        else shippingCost = 100;
+        if (Selectpayment === 'insideDhaka') {
+          if (weight <= 1) shippingCost = 60;
+          else if (weight <= 2) shippingCost = 80;
+          else shippingCost = 100;
+        } else if (Selectpayment === 'outsideDhaka') {
+          if (weight <= 1) shippingCost = 120;
+          else if (weight <= 2) shippingCost = 150;
+          else shippingCost = 200;
+        }
       }
 
       const totalPrice = subTotal + shippingCost;
@@ -84,6 +91,10 @@ const page = () => {
     FetchInfo();
     FetchProduct();
   }, []);
+
+  useEffect(() => {
+    FetchProduct();
+  }, [Selectpayment]);
 
   let handleSubmit = async () => {
     const isMobile = window.innerWidth < 768;
@@ -142,11 +153,10 @@ const page = () => {
         phone,
         address: Address,
         saveInfo,
-        paymentMethod,
       };
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/directChdout?productId=${productId}&area=${Selectpayment}`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/directCheckout?productId=${productId}&area=${Selectpayment}`,
         {
           method: 'POST',
           headers: {

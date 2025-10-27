@@ -4,7 +4,6 @@ let CheckoutSchema = new mongoose.Schema(
   {
     cartId: {
       type: String,
-      required: true,
     },
     items: [
       {

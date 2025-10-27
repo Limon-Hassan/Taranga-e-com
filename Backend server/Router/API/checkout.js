@@ -9,7 +9,7 @@ const {
 let router = express.Router();
 
 router.post('/makeCheckout', makeCheckout);
-router.post('/directChdout', directCheckout);
+router.post('/directCheckout', directCheckout);
 router.get('/AdminReadCheckout', AdminReadCheckout);
 router.get('/getSavedInfo', getSavedInfo);
 router.delete('/deleteChechout', deleteCheckout);
