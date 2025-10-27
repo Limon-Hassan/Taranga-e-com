@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import Container from '../../../../Componets/Container/Container';
 import { PiStarFill } from 'react-icons/pi';
 import { FaCartShopping } from 'react-icons/fa6';
@@ -115,14 +116,31 @@ const Page = () => {
     }
   };
 
+  useEffect(() => {
+    if (product && product.name) {
+      document.title = `${product.name} | Deluxe X Deal`;
+    }
+  }, [product]);
+
   return (
     <>
       <Head>
-        <title>{product.name} | Deluxe X Deal</title>
-        <meta name="description" content={product.description.slice(0, 150)} />
+        <title>
+          {product && product.name
+            ? `${product.name} | Deluxe X Deal`
+            : 'Loading Product... | Deluxe X Deal'}
+        </title>
+        <meta
+          name="description"
+          content={
+            product && product.description
+              ? product.description.slice(0, 150)
+              : 'View product details and best deals on Deluxe X Deal.'
+          }
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <section className="mobile:py-[50px] tablet:py-[80px] laptop:py-[100px] computer:py-[100px]">
         <Container>
           <div className="flex flex-col lg:flex-row gap-[100px]">
