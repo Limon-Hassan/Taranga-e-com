@@ -3,7 +3,8 @@ const checkoutSchema = require('../models/checkoutSchema');
 const productSchema = require('../models/productSchema');
 const Save_info = require('../models/Save_info');
 const { getIO } = require('../socket_server');
-import { v4 as uuidv4 } from 'uuid';
+const { v4: uuidv4 } = require('uuid');
+
 
 async function makeCheckout(req, res) {
   let { cartId, name, address, phone, paymentMethod, saveInfo } = req.body;
