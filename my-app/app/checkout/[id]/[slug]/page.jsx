@@ -172,11 +172,20 @@ const page = () => {
         setSummeryData([]);
         localStorage.setItem('userInfo', JSON.stringify(phone));
         window.dispatchEvent(new Event('storage'));
-        enqueueSnackbar('ধন্যবাদ আপনাকে সফলভাবে চেকআউট করার জন্য', {
+        enqueueSnackbar('ধন্যবাদ, আপনার অর্ডার সফল হয়েছে 🎊', {
           variant: 'success',
           anchorOrigin: {
             vertical: 'top',
             horizontal: isMobile ? 'center' : 'right',
+          },
+          autoHideDuration: 5000,
+          style: {
+            width: isMobile ? '300px' : '350px',
+            fontSize: isMobile ? '14px' : '16px',
+            backgroundColor: '#629D23',
+            color: '#fff',
+            padding: '10px 15px',
+            borderRadius: '8px',
           },
           style: {
             width: isMobile ? '300px' : '350px',
@@ -191,7 +200,9 @@ const page = () => {
         SetAddress('');
         SetPhone('');
         setSaveInfo(false);
-        router.push('/');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
       }
     } catch (error) {
       console.log(error);

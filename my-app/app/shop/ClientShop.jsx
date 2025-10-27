@@ -10,7 +10,6 @@ import { useSearchParams } from 'next/navigation';
 import { FaBars } from 'react-icons/fa6';
 import { ImCross } from 'react-icons/im';
 
-
 const ClientShop = () => {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState('');
@@ -98,7 +97,7 @@ const ClientShop = () => {
     SetCurrentPrice(value);
     SetmaxPrice(value);
   };
-  
+
   let handleFilter = () => {
     setFilteredRange({ min: minPrice, max: maxPrice });
     setActiveSidebar(false);
@@ -317,7 +316,7 @@ const ClientShop = () => {
                 <div
                   key={idx}
                   onClick={() => handleShowProduct(pro._id)}
-                  className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[30%] computer:w-[30%] hover:border-[#F1A31C] rounded-sm"
+                  className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
                 >
                   <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
                     <img
@@ -326,7 +325,11 @@ const ClientShop = () => {
                       alt="product"
                     />
                   </div>
-
+                  {pro.disCountPrice > 0 && (
+                    <div className="absolute top-[5px] left-[5px] bg-[#E6963A] mobile:text-[12px] tablet:text-[14px] laptop:text-[14px] computer:text-[14px] font-nunito font-bold text-white mobile:w-[90px] mobile:h-[30px] tablet:w-[90px] tablet:h-[35px] laptop:w-[90px] laptop:h-[35px] computer:w-[90px] computer:h-[35px] rounded-full flex items-center justify-center z-10">
+                      Sale {pro.disCountPrice}% off
+                    </div>
+                  )}
                   <div className="bg-[#eeeeee] text-center w-full max-h-[220px] pb-[15px]">
                     <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-auto tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                       {pro.name}

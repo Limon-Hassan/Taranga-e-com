@@ -106,7 +106,7 @@ const Page_1 = () => {
             {category[0]?.Product?.slice(0, 10).map((pro, idx) => (
               <div
                 key={idx}
-                className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[25%] computer:w-[25%] hover:border-[#F1A31C] rounded-sm"
+                className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
               >
                 <div
                   onClick={() => handleShowProduct(pro._id)}

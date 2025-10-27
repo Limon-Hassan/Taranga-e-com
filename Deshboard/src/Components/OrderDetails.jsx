@@ -43,6 +43,7 @@ const OrderDetails = () => {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
+                  <th className="p-3">Image</th>
                   <th className="p-3">Order ID</th>
                   <th className="p-3">Shipping Cost</th>
                   <th className="p-3">Total Price</th>
@@ -55,6 +56,11 @@ const OrderDetails = () => {
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b hover:bg-gray-50">
+                      <img
+                        className="h-10 w-10 rounded object-cover"
+                        src={order.items[0].productId?.photo[0]}
+                        alt="product"
+                      />
                       <td className="p-3">{order.uniqueOrderID}</td>
                       <td className="p-3">{order.shippingCost}৳</td>
                       <td className="p-3">{order.totalPrice}৳</td>
