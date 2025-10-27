@@ -207,7 +207,7 @@ const Navber_1 = () => {
                     alt="headimage"
                   />
                 </a>
-                <a onClick={handleCartClick} href="/cart">
+                <a href="/cart">
                   <div className=" mobile:flex tablet:flex computer:hidden laptop:hidden relative mobile:items-center table:items-center gap-2">
                     <LuShoppingBag className="text-[25px] text-[#69727d]" />
                     <span className="flex items-center mobile:text-[15px] tablet:text-[20px] text-[#69727d]">
