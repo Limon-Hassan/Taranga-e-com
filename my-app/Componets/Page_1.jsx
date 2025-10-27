@@ -78,6 +78,7 @@ const Page_1 = () => {
 
       if (!response.ok) throw new Error('Failed to fetch product');
       let data = await response.json();
+      console.log(data);
       window.location.href = `/checkout/${
         data.product._id
       }/${data.product.name.replace(/\s+/g, '-')}`;
@@ -105,10 +106,12 @@ const Page_1 = () => {
             {category[0]?.Product?.slice(0, 10).map((pro, idx) => (
               <div
                 key={idx}
-                onClick={() => handleShowProduct(pro._id)}
                 className="mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[25%] computer:w-[25%] hover:border-[#F1A31C] rounded-sm"
               >
-                <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                <div
+                  onClick={() => handleShowProduct(pro._id)}
+                  className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
+                >
                   <img
                     className="w-full h-full bg-white object-cover cursor-pointer"
                     src={pro.photo[0]}

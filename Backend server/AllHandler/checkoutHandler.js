@@ -5,7 +5,6 @@ const Save_info = require('../models/Save_info');
 const { getIO } = require('../socket_server');
 const { v4: uuidv4 } = require('uuid');
 
-
 async function makeCheckout(req, res) {
   let { cartId, name, address, phone, paymentMethod, saveInfo } = req.body;
   try {
@@ -73,8 +72,8 @@ async function makeCheckout(req, res) {
 }
 
 async function directCheckout(req, res) {
-  let productId = req.query.productId;
-  let { name, address, phone, paymentMethod, saveInfo, area } = req.body;
+  let { productId, area } = req.query;
+  let { name, address, phone, paymentMethod, saveInfo } = req.body;
   try {
     if (!productId || !name || !address || !phone) {
       return res.status(400).json({ msg: 'All fields are required ' });

@@ -2,16 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import Container from '../../../../Componets/Container/Container';
 import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import CheckBox from '../../../../Componets/CheckBox';
 
 const page = () => {
   let router = useRouter();
+  const { id } = useParams();
   let [name, SetName] = useState('');
   let { enqueueSnackbar } = useSnackbar();
   let [phone, SetPhone] = useState('');
   let [Address, SetAddress] = useState('');
+  let [Selectpayment, setSelectpayment] = useState('insideDhaka');
+  let [SummeryData, setSummeryData] = useState({});
   let [saveInfo, setSaveInfo] = useState(false);
-  let [SummeryData, setSummeryData] = useState([]);
+
+  let handlePaymentChange = paymentMethod => {
+    setSelectpayment(paymentMethod);
+  };
 
   const [error, setError] = useState({
     name: false,
@@ -41,36 +48,46 @@ const page = () => {
     }
   }
 
-  useEffect(() => {
-    FetchInfo();
-  }, []);
-
-  async function FetchSummery() {
-    let CartId = JSON.parse(localStorage.getItem('CARTID'));
+  async function FetchProduct() {
     try {
-      let res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/FinalSummery?CartId=${CartId}`,
-        {
-          method: 'GET',
-        }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${id}`
       );
+      if (!res.ok) throw new Error('Failed to fetch product');
+      const data = await res.json();
+      const product = data.product;
 
-      if (!res.ok) throw new Error('Failed to fetch CartSummery');
+      const subTotal = Number(product.price || 0);
+      const weight = Number(product.weight || 0);
 
-      let data = await res.json();
-      setSummeryData(data.data);
+      let shippingCost = 0;
+      if (weight > 0) {
+        if (weight <= 1) shippingCost = 60;
+        else if (weight <= 2) shippingCost = 80;
+        else shippingCost = 100;
+      }
+
+      const totalPrice = subTotal + shippingCost;
+      setSummeryData({
+        subTotal,
+        shippingCost,
+        totalPrice,
+        productName: product.name,
+        productPrice: product.price,
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    FetchSummery();
+    FetchInfo();
+    FetchProduct();
   }, []);
 
   let handleSubmit = async () => {
     const isMobile = window.innerWidth < 768;
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let productId = id;
     try {
       if (!name || !phone || !Address) {
         setError({
@@ -121,15 +138,15 @@ const page = () => {
       setError({ name: false, phone: false, address: false });
 
       const bodyData = {
-        cartId,
         name,
         phone,
         address: Address,
         saveInfo,
+        paymentMethod,
       };
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/makeCheckout`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/directChdout?productId=${productId}&area=${Selectpayment}`,
         {
           method: 'POST',
           headers: {
@@ -139,10 +156,9 @@ const page = () => {
         }
       );
       const data = await response.json();
+      console.log(data);
       if (!response.ok) throw new Error(data.msg || 'Checkout failed');
       if (data.msg === 'Checkout successful') {
-        localStorage.removeItem('cartInfo');
-        localStorage.removeItem('CARTID');
         setSummeryData([]);
         localStorage.setItem('userInfo', JSON.stringify(phone));
         window.dispatchEvent(new Event('storage'));
@@ -191,6 +207,7 @@ const page = () => {
       console.log(error);
     }
   };
+
   return (
     <>
       <section className="mobile:py-[50px] tablet:py-[100px] laptop:py-[100px] computer:py-[100px]">
@@ -279,45 +296,57 @@ const page = () => {
                     Subtotals
                   </h4>
                 </div>
-                {SummeryData.items?.map((item, indx) => (
-                  <div
-                    key={indx}
-                    className="flex items-center justify-between mb-[10px]"
+                {/* {SummeryData.items?.map((item, indx) => ( */}
+                <div className="flex items-center justify-between mb-[10px]">
+                  <h4
+                    onClick={() => handleShowProduct(item.productId._id)}
+                    className="text-[16px] mobile:w-[220px] tablet:w-[415px] laptop:w-[478px] hover:text-[#4169e1] computer:w-[360px] truncate font-bold font-nunito text-[#f1a31c] cursor-pointer"
                   >
-                    <h4
-                      onClick={() => handleShowProduct(item.productId._id)}
-                      className="text-[16px] mobile:w-[220px] tablet:w-[415px] laptop:w-[478px] hover:text-[#4169e1] computer:w-[360px] truncate font-bold font-nunito text-[#f1a31c] cursor-pointer"
-                    >
-                      ({item.quantity}) {item.productId.name}
-                    </h4>
-                    <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                      {item.productId.price}
-                    </h4>
-                  </div>
-                ))}
+                    (1) {SummeryData.productName}
+                  </h4>
+                  <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
+                    {SummeryData.productPrice}৳
+                  </h4>
+                </div>
+                {/* ))} */}
 
                 <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
                     Subtotal
                   </h4>
                   <h4 className="mt-[10px] text-[16px] font-bold font-noto-bengali text-gray-600">
-                    (+) {SummeryData.subTotal || 0}
+                    (+) {SummeryData.subTotal || 0}৳
                   </h4>
                 </div>
-                <div className="flex items-center justify-between mb-[20px]">
-                  <h4 className="text-[16px] font-bold font-nunito text-gray-500">
-                    Shipping cost
-                  </h4>
-                  <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    {SummeryData.shippingCost || 0}
-                  </h4>
+                <div className="my-2.5">
+                  <CheckBox
+                    label={`Inside Dhaka: ${
+                      Selectpayment === 'insideDhaka'
+                        ? SummeryData?.shippingCost || 0
+                        : 0
+                    }.00৳ `}
+                    checked={Selectpayment === 'insideDhaka'}
+                    className="rounded-full mb-2.5"
+                    onChange={() => handlePaymentChange('insideDhaka')}
+                  />
+
+                  <CheckBox
+                    label={`Outside Dhaka: ${
+                      Selectpayment === 'outsideDhaka'
+                        ? SummeryData?.shippingCost || 0
+                        : 0
+                    }.00৳ `}
+                    checked={Selectpayment === 'outsideDhaka'}
+                    className="rounded-full"
+                    onChange={() => handlePaymentChange('outsideDhaka')}
+                  />
                 </div>
                 <div className="flex items-center justify-between mb-[30px]">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500">
                     Total
                   </h4>
                   <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    {SummeryData.totalPrice || 0}
+                    {SummeryData.totalPrice}৳
                   </h4>
                 </div>
 
