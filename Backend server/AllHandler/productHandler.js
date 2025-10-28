@@ -20,11 +20,16 @@ async function createProduct(req, res) {
     return res.status(400).send({ msg: 'please fill all the fields' });
   }
   try {
-    const fileName = req.files;
-
-    const fileNames = fileName.map(
-      element => `${process.env.HOST_NAME}${element.filename}`
-    );
+    let fileNames = [];
+    if (req.files) {
+      if (Array.isArray(req.files)) {
+        req.files.forEach(file =>
+          fileNames.push(process.env.HOST_NAME + file.filename)
+        );
+      } else {
+        fileNames.push(process.env.HOST_NAME + req.files.filename);
+      }
+    }
 
     let product = new productSchema({
       name,
@@ -130,32 +135,35 @@ async function updateProduct(req, res) {
     ChangeDisCountPrice,
   } = req.body;
   try {
-    let fileName = req.files;
     let fileNames = [];
-    if (Array.isArray(fileName)) {
-      fileName.forEach(element => {
-        fileNames.push(process.env.HOST_NAME + element.filename);
-      });
-    } else {
-      fileNames.push(process.env.HOST_NAME + fileName.filename);
+    if (req.files) {
+      if (Array.isArray(req.files)) {
+        req.files.forEach(file =>
+          fileNames.push(process.env.HOST_NAME + file.filename)
+        );
+      } else {
+        fileNames.push(process.env.HOST_NAME + req.files.filename);
+      }
     }
+
     let updateProduct = await productSchema.findByIdAndUpdate(
       { _id: id },
       {
         name: ChangeName,
         description: ChangeDescription,
         price: ChangePrice,
-        category: ChangeCategory,
+        category: Array.isArray(ChangeCategory)
+          ? ChangeCategory
+          : [ChangeCategory],
         stock: Changestock,
         brand: ChangeBrand,
         weight: ChangeWeight,
         oldPrice: ChangeOldPrice,
-        disCountPrice:ChangeDisCountPrice,
-        photo: fileNames,
+        disCountPrice: ChangeDisCountPrice,
+        photo: fileNames.length > 0 ? fileNames : undefined,
       },
       { new: true }
     );
-    await updateProduct.save();
     getIO().emit('productUpdated', updateProduct);
     return res.json({
       msg: 'Product update Successfully !',
@@ -163,7 +171,7 @@ async function updateProduct(req, res) {
     });
   } catch (error) {
     console.log(error.message);
-    console.error(error.message);
+    return res.status(500).json({ msg: error.message });
   }
 }
 

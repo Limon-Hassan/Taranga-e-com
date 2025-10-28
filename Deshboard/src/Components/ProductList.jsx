@@ -145,7 +145,7 @@ const ProductList = () => {
     formData.append("ChangeOldPrice", oldPriceChange);
     formData.append("ChangeDisCountPrice", discountChange);
     formData.append("ChangeDescription", descriptionChange);
-    formData.append("ChangePrice", ChangePrice);
+    formData.append("ChangePrice", priceChange);
     if (images.length > 0) {
       images.forEach((img) => {
         formData.append("photo", img);
@@ -154,45 +154,49 @@ const ProductList = () => {
     for (let [key, value] of formData.entries()) {
       console.log(key + " : " + value);
     }
-    await axios
-      .post(`${api}api/v3/product/updateProduct?id=${proId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response);
-        setProductChangeName("");
-        setCategory("");
-        setBrandChange("");
-        setDescriptionChange("");
-        setPriceChange("");
-        setStockChange("");
-        setChangeweight("");
-        setOldPriceChange("");
-        setDescriptionChange("");
-        setImages([]);
-        setOpen(false);
-        toast.success("Product Update SuccessFully!", {
+
+    try {
+      const response = await axios.post(
+        `${api}api/v3/product/updateProduct?id=${proId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        },
+      );
+
+      console.log(response);
+      setProductChangeName("");
+      setCategory("");
+      setBrandChange("");
+      setPriceChange("");
+      setStockChange("");
+      setChangeweight("");
+      setOldPriceChange("");
+      setDescriptionChange("");
+      setImages([]);
+      toast.success("Product Update SuccessFully!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+      });
+      fetchProduct();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        (error.response && error.response.data?.msg) || "Something went wrong",
+        {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: true,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-        });
-        fetchProducts();
-      })
-      .catch((error) => {
-        if (error.response && error.response.data) {
-          toast.error(error.response.data.msg || "Something went wrong", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            draggable: true,
-          });
-        }
-      });
+        },
+      );
+    } finally {
+      setOpen(false);
+    }
   };
 
   return (
