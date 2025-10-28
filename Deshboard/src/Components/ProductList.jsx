@@ -156,7 +156,7 @@ const ProductList = () => {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `${api}api/v3/product/updateProduct?id=${proId}`,
         formData,
         {
