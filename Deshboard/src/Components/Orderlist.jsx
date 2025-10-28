@@ -104,6 +104,7 @@ const Orderlist = () => {
                   <th className="p-3">Product</th>
                   <th className="p-3">Order ID</th>
                   <th className="p-3">Price</th>
+                  <th className="p-3">Offer</th>
                   <th className="p-3">Quantity</th>
                   <th className="p-3">Status</th>
                   <th className="p-3">Actions</th>
@@ -131,6 +132,7 @@ const Orderlist = () => {
                         </td>
                         <td className="p-3 text-sm">{order.uniqueOrderID}</td>
                         <td className="p-3">{price}৳</td>
+                        <td className="p-3">{order.disCountPrice || 0}৳</td>
                         <td className="p-3">{quantity}</td>
                         <td
                           className={`p-3 font-semibold ${

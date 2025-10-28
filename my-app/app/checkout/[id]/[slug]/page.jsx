@@ -16,6 +16,7 @@ const page = () => {
   let [SummeryData, setSummeryData] = useState({});
   let [saveInfo, setSaveInfo] = useState(false);
 
+  
   let handlePaymentChange = paymentMethod => {
     setSelectpayment(paymentMethod);
   };
@@ -59,6 +60,7 @@ const page = () => {
 
       const subTotal = Number(product.price || 0);
       const weight = Number(product.weight || 0);
+      let disCountPrice = Number(product.disCountPrice || 0);
 
       let shippingCost = 0;
 
@@ -73,12 +75,14 @@ const page = () => {
           else shippingCost = 200;
         }
       }
-
-      const totalPrice = subTotal + shippingCost;
+      let discountAmount = (subTotal * disCountPrice) / 100;
+      let totalPrice = subTotal - discountAmount + shippingCost;
       setSummeryData({
         subTotal,
         shippingCost,
         totalPrice,
+        showingDiscount: product.disCountPrice,
+        disCountPrice: discountAmount,
         productName: product.name,
         productPrice: product.price,
       });
@@ -337,6 +341,17 @@ const page = () => {
                     (+) {SummeryData.subTotal || 0}৳
                   </h4>
                 </div>
+                {SummeryData.disCountPrice && (
+                  <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
+                    <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
+                      Discount ({SummeryData.showingDiscount || 0} % ছাড়)
+                    </h4>
+                    <h4 className="mt-[10px] text-[16px] font-bold font-noto-bengali text-gray-600">
+                      (-) {SummeryData.disCountPrice || 0}৳
+                    </h4>
+                  </div>
+                )}
+
                 <div className="my-2.5">
                   <CheckBox
                     label={`ঢাকার ভিতরে: ${
