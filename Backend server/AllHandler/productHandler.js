@@ -124,6 +124,10 @@ async function updateProduct(req, res) {
     ChangePrice,
     ChangeCategory,
     Changestock,
+    ChangeBrand,
+    ChangeWeight,
+    ChangeOldPrice,
+    ChangeDisCountPrice,
   } = req.body;
   try {
     let fileName = req.files;
@@ -143,6 +147,10 @@ async function updateProduct(req, res) {
         price: ChangePrice,
         category: ChangeCategory,
         stock: Changestock,
+        brand: ChangeBrand,
+        weight: ChangeWeight,
+        oldPrice: ChangeOldPrice,
+        disCountPrice:ChangeDisCountPrice,
         photo: fileNames,
       },
       { new: true }

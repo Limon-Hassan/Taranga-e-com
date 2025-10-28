@@ -1,11 +1,56 @@
-import { Input } from "@material-tailwind/react";
+import React from "react";
+import {
+  Input,
+  Option,
+  Select,
+  Button,
+  Dialog,
+  IconButton,
+  Typography,
+} from "@material-tailwind/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+
+import JoditEditor from "jodit-react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const api = import.meta.env.VITE_SERVER_URL;
   const [GetallProducts, setGetallProducts] = useState([]);
+  const editor = useRef(null);
+  const dialogRef = useRef(null);
+  const [productChangeName, setProductChangeName] = useState("");
+  const [category, setCategory] = useState("");
+  const [categoriesFromBackend, setcategoriesFromBackend] = useState([]);
+  const [brandChange, setBrandChange] = useState("");
+  const [descriptionChange, setDescriptionChange] = useState("");
+  const [priceChange, setPriceChange] = useState("");
+  const [stockChange, setStockChange] = useState("");
+  const [discountChange, setDiscountChange] = useState("");
+  const [oldPriceChange, setOldPriceChange] = useState("");
+  const [Changeweight, setChangeweight] = useState("");
+  const [images, setImages] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [proId, setProId] = useState(null);
+
+  const handleOpen = (productId) => {
+    setOpen(true);
+    setProId(productId);
+  };
+
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: "Write your content here...",
+      height: 400,
+      autofocus: true,
+      toolbarAdaptive: false,
+      toolbarSticky: false,
+    }),
+    [],
+  );
 
   useEffect(() => {
     axios
@@ -19,6 +64,37 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length + images.length > 4) {
+      alert("You can only upload up to 4 images.");
+      return;
+    }
+
+    setImages((prev) => [...prev, ...files]);
+  };
+
+  const handleDeleteImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  async function fetchProduct() {
+    axios
+      .get(`${api}api/v3/category/getCategory`, { withCredentials: true })
+      .then((response) => {
+        let data = response.data?.data || response.data || [];
+        const safeArray = Array.isArray(data) ? data : [data];
+        setcategoriesFromBackend(safeArray);
+      })
+      .catch((error) => {
+        console.error("Error fetching categoriesFromBackend:", error);
+      });
+  }
+  useEffect(() => {
+    fetchProduct();
   }, []);
 
   const handleProDeleted = async (id) => {
@@ -40,6 +116,83 @@ const ProductList = () => {
     } catch (err) {
       console.error("Error deleting product:", err);
     }
+  };
+
+  useEffect(() => {
+    if (open && dialogRef.current) {
+      let timer = setTimeout(() => {
+        dialogRef.current.scrollTop = 0;
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    const form = document.getElementById("addProductForm");
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("ChangeName", productChangeName);
+    formData.append("ChangeCategory", category);
+    formData.append("ChangeBrand", brandChange);
+    formData.append("Changestock", stockChange);
+    formData.append("ChangeWeight", Changeweight);
+    formData.append("ChangeOldPrice", oldPriceChange);
+    formData.append("ChangeDisCountPrice", discountChange);
+    formData.append("ChangeDescription", descriptionChange);
+    formData.append("ChangePrice", ChangePrice);
+    if (images.length > 0) {
+      images.forEach((img) => {
+        formData.append("photo", img);
+      });
+    }
+    for (let [key, value] of formData.entries()) {
+      console.log(key + " : " + value);
+    }
+    await axios
+      .post(`${api}api/v3/product/updateProduct?id=${proId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response);
+        setProductChangeName("");
+        setCategory("");
+        setBrandChange("");
+        setDescriptionChange("");
+        setPriceChange("");
+        setStockChange("");
+        setChangeweight("");
+        setOldPriceChange("");
+        setDescriptionChange("");
+        setImages([]);
+        setOpen(false);
+        toast.success("Product Update SuccessFully!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+        });
+        fetchProducts();
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          toast.error(error.response.data.msg || "Something went wrong", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            draggable: true,
+          });
+        }
+      });
   };
 
   return (
@@ -64,54 +217,61 @@ const ProductList = () => {
               <table className="w-full border-collapse text-left">
                 <thead>
                   <tr className="border-b">
-                    <th className="px-4 py-2">Product</th>
-                    <th className="px-4 py-2">Product ID</th>
-                    <th className="px-4 py-2">Price</th>
-                    <th className="px-4 py-2">Stock</th>
-                    <th className="px-4 py-2">Discount</th>
-                    <th className="px-4 py-2">Category</th>
-                    <th className="px-4 py-2">Action</th>
+                    <th className="px-0 py-2">Product</th>
+                    <th className="px-0 py-2">Price</th>
+                    <th className="px-0 py-2">Stock</th>
+                    <th className="px-0 py-2">Discount</th>
+                    <th className="px-0 py-2">Category</th>
+                    <th className="px-0 py-2">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {GetallProducts.length > 0 ? (
                     GetallProducts?.map((product, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="flex items-center gap-2 px-4 py-3">
-                          <img
-                            src={product.photo?.[0] || "/default-image.png"}
-                            alt={product.name}
-                            className="h-10 w-10 rounded-lg"
-                          />
-                          {product.name}
-                        </td>
-                        <td className="px-4 py-3">#{product._id}</td>
-                        <td className="px-4 py-3">৳{product.price}</td>
-                        <td className="px-4 py-3">
-                          {product.stock > 0 ? product.stock : "out of stock"}
-                        </td>
-                        <td className="px-4 py-3">{product.disCountPrice}%</td>
-                        <td className="px-4 py-3">
-                          {Array.isArray(product.category) &&
-                          product.category.length > 0
-                            ? product.category.map((cat, index) => (
-                                <span key={cat._id}>
-                                  {cat.name}
-                                  {index !== product.category.length - 1
-                                    ? ", "
-                                    : ""}
-                                </span>
-                              ))
-                            : "N/A"}
-                        </td>
-
-                        <td className="px-4 py-3">
-                          <i
-                            onClick={() => handleProDeleted(product._id)}
-                            className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"
-                          ></i>
-                        </td>
-                      </tr>
+                      <>
+                        <tr key={index} className="border-b">
+                          <td className="flex w-[380px] items-center gap-2 text-clip text-wrap px-0 py-[18px]">
+                            <img
+                              src={product.photo?.[0] || "/default-image.png"}
+                              alt={product.name}
+                              className="h-[70px] w-[70px] rounded-lg"
+                            />
+                            {product.name}
+                          </td>
+                          <td className="px-0 py-[18px]">{product.price}৳</td>
+                          <td className="px-0 py-[18px]">
+                            {product.stock > 0 ? product.stock : "out of stock"}
+                          </td>
+                          <td className="px-0 py-[18px]">
+                            {product.disCountPrice || 0}%
+                          </td>
+                          <td className="px-0 py-[18px]">
+                            {Array.isArray(product.category) &&
+                            product.category.length > 0
+                              ? product.category.map((cat, index) => (
+                                  <span key={cat._id}>
+                                    {cat.name}
+                                    {index !== product.category.length - 1
+                                      ? ", "
+                                      : ""}
+                                  </span>
+                                ))
+                              : "N/A"}
+                          </td>
+                          <div className="flex items-center gap-3 px-0 py-[18px]">
+                            <Button
+                              className="bg-transparent shadow-none hover:shadow-none"
+                              onClick={() => handleOpen(product._id)}
+                            >
+                              <i className="fa-light fa-pen-line cursor-pointer text-[24px] text-green-400"></i>
+                            </Button>
+                            <i
+                              onClick={() => handleProDeleted(product._id)}
+                              className="fa-light fa-trash cursor-pointer text-[24px] text-red-400"
+                            ></i>
+                          </div>
+                        </tr>
+                      </>
                     ))
                   ) : (
                     <tr>
@@ -126,7 +286,225 @@ const ProductList = () => {
                 </tbody>
               </table>
             </div>
+            <Dialog
+              size="sm"
+              open={open}
+              handler={() => setOpen(false)}
+              className="z-[999] h-[690px] overflow-y-scroll p-4"
+              ref={dialogRef}
+            >
+              <Typography variant="h4" className="mb-2" color="blue-gray">
+                Edit Product
+              </Typography>
+              <IconButton
+                size="sm"
+                variant="text"
+                className="!absolute right-3.5 top-3.5"
+                onClick={() => setOpen(false)}
+              >
+                <XMarkIcon className="h-8 w-8 stroke-2" />
+              </IconButton>
+              <form noValidate id="addProductForm">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Product ChangeName *
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="text"
+                      label="Product changeName"
+                      value={productChangeName}
+                      onChange={(e) => setProductChangeName(e.target.value)}
+                      required
+                      maxLength={80}
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Category *
+                    </Typography>
+                    <Select
+                      value={category}
+                      onChange={(value) => {
+                        setCategory(value);
+                      }}
+                      required
+                    >
+                      {categoriesFromBackend.length > 0 ? (
+                        categoriesFromBackend.map((cat) => (
+                          <Option key={cat._id} value={cat._id}>
+                            {cat.name}
+                          </Option>
+                        ))
+                      ) : (
+                        <Option disabled>No Categories Found</Option>
+                      )}
+                    </Select>
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Brand Change *
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="text"
+                      label="Product Brand Change"
+                      value={brandChange}
+                      onChange={(e) => setBrandChange(e.target.value)}
+                      required
+                      maxLength={50}
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Change Price *
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="number"
+                      label="Change Price"
+                      value={priceChange}
+                      onChange={(e) => setPriceChange(e.target.value)}
+                      required
+                      min="1"
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Change Discount
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="number"
+                      label="Change Discount"
+                      value={discountChange}
+                      placeholder="Exm: 10 - not required"
+                      onChange={(e) => setDiscountChange(e.target.value)}
+                      min="1"
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Change stock *
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="number"
+                      label="Change stock"
+                      value={stockChange}
+                      onChange={(e) => setStockChange(e.target.value)}
+                      required
+                      min="1"
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Change weight
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="number"
+                      label="Change weight"
+                      value={Changeweight}
+                      placeholder="Exm: 2.5 - not required"
+                      onChange={(e) => setChangeweight(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Old-Price
+                    </Typography>
+                    <Input
+                      color="blue"
+                      type="number"
+                      label="Old-Price"
+                      placeholder="not required"
+                      value={oldPriceChange}
+                      onChange={(e) => setOldPriceChange(e.target.value)}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <Typography variant="small" className="mb-3">
+                      Change Description *
+                    </Typography>
+                    <div className="h-[400px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-2 text-[16px] font-normal text-black/50 outline-none">
+                      <JoditEditor
+                        ref={editor}
+                        value={descriptionChange}
+                        config={config}
+                        tabIndex={1}
+                        required
+                        onBlur={(newContent) =>
+                          setDescriptionChange(newContent)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
 
+                <div className="mt-6">
+                  <Typography variant="small" className="mb-3">
+                    Upload Images
+                  </Typography>
+
+                  <div className="flex w-full flex-col items-center justify-center gap-4">
+                    <label
+                      htmlFor="dropzone-file"
+                      className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
+                    >
+                      <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                        <i className="fa-light fa-cloud-arrow-up mb-3 text-[30px] text-blue-600"></i>
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          SVG, PNG, JPG or GIF (MAX. 768x768px)
+                        </p>
+                      </div>
+                      <input
+                        id="dropzone-file"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+
+                    <div className="mt-4 flex flex-wrap gap-4">
+                      {images.map((img, index) => (
+                        <div key={index} className="relative h-40 w-40">
+                          <img
+                            src={URL.createObjectURL(img)}
+                            alt={`upload-${index}`}
+                            className="h-full w-full rounded object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteImage(index)}
+                            className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex gap-4">
+                  <Button type="button" color="blue" onClick={handleAddProduct}>
+                    Add Product
+                  </Button>
+                  <Button onClick={() => setOpen(false)} color="red">
+                    Cancel
+                  </Button>
+                </div>
+                <ToastContainer />
+              </form>
+            </Dialog>
             <div className="mb-5 mt-8 flex items-center justify-between text-sm text-gray-600">
               <p>Showing {GetallProducts.length} entries</p>
             </div>

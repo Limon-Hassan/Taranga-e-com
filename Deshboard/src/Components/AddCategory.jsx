@@ -70,7 +70,7 @@ const AddCategory = () => {
           setDescription("");
           setImages([]);
           toast.success("Category added SuccessFully!", {
-            position: "top-right",
+            position: "top-center",
             autoClose: 3000,
             hideProgressBar: true,
             closeOnClick: true,
@@ -81,7 +81,7 @@ const AddCategory = () => {
         .catch((error) => {
           if (error.response && error.response.data) {
             toast.error(error.response.data.msg || "Something went wrong", {
-              position: "top-right",
+              position: "top-center",
               autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: true,

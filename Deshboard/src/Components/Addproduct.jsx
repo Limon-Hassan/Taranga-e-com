@@ -69,6 +69,12 @@ const AddProduct = () => {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
+    const form = document.getElementById("addProductForm");
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     const formData = new FormData();
     formData.append("name", productName);
     formData.append("category", category);
@@ -105,7 +111,7 @@ const AddProduct = () => {
         setDiscount("");
         setImages([]);
         toast.success("Product added SuccessFully!", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 3000,
           hideProgressBar: true,
           closeOnClick: true,
@@ -116,7 +122,7 @@ const AddProduct = () => {
       .catch((error) => {
         if (error.response && error.response.data) {
           toast.error(error.response.data.msg || "Something went wrong", {
-            position: "top-right",
+            position: "top-center",
             autoClose: 3000,
             hideProgressBar: true,
             closeOnClick: true,
@@ -131,7 +137,7 @@ const AddProduct = () => {
       <Typography variant="h4" className="mb-4 text-lg">
         Add Product
       </Typography>
-      <form noValidate>
+      <form noValidate id="addProductForm">
         <div className="flex flex-col gap-4">
           <div>
             <Typography variant="small" className="mb-3">
