@@ -52,11 +52,10 @@ const ProductList = () => {
     [],
   );
 
-  useEffect(() => {
+  async function fetchProduct() {
     axios
       .get(`${api}api/v3/product/getProduct`)
       .then((response) => {
-        console.log(response.data);
         let data = response.data?.data || response.data || [];
         const safeArray = Array.isArray(data) ? data : [data];
         setGetallProducts(safeArray);
@@ -64,6 +63,10 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  useEffect(() => {
+    fetchProduct();
   }, []);
 
   const handleImageChange = (e) => {
@@ -81,7 +84,7 @@ const ProductList = () => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  async function fetchProduct() {
+  useEffect(() => {
     axios
       .get(`${api}api/v3/category/getCategory`, { withCredentials: true })
       .then((response) => {
@@ -92,9 +95,6 @@ const ProductList = () => {
       .catch((error) => {
         console.error("Error fetching categoriesFromBackend:", error);
       });
-  }
-  useEffect(() => {
-    fetchProduct();
   }, []);
 
   const handleProDeleted = async (id) => {
@@ -166,6 +166,7 @@ const ProductList = () => {
       );
 
       console.log(response);
+      fetchProduct();
       setProductChangeName("");
       setCategory("");
       setBrandChange("");
@@ -183,7 +184,6 @@ const ProductList = () => {
         draggable: true,
         progress: undefined,
       });
-      fetchProduct();
     } catch (error) {
       console.error(error);
       toast.error(
