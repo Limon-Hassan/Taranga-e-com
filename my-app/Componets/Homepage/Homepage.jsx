@@ -1,4 +1,3 @@
-import React from 'react';
 import Page from '../Page';
 import Page_1 from '../Page_1';
 import Page_2 from '../Page_2';

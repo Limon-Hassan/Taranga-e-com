@@ -19,7 +19,7 @@ const notoBengali = Noto_Sans_Bengali({
 });
 
 export const metadata = {
-  title: 'Deluxe X Deal BD',
+  title: 'Deluxe X Deal BD | Best Hardware Shop in Bangladesh',
   description:
     'Your one-stop hardware shop for premium quality drill machines, power tools, and industrial equipment — built to last, trusted by professionals',
   icons: {
@@ -34,15 +34,17 @@ export const metadata = {
       },
     ],
     apple: '/apple-touch-icon.png',
-    other: {
-      'application-name': 'Deluxe X Deal BD',
-      'apple-mobile-web-app-title': 'Deluxe X Deal BD',
-      'og:site_name': 'Deluxe X Deal BD',
-    },
   },
-
+  metadataBase: new URL('https://deluxexdeal.com'),
   alternates: {
-    canonical: 'https://deluxexdeal.com',
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Deluxe X Deal BD | Best Hardware Shop in Bangladesh',
+    description:
+      'Your one-stop hardware shop for premium quality drill machines, power tools, and industrial equipment — built to last, trusted by professionals',
+    url: 'https://deluxexdeal.com',
+    siteName: 'Deluxe X Deal BD',
   },
 };
 
