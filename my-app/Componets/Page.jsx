@@ -40,15 +40,6 @@ const Page = () => {
                   />
                 </div>
               </div>
-              <div>
-                <div className="mobile:mt-1 tablet:mt-5 laptop:mt-10 computer:mt-10 mobile:h-[200px] tablet:h-[300px] laptop:h-[500px] computer:h-[500px]">
-                  <img
-                    className="w-full h-full object-cover object-center"
-                    src="/images.jpg"
-                    alt="benner"
-                  />
-                </div>
-              </div>
             </Slider>
           </div>
           <div>
