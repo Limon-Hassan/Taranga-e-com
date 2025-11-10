@@ -59,7 +59,6 @@ const page = () => {
 
       const subTotal = Number(product.price || 0);
       const weight = Number(product.weight || 0);
-      let disCountPrice = Number(product.disCountPrice || 0);
 
       let shippingCost = 0;
 
@@ -74,14 +73,11 @@ const page = () => {
           else shippingCost = 200;
         }
       }
-      let discountAmount = (subTotal * disCountPrice) / 100;
-      let totalPrice = subTotal - discountAmount + shippingCost;
+      let totalPrice = subTotal + shippingCost;
       setSummeryData({
         subTotal,
         shippingCost,
         totalPrice,
-        showingDiscount: product.disCountPrice,
-        disCountPrice: discountAmount,
         productName: product.name,
         productPrice: product.price,
       });
@@ -169,7 +165,6 @@ const page = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
       if (!response.ok) throw new Error(data.msg || 'Checkout failed');
       if (data.msg === 'Checkout successful') {
         setSummeryData([]);
@@ -204,7 +199,7 @@ const page = () => {
         SetPhone('');
         setSaveInfo(false);
         setTimeout(() => {
-          window.location.href = '/';
+          window.location.href = '/orderSuccess';
         }, 3000);
       }
     } catch (error) {
@@ -340,16 +335,6 @@ const page = () => {
                     (+) {SummeryData.subTotal || 0}৳
                   </h4>
                 </div>
-                {SummeryData.disCountPrice > 0 && (
-                  <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
-                    <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
-                      Discount ({SummeryData.showingDiscount} % ছাড়)
-                    </h4>
-                    <h4 className="mt-[10px] text-[16px] font-bold font-noto-bengali text-red-500">
-                      (-) {SummeryData.disCountPrice || 0}৳
-                    </h4>
-                  </div>
-                )}
 
                 <div className="my-2.5">
                   <CheckBox

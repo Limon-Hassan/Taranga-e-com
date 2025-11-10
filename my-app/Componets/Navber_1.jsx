@@ -222,7 +222,7 @@ const Navber_1 = () => {
     <>
       <section className="mobile:w-full tablet:w-full bg-[#ededed] mobile:py-0 tablet:py-5 laptop:py-5 computer:py-5">
         <Container>
-          <div className=" mobile:relative tablet:relative laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
+          <div className="mobile:relative tablet:relative laptop:flex computer:flex computer:items-center computer:justify-between laptop:items-center laptop:justify-between">
             <div className="computer:flex laptop:flex computer:items-center laptop:items-center mobile:gap-0 tablet:gap-0 laptop:gap-[30px] computer:gap-[50px]">
               <div className="mobile:mb-0 tablet:mb-5 mobile:flex tablet:flex mobile:justify-between tablet:justify-between mobile:items-center tablet:items-center">
                 <button
@@ -284,19 +284,7 @@ const Navber_1 = () => {
                     ))}
                   </ul>
                 )}
-                {/* {suggestions.length > 0 && (
-                  <ul className="absolute left-0 top-[65px] w-full bg-white border rounded shadow  z-10">
-                    {suggestions.map((s, i) => (
-                      <li
-                        key={i}
-                        className="px-3 py-2 text-[16px] truncate mobile:w-[300px] tablet:w-[550px] laptop:w-[550px] computer:w-[550px] hover:bg-gray-200 cursor-pointer"
-                        onClick={() => handleSuggestionClick(s)}
-                      >
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                )} */}
+
                 <button
                   onClick={handleShow}
                   className="mobile:text-[14px] tablet:text-[16px] laptop:-[16px] computer:text-[16px]  font-nunito font-bold text-white bg-[#E6963A] rounded-md mobile:py-2 tablet:py-3 laptop:py-3 computer:py-3 mobile:px-2.5 tablet:px-6 laptop:px-6 computer:px-6 cursor-pointer flex items-center mobile:gap-[3px] tablet:gap-2 laptop:gap-2 computer:gap-2"

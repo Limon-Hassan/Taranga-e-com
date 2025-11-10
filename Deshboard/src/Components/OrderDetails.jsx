@@ -22,6 +22,19 @@ const OrderDetails = () => {
     order.uniqueOrderID.toLowerCase().includes(search.toLowerCase().trim()),
   );
 
+  const handleDelete = async (orderId) => {
+    try {
+      await axios.delete(`${api}api/v3/checkout/deleteChechout?id=${orderId}`);
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order._id !== orderId),
+      );
+      alert("Order deleted successfully!");
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete order!");
+    }
+  };
+
   return (
     <section className="py-6">
       <div className="mx-auto max-w-[1400px]">
@@ -43,24 +56,23 @@ const OrderDetails = () => {
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
                   <th className="p-3">Image</th>
-                  <th className="p-3">Order ID</th>
                   <th className="p-3">Shipping Cost</th>
                   <th className="p-3">Total Price</th>
                   <th className="p-3">Name</th>
                   <th className="p-3">Phone</th>
                   <th className="p-3">Address</th>
+                  <th className="p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
-                    <tr key={order._id} className="border-b hover:bg-gray-50">
+                    <tr key={order._id} className="border-b bg-gray-50 relative">
                       <img
                         className="h-[90px] w-[90px] rounded object-cover px-1 py-3"
                         src={order.items[0].productId?.photo[0]}
                         alt="product"
                       />
-                      <td className="px-1 py-3">{order.uniqueOrderID}</td>
                       <td className="px-1 py-3">{order.shippingCost}৳</td>
                       <td className="px-1 py-3">{order.totalPrice}৳</td>
                       <td className="px-1 py-3">{order.name}</td>
@@ -68,6 +80,15 @@ const OrderDetails = () => {
                       <td className="w-[200px] overflow-hidden text-clip text-wrap px-1 py-3">
                         {order.address}
                       </td>
+
+                      <div className="px-1 py-3 absolute top-[20px] right-[50px]">
+                        <button
+                          onClick={() => handleDelete(order._id)}
+                          className="text-red-500 hover:underline"
+                        >
+                          🗑 Delete
+                        </button>
+                      </div>
                     </tr>
                   ))
                 ) : (

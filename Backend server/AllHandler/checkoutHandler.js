@@ -83,7 +83,6 @@ async function directCheckout(req, res) {
     if (!product) return res.status(404).json({ msg: 'Product not found' });
 
     let subTotal = Number(product.price || 0);
-    let disCountPrice = Number(product.disCountPrice || 0);
     let weight = Number(product.weight || 0);
     let shippingCost = 0;
 
@@ -99,8 +98,7 @@ async function directCheckout(req, res) {
       }
     }
 
-    let discountAmount = (subTotal * disCountPrice) / 100;
-    let totalPrice = subTotal - discountAmount + shippingCost;
+    let totalPrice = subTotal + shippingCost;
     let oderId = `ODR-${uuidv4().split('-')[0].toUpperCase()}`;
     if (saveInfo) {
       await Save_info.findOneAndUpdate(
@@ -115,7 +113,6 @@ async function directCheckout(req, res) {
       subTotal,
       shippingCost,
       totalPrice,
-      disCountPrice: discountAmount,
       name,
       address,
       phone: Number(phone),

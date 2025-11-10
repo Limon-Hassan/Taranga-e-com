@@ -31,6 +31,8 @@ const Page = () => {
     backgroundSize: '100%',
   });
 
+  console.log(RelatedProduct);
+
   useEffect(() => {
     if (product && Array.isArray(product.photo) && product.photo.length > 0) {
       setSelectedImage(product.photo[0]);
@@ -223,7 +225,7 @@ const Page = () => {
                 </p>
                 <button
                   onClick={() => handleDirectCheckout(product._id)}
-                  className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] px-[30px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition"
+                  className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] px-[30px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition duration-300 ease-in-out flex items-center justify-center mx-auto"
                 >
                   অর্ডার করুন
                 </button>
@@ -263,10 +265,12 @@ const Page = () => {
               {RelatedProduct?.map((pro, idx) => (
                 <div
                   key={idx}
-                  onClick={() => handleShowProduct(pro._id)}
                   className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
                 >
-                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                  <div
+                    onClick={() => handleShowProduct(pro._id)}
+                    className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
+                  >
                     <img
                       className="w-full h-full bg-white object-cover cursor-pointer"
                       src={pro.photo[0]}
@@ -278,20 +282,14 @@ const Page = () => {
                       Sale {pro.disCountPrice}% off
                     </div>
                   )}
+
                   <div className="bg-[#eeeeee] text-center w-full max-h-[220px] pb-[15px]">
                     <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-auto tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                       {pro.name}
                     </h3>
-                    {RelatedProduct.map(pro =>
-                      pro.category?.map((cat, index) => (
-                        <span
-                          className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]"
-                          key={index}
-                        >
-                          {cat.name}
-                        </span>
-                      ))
-                    )}
+                    <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]">
+                      {pro.category[0]?.name}
+                    </h5>
                     <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
                       <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
                         {pro.oldPrice}৳
