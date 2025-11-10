@@ -95,6 +95,10 @@ const page = () => {
     FetchProduct();
   }, [Selectpayment]);
 
+  const convertToEnglishDigits = str => {
+    return str.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+  };
+
   let handleSubmit = async () => {
     const isMobile = window.innerWidth < 768;
     let productId = id;
@@ -149,11 +153,10 @@ const page = () => {
 
       const bodyData = {
         name,
-        phone,
+        phone: convertToEnglishDigits(phone),
         address: Address,
         saveInfo,
       };
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/directCheckout?productId=${productId}&area=${Selectpayment}`,
         {
