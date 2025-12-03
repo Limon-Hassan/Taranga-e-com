@@ -29,6 +29,7 @@ app.use(express.static('uploads'));
 app.use(express.static('productImage'));
 let http = require('http');
 const { init: initSocket } = require('./socket_server');
+const { sendServerEvent } = require('./config/sendServerEvent');
 let server = http.createServer(app);
 const io = initSocket(server);
 io.on('connection', socket => {
@@ -86,6 +87,21 @@ io.on('connection', socket => {
     }
   );
 });
+
+app.get('/test-fb-pixel', async (req, res) => {
+  try {
+    const data = await sendServerEvent('PageView', {
+      email: 'test@gmail.com',
+      ip: req.ip || '127.0.0.1',
+      ua: req.headers['user-agent'] || 'test-agent',
+      event_id: `test-pageview-${Date.now()}`,
+    });
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 
 app.get('/', (req, res) => {
   res.send('Hello World !');
