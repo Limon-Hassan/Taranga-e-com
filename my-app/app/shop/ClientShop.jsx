@@ -24,6 +24,8 @@ const ClientShop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [ActiveSidebar, setActiveSidebar] = useState(false);
+
+  
   useEffect(() => {
     setQuery(searchParams.get('search') || '');
   }, [searchParams]);

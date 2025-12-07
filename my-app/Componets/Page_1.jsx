@@ -7,6 +7,8 @@ import socket from '../utills/socket';
 
 const Page_1 = () => {
   const [category, setCategory] = useState([]);
+
+
   async function Fetch() {
     try {
       const res = await fetch(
@@ -17,7 +19,6 @@ const Page_1 = () => {
       );
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      console.log(data);
       setCategory(data);
     } catch (error) {
       console.error(error);
@@ -77,7 +78,6 @@ const Page_1 = () => {
 
       if (!response.ok) throw new Error('Failed to fetch product');
       let data = await response.json();
-      console.log(data);
       window.location.href = `/checkout/${
         data.product._id
       }/${data.product.name.replace(/\s+/g, '-')}`;

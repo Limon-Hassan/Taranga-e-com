@@ -2,11 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
-import { v4 as uuidv4 } from 'uuid';
-import { useSnackbar } from 'notistack';
+
 const Page_2 = () => {
   let [Category, setCategory] = useState([]);
-  let { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     async function Fetch() {

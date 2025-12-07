@@ -18,7 +18,6 @@ const Navber_2 = () => {
       );
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      console.log(data);
       setCategory(data);
     } catch (error) {
       console.error(error);

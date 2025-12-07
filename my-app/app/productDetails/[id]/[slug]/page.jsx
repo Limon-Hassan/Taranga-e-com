@@ -13,7 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Page = () => {
   const [product, setProduct] = useState('');
-  let { enqueueSnackbar } = useSnackbar();
   const [RelatedProduct, setRelatedProduct] = useState([]);
   let router = useRouter();
   const { id } = useParams();
@@ -31,7 +30,6 @@ const Page = () => {
     backgroundSize: '100%',
   });
 
-  console.log(RelatedProduct);
 
   useEffect(() => {
     if (product && Array.isArray(product.photo) && product.photo.length > 0) {

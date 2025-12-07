@@ -5,6 +5,8 @@ import { FaCartShopping } from 'react-icons/fa6';
 
 const Page_3 = () => {
   const [category, setCategory] = useState([]);
+
+  
   useEffect(() => {
     async function Fetch() {
       try {

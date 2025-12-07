@@ -27,8 +27,12 @@ const page = () => {
   });
 
   async function FetchInfo() {
-    let phone = JSON.parse(localStorage.getItem('userInfo'));
-    if (!phone) return;
+    if (typeof window === 'undefined') return;
+
+    const stored = window.localStorage.getItem('userInfo');
+    if (!stored) return;
+
+    let phone = JSON.parse(stored);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/getSavedInfo?phone=${phone}`
