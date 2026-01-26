@@ -4,7 +4,7 @@ let io;
 function init(server) {
   io = new Server(server, {
     cors: {
-      origin: 'http://deluxexdeal.com',
+      origin: ['http://deluxexdeal.com', 'http://localhost:3000'],
       methods: ['GET', 'POST'],
     },
   });

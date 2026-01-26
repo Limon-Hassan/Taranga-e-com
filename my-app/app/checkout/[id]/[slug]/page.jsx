@@ -207,7 +207,7 @@ const page = () => {
         setSaveInfo(false);
         setTimeout(() => {
           window.location.href = '/orderSuccess';
-        }, 3000);
+        }, 1500);
       }
     } catch (error) {
       console.log(error);

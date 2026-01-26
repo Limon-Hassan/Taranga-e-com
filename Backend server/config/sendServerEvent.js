@@ -1,5 +1,6 @@
-import crypto from 'crypto';
-export const sendServerEvent = async (eventName, eventData = {}) => {
+let crypto = require('crypto');
+
+const sendServerEvent = async (eventName, eventData = {}) => {
   try {
     const pixelId = process.env.META_PIXEL_ID;
     const accessToken = process.env.META_ACCESS_TOKEN;
@@ -51,3 +52,5 @@ export const sendServerEvent = async (eventName, eventData = {}) => {
     console.error('Meta Pixel Server Error:', err);
   }
 };
+
+module.exports = { sendServerEvent };

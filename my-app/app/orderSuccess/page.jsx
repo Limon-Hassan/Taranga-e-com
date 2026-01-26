@@ -17,19 +17,24 @@ const page = () => {
               ></path>
             </svg>
             <div className="text-center">
-              <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
-                Order Successfully Done!
+              <h3 className="mobile:text-[28px] computer:text-3xl font-noto-bengali font-medium text-black mb-2.5">
+                আপনার অর্ডার সফল হয়েছে 🎉
               </h3>
-              <p className="text-gray-600 my-2">
-                Thank you for completing your secure online Order.
+              <p className="text-[16px] font-noto-bengali font-normal text-black mb-2">
+                কিছুক্ষণের মধ্যেই আমাদের এজেন্ট আপনার সাথে যোগাযোগ করবে।
               </p>
-              <p> Have a great day! </p>
+              <p className="text-[16px] font-noto-bengali font-normal text-black mb-2">
+                সকল দায়-দায়িত্ত এবং পরিবেশনায় Deluxe X Deals LTD.
+              </p>
+              <p className="text-sm font-noto-bengali font-normal text-black">
+                Organizer of Deluxe X Deals LTD : CEO MD Hakim Ahmed
+              </p>
               <div className="py-10 text-center">
                 <a
                   href="/"
-                  className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
+                  className="px-12 bg-[#E6963A] text-white font-semibold py-3"
                 >
-                  GO BACK
+                  হোম পেজ যান
                 </a>
               </div>
             </div>
