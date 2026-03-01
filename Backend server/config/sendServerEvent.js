@@ -23,13 +23,13 @@ const sendServerEvent = async (eventName, eventData = {}) => {
             em: eventData.email
               ? crypto
                   .createHash('sha256')
-                  .update(eventData.email)
+                  .update(eventData.email.trim().toLowerCase())
                   .digest('hex')
               : undefined,
             ph: eventData.phone
               ? crypto
                   .createHash('sha256')
-                  .update(eventData.phone)
+                  .update(eventData.phone.replace(/\D/g, ''))
                   .digest('hex')
               : undefined,
           },
