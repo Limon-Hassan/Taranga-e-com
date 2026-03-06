@@ -1,3 +1,4 @@
+const { sendServerEvent } = require('../config/sendServerEvent');
 const cartSchema = require('../models/cartSchema');
 const checkoutSchema = require('../models/checkoutSchema');
 const productSchema = require('../models/productSchema');
@@ -16,18 +17,18 @@ async function makeCheckout(req, res) {
 
     cartdata.subTotal = cartdata.items.reduce(
       (acc, item) => acc + Number(item.singleSubtotal),
-      0
+      0,
     );
     cartdata.shippingCost = cartdata.items.reduce(
       (acc, item) => acc + Number(item.shippingCost),
-      0
+      0,
     );
 
     if (saveInfo) {
       await Save_info.findOneAndUpdate(
         { phone: Number(phone) },
         { name, address, phone: Number(phone) },
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       );
     }
     let oderId = `ODR-${uuidv4().split('-')[0].toUpperCase()}`;
@@ -104,7 +105,7 @@ async function directCheckout(req, res) {
       await Save_info.findOneAndUpdate(
         { phone: Number(phone) },
         { name, address, phone: Number(phone) },
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       );
     }
 
@@ -127,6 +128,20 @@ async function directCheckout(req, res) {
     });
 
     await directCheckout.save();
+
+    await sendServerEvent('Purchase', {
+      phone: phone,
+      ip: req.ip,
+      ua: req.headers['user-agent'],
+      event_id: directCheckout._id.toString(),
+      custom_data: {
+        currency: 'BDT',
+        value: totalPrice,
+        content_ids: [productId],
+        content_type: 'product',
+      },
+    });
+
     return res.status(200).json({
       msg: 'Checkout successful',
       data: directCheckout,
