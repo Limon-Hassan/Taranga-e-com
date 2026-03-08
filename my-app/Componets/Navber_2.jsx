@@ -59,7 +59,7 @@ const Navber_2 = () => {
 
   return (
     <>
-      <section className="bg-white shadow-md py-[5px] mobile:hidden tablet:hidden computer:block laptop:block">
+      <section className=" bg-white shadow-md py-[5px] mobile:hidden tablet:hidden computer:block laptop:block">
         <Container>
           <ul className="flex items-center justify-between">
             {category.slice(0, 4).map((item, index) => (

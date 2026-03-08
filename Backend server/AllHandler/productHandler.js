@@ -24,7 +24,7 @@ async function createProduct(req, res) {
     if (req.files) {
       if (Array.isArray(req.files)) {
         req.files.forEach(file =>
-          fileNames.push(process.env.HOST_NAME + file.filename)
+          fileNames.push(process.env.HOST_NAME + file.filename),
         );
       } else {
         fileNames.push(process.env.HOST_NAME + req.files.filename);
@@ -51,7 +51,7 @@ async function createProduct(req, res) {
         { _id: { $in: category } },
         {
           $push: { Product: product._id },
-        }
+        },
       );
     }
     getIO().emit('productCreated', product);
@@ -65,7 +65,7 @@ async function createProduct(req, res) {
 }
 
 async function getProduct(req, res) {
-  let { id } = req.query;
+  let { id, page = 1, limit = 20 } = req.query;
   try {
     if (id) {
       let singleProduct = await productSchema
@@ -92,7 +92,12 @@ async function getProduct(req, res) {
         relatedProduct,
       });
     } else {
-      let product = await productSchema.find().populate('category');
+      let skip = (page - 1) * limit;
+      let product = await productSchema
+        .find()
+        .skip(skip)
+        .limit(Number(limit))
+        .populate('category');
       return res.json(product);
     }
   } catch (error) {
@@ -102,6 +107,7 @@ async function getProduct(req, res) {
   }
 }
 
+//top rated work baki
 async function topProduct(req, res) {
   try {
     let topProduct = await productSchema
@@ -139,7 +145,7 @@ async function updateProduct(req, res) {
     if (req.files) {
       if (Array.isArray(req.files)) {
         req.files.forEach(file =>
-          fileNames.push(process.env.HOST_NAME + file.filename)
+          fileNames.push(process.env.HOST_NAME + file.filename),
         );
       } else {
         fileNames.push(process.env.HOST_NAME + req.files.filename);
@@ -162,7 +168,7 @@ async function updateProduct(req, res) {
         disCountPrice: ChangeDisCountPrice,
         photo: fileNames.length > 0 ? fileNames : undefined,
       },
-      { new: true }
+      { new: true },
     );
     getIO().emit('productUpdated', updateProduct);
     return res.json({
@@ -188,7 +194,7 @@ async function deleteProduct(req, res) {
         const PhotoPathOnServer = path.join(
           __dirname,
           '../productImage',
-          imagePath.split('/').pop()
+          imagePath.split('/').pop(),
         );
 
         fs.unlink(PhotoPathOnServer, err => {

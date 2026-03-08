@@ -5,7 +5,7 @@ import Container from '../../Componets/Container/Container';
 import CheckBox from '../../Componets/CheckBox';
 import socket from '../../utills/socket';
 import { useSnackbar } from 'notistack';
-
+import { useRouter } from 'next/navigation';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { ImSpinner6 } from 'react-icons/im';
 
@@ -15,6 +15,7 @@ const page = () => {
   let [cartData, setCartData] = useState([]);
   let [SummeryData, setSummeryData] = useState({});
   let [loding, setLoding] = useState(false);
+  let router = useRouter();
 
   let handlePaymentChange = paymentMethod => {
     setSelectpayment(paymentMethod);
@@ -22,16 +23,17 @@ const page = () => {
 
   async function FetchSummery() {
     setLoding(true);
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let cartId = localStorage.getItem('cartID');
     try {
       if (!Selectpayment) return;
       let res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/CartSummery?cartId=${cartId}&area=${Selectpayment}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/CartSummery?cartId=${cartId}&area=${Selectpayment}`,
       );
 
       if (!res.ok) throw new Error('Failed to fetch CartSummery');
 
       let SumaaryData = await res.json();
+      console.log(SumaaryData)
       setSummeryData(SumaaryData.data);
     } catch (error) {
       console.log(error);
@@ -46,10 +48,10 @@ const page = () => {
 
   async function FetchCart() {
     setLoding(true);
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let cartId = localStorage.getItem('cartID');
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/reatCart?cartId=${cartId}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/reatCart?cartId=${cartId}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch Cart');
@@ -68,7 +70,7 @@ const page = () => {
   }, []);
 
   useEffect(() => {
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let cartId = localStorage.getItem('cartID');
     socket.emit('joinCart', { cartId });
 
     const handleItemDeleted = ({ updatedCart }) => {
@@ -111,12 +113,12 @@ const page = () => {
   let handleCartDelete = async proId => {
     setLoding(true);
     const isMobile = window.innerWidth < 768;
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let cartId = localStorage.getItem('cartID');
 
     try {
       let response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/deleteCart?cartId=${cartId}&productId=${proId}`,
-        { method: 'DELETE' }
+        { method: 'DELETE' },
       );
 
       if (!response.ok) throw new Error('Failed to Delete cart');
@@ -127,11 +129,11 @@ const page = () => {
         await FetchSummery();
         const cartInfo = JSON.parse(localStorage.getItem('cartInfo')) || {};
         const updatedItems = (cartInfo.items || []).filter(
-          item => item.productId !== proId
+          item => item.productId !== proId,
         );
         const updatedTotalPrice = updatedItems.reduce(
           (acc, i) => acc + i.price * i.quantity,
-          0
+          0,
         );
         const updatedCartInfo = {
           items: updatedItems,
@@ -173,11 +175,11 @@ const page = () => {
   let HandleIncrement = async (action, productId) => {
     setLoding(true);
     const isMobile = window.innerWidth < 768;
-    let cartId = JSON.parse(localStorage.getItem('CARTID'));
+    let cartId = localStorage.getItem('cartID');
     try {
       let response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/IncrementCart?cartId=${cartId}&action=${action}&productId=${productId}`,
-        { method: 'PUT' }
+        { method: 'PUT' },
       );
 
       if (!response.ok) throw new Error('Failed to Delete Increment');
@@ -208,23 +210,23 @@ const page = () => {
   };
 
   let handleCheckout = () => {
-    let CARTID = JSON.parse(localStorage.getItem('CARTID'));
+    let CARTID = localStorage.getItem('cartID');
     if (!cartData) {
       return enqueueSnackbar('cart is empty', { variant: 'info' });
     }
 
     router.push(
-      `/checkout/${cartData.map(item => item.productId._id)}/${CARTID.replace(
+      `/menual-order/${cartData.map(item => item.productId._id)}/${CARTID.replace(
         /\s+/g,
-        '-'
-      )}`
+        '-',
+      )}`,
     );
   };
 
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -245,7 +247,7 @@ const page = () => {
           <ImSpinner6 className="animate-spin text-[50px]  mx-auto" />
         </div>
       ) : (
-        <section className="mobile:pt-[50px] tablet:pt-20 laptop:pt-[100px] computer:pt-[100px] mobile:pb-[150px] tablet:pb-[200px] laptop:pb-[400px] computer:pb-[500px]">
+        <section className="mobile:pt-[150px] tablet:pt-[300px] laptop:pt-[280px] computer:pt-[280px] mobile:pb-[100px] tablet:pb-[100px] laptop:pb-[400px] computer:pb-[500px]">
           <Container>
             <div>
               <h4 className="text-[30px] font-nunito font-bold text-[#1e293b] mb-5">
@@ -289,7 +291,7 @@ const page = () => {
                               handleCartDelete(
                                 typeof cartProduct.productId === 'string'
                                   ? cartProduct.productId
-                                  : cartProduct.productId._id
+                                  : cartProduct.productId._id,
                               )
                             }
                             className="mobile:text-[14px] tablet:text-[16px] laptop:text-[20px] computer:text-[20px] cursor-pointer"
@@ -322,7 +324,7 @@ const page = () => {
                               onClick={() =>
                                 HandleIncrement(
                                   'Decrement',
-                                  cartProduct.productId._id
+                                  cartProduct.productId._id,
                                 )
                               }
                               className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-black/30 mobile:w-[30px] mobile:h-[30px] tablet:w-10 tablet:h-10 laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
@@ -336,7 +338,7 @@ const page = () => {
                               onClick={() =>
                                 HandleIncrement(
                                   'Increment',
-                                  cartProduct.productId._id
+                                  cartProduct.productId._id,
                                 )
                               }
                               className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] cursor-pointer font-bold border border-black/30 mobile:w-[30px] mobile:h-[30px] tablet:w-10 tablet:h-10 laptop:w-[45px] laptop:h-[45px] computer:w-[45px] computer:h-[45px] flex items-center justify-center"
@@ -420,7 +422,7 @@ const page = () => {
                   </div>
                   <button
                     onClick={handleCheckout}
-                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-3.5 mobile:px-[85px] tablet:py-[18px] tablet:px-[200px] laptop:py-[18px] laptop:px-[125px] computer:py-[18px] computer:px-[185px] hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-5 rounded-md mb-[30px] cursor-pointer"
+                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-3.5 tablet:py-[18px] laptop:py-[18px] computer:py-[18px] w-full hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-5 rounded-md mb-[30px] cursor-pointer"
                   >
                     Proceed to checkout
                   </button>

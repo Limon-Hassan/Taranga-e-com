@@ -18,7 +18,7 @@ const Page = () => {
   };
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-[20px] tablet:mb-5 computer:mb-10 laptop:mb-10">
+      <section className="mobile:w-full tablet:w-full mobile:pb-[20px] tablet:pb-5 computer:pb-10 laptop:pb-10 computer:mt-[12%] laptop:mt-[20%] tablet:mt-[35%] mobile:mt-[30%] bg-[#E6963A]/30">
         <Container>
           <div className="slider-container">
             <Slider {...settings}>

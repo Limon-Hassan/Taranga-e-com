@@ -52,52 +52,12 @@ const page = () => {
     }
   }
 
-  async function FetchProduct() {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${id}`,
-      );
-      if (!res.ok) throw new Error('Failed to fetch product');
-      const data = await res.json();
-      const product = data.product;
-
-      const subTotal = Number(product.price || 0);
-      const weight = Number(product.weight || 0);
-
-      let shippingCost = 0;
-
-      if (weight > 0) {
-        if (Selectpayment === 'insideDhaka') {
-          if (weight <= 1) shippingCost = 60;
-          else if (weight <= 2) shippingCost = 80;
-          else shippingCost = 100;
-        } else if (Selectpayment === 'outsideDhaka') {
-          if (weight <= 1) shippingCost = 120;
-          else if (weight <= 2) shippingCost = 150;
-          else shippingCost = 200;
-        }
-      }
-      let totalPrice = subTotal + shippingCost;
-      setSummeryData({
-        subTotal,
-        shippingCost,
-        totalPrice,
-        productName: product.name,
-        productPrice: product.price,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   useEffect(() => {
     FetchInfo();
-    FetchProduct();
   }, []);
 
-  useEffect(() => {
-    FetchProduct();
-  }, [Selectpayment]);
+
 
   const convertToEnglishDigits = str => {
     return str.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));

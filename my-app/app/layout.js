@@ -76,9 +76,9 @@ export default function RootLayout({ children }) {
             src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_PIXEL_ID}&ev=PageView&noscript=1`}
           />
         </noscript>
-        <Navber />
+
         <Navber_1 />
-        <Navber_2 />
+
         <ClientProvider>{children}</ClientProvider>
         <Footer />
       </body>

@@ -3,17 +3,18 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Container from '../../../../Componets/Container/Container';
 import { PiStarFill } from 'react-icons/pi';
-import { FaCartShopping } from 'react-icons/fa6';
+import { FaBagShopping, FaCartShopping } from 'react-icons/fa6';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import ProductDetails from '../../../../Componets/ProductDetails';
 import CustomerReview from '../../../../Componets/CustomerReview';
 import { useParams, useRouter } from 'next/navigation';
-import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
+import { IoCheckmarkDoneCircleOutline } from 'react-icons/io5';
 
 const Page = () => {
   const [product, setProduct] = useState('');
   const [RelatedProduct, setRelatedProduct] = useState([]);
+  const [addedCart, setAddedCart] = useState([]);
   let router = useRouter();
   const { id } = useParams();
   const images = product && Array.isArray(product.photo) ? product.photo : [];
@@ -29,7 +30,6 @@ const Page = () => {
     backgroundPosition: 'center',
     backgroundSize: '100%',
   });
-
 
   useEffect(() => {
     if (product && Array.isArray(product.photo) && product.photo.length > 0) {
@@ -66,7 +66,7 @@ const Page = () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`,
-          { cache: 'no-store' }
+          { cache: 'no-store' },
         );
         if (!res.ok) throw new Error('Failed to fetch product');
         const data = await res.json();
@@ -83,7 +83,7 @@ const Page = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -92,8 +92,8 @@ const Page = () => {
       router.push(
         `/productDetails/${data.product._id}/${data.product.name.replace(
           /\s+/g,
-          '-'
-        )}`
+          '-',
+        )}`,
       );
     } catch (error) {
       console.log(error);
@@ -103,7 +103,7 @@ const Page = () => {
   let handleDirectCheckout = async proID => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -115,6 +115,57 @@ const Page = () => {
       console.log(error);
     }
   };
+
+  let handleCart = async proID => {
+    try {
+      let cartID = localStorage.getItem('cartID');
+      if (!cartID) {
+        cartID = uuidv4();
+        localStorage.setItem('cartID', cartID);
+      }
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/addCart`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cartId: cartID,
+            productId: proID,
+          }),
+        },
+      );
+      if (!response.ok) throw new Error('Failed to fetch product');
+      let data = await response.json();
+      let cartInfo = JSON.parse(localStorage.getItem('cartInfo')) || {
+        cartLength: 0,
+        totalPrice: 0,
+        productIds: [],
+      };
+      if (!cartInfo.productIds.includes(proID)) {
+        cartInfo.productIds.push(proID);
+      }
+
+      cartInfo.cartLength = data.data.items.length;
+      cartInfo.totalPrice = data.data.totalPrice;
+
+      localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
+      setAddedCart(cartInfo.productIds);
+
+      window.dispatchEvent(new Event('cartUpdated'));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    let cartInfo = JSON.parse(localStorage.getItem('cartInfo'));
+
+    if (cartInfo?.productIds) {
+      setAddedCart(cartInfo.productIds);
+    }
+  }, []);
 
   useEffect(() => {
     if (product && product.name) {
@@ -141,9 +192,9 @@ const Page = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="mobile:py-[50px] tablet:py-[80px] laptop:py-[100px] computer:py-[100px]">
+      <section className="mobile:pt-[150px] mobile:pb-[50px] tablet:py-[80px] laptop:py-[100px] computer:pt-[270px] computer:pb-[100px]">
         <Container>
-          <div className="flex flex-col lg:flex-row gap-[100px]">
+          <div className="flex flex-col lg:flex-row mobile:gap-[20px] tablet:gap-[50px] laptop:gap-[100px] computer:gap-[100px]">
             <div className="image_part relative shadow-md flex flex-col items-center">
               <div
                 className=" mobile:w-[300px] mobile:h-[300px] tablet:w-[400px] tablet:h-[400px] laptop:w-[400px] laptop:h-[400px] computer:w-[400px] computer:h-[400px] rounded-lg overflow-hidden bg-cover bg-center bg-no-repeat cursor-zoom-in"
@@ -179,7 +230,7 @@ const Page = () => {
                   </button>
                 </div>
               )}
-              <div className="flex items-center gap-[20px] mt-[30px] mb-[30px]">
+              <div className="flex items-center gap-[20px] my-[20px]">
                 {images.map((img, i) => (
                   <img
                     key={i}
@@ -214,19 +265,37 @@ const Page = () => {
                 {product.price}৳
               </h4>
 
-              <div className="border-t border-[#000]/30 pt-[15px] space-y-3">
-                <p className="text-[15px] text-[#555]">
+              <div className="border-t border-[#000]/30 pt-[15px]">
+                <p className="text-[15px] text-[#555] font-bold">
                   Categories: {product.category?.[0]?.name}
                 </p>
-                <p className="text-[15px] text-[#555]">
+                <p className="text-[15px] text-[#555] font-bold">
                   Brand: {product.brand}
                 </p>
-                <button
-                  onClick={() => handleDirectCheckout(product._id)}
-                  className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] px-[30px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition duration-300 ease-in-out flex items-center justify-center mx-auto"
-                >
-                  অর্ডার করুন
-                </button>
+                <div className="w-full flex flex-col gap-2 items-center mt-3.5">
+                  <button
+                    onClick={() => handleDirectCheckout(product._id)}
+                    className="text-[16px] font-bold font-nunito text-white bg-[#F2B10C] py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition duration-300 ease-in-out flex items-center justify-center gap-2"
+                  >
+                    <FaCartShopping size={24} /> অর্ডার করুন
+                  </button>
+                  <button
+                    disabled={addedCart.includes(product._id)}
+                    onClick={() => handleCart(product._id)}
+                    className={`text-[16px] font-bold font-nunito text-white ${addedCart.includes(product._id) ? 'bg-green-500 opacity-60 ' : 'bg-green-600'} py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition duration-300 ease-in-out flex items-center justify-center gap-2`}
+                  >
+                    {addedCart.includes(product._id) ? (
+                      <>
+                        <IoCheckmarkDoneCircleOutline size={24} /> কার্টে যুক্ত
+                        হয়েছে
+                      </>
+                    ) : (
+                      <>
+                        <FaBagShopping size={24} /> কার্টে যোগ করুন
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -267,10 +336,10 @@ const Page = () => {
                 >
                   <div
                     onClick={() => handleShowProduct(pro._id)}
-                    className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
+                    className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
                   >
                     <img
-                      className="w-full h-full bg-white object-cover cursor-pointer"
+                      className="w-full h-full bg-white object-contain cursor-pointer"
                       src={pro.photo[0]}
                       alt="product"
                     />
@@ -285,9 +354,6 @@ const Page = () => {
                     <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-auto tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                       {pro.name}
                     </h3>
-                    <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]">
-                      {pro.category[0]?.name}
-                    </h5>
                     <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
                       <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
                         {pro.oldPrice}৳
