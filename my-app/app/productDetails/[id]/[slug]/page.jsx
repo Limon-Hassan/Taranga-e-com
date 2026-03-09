@@ -282,7 +282,7 @@ const Page = () => {
                   <button
                     disabled={addedCart.includes(product._id)}
                     onClick={() => handleCart(product._id)}
-                    className={`text-[16px] font-bold font-nunito text-white ${addedCart.includes(product._id) ? 'bg-green-500 opacity-60 ' : 'bg-green-600'} py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-[#e1a60b] transition duration-300 ease-in-out flex items-center justify-center gap-2`}
+                    className={`text-[16px] font-bold font-nunito text-white ${addedCart.includes(product._id) ? 'bg-green-500 opacity-60 cursor-not-allowed ' : 'bg-green-600'} py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-transparent hover:border hover:border-green-500 hover:text-green-500 transition duration-300 ease-in-out flex items-center justify-center gap-2`}
                   >
                     {addedCart.includes(product._id) ? (
                       <>

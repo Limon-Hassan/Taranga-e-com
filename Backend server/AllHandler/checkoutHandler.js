@@ -12,7 +12,6 @@ async function makeCheckout(req, res) {
     let cartdata = await cartSchema
       .findOne({ cartId })
       .populate('items.productId');
-
     if (!cartdata) return res.status(404).json({ msg: 'Cart not Found' });
 
     cartdata.subTotal = cartdata.items.reduce(
@@ -47,6 +46,16 @@ async function makeCheckout(req, res) {
       paymentMethod,
     });
     await checkout.save();
+
+    let updateProductSold = cartdata.items.map(item => ({
+      updateOne: {
+        filter: { _id: item.productId._id },
+        update: { $inc: { sold: item.quantity } },
+      },
+    }));
+
+    await productSchema.bulkWrite(updateProductSold);
+
     getIO().to(cartId).emit('checkout', {
       cartId: checkout.cartId,
       name: checkout.name,
@@ -59,6 +68,20 @@ async function makeCheckout(req, res) {
       items: checkout.items,
       status: 'success',
     });
+
+    await sendServerEvent('Purchase', {
+      phone: phone,
+      ip: req.ip,
+      ua: req.headers['user-agent'],
+      event_id: checkout._id.toString(),
+      custom_data: {
+        currency: 'BDT',
+        value: checkout.totalPrice,
+        content_ids: [cartId],
+        content_type: 'product',
+      },
+    });
+
     await cartSchema.findOneAndDelete({ cartId });
     getIO().to(cartId).emit('deletedCart', { cartId });
     return res.status(200).json({
@@ -128,6 +151,8 @@ async function directCheckout(req, res) {
     });
 
     await directCheckout.save();
+
+    await productSchema.findByIdAndUpdate(productId, { $inc: { sold: 1 } });
 
     await sendServerEvent('Purchase', {
       phone: phone,

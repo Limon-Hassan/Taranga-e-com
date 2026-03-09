@@ -63,7 +63,7 @@ const page = () => {
 
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px] tablet:py-[100px] laptop:py-[100px] computer:py-[100px] mobile:py-[50px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px] tablet:py-[150px] laptop:py-[200px] computer:py-[200px] mobile:py-[150px]">
         <Container>
           <div className="flex items-center justify-between ">
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[28px] computer:text-[28px] font-nunito mobile:font-bold tablet:font-bold  laptop:font-bold computer:font-bold text-[#1e293b] mb-[20px]">

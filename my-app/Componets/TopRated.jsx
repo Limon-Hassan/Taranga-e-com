@@ -3,54 +3,28 @@
 import { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
-import socket from '../utills/socket';
 
 const TopRated = () => {
-  const [category, setCategory] = useState([]);
-
-  async function Fetch() {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory`,
-        {
-          cache: 'no-store',
-        },
-      );
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-      setCategory(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const [TopProducts, setTopProducts] = useState([]);
 
   useEffect(() => {
-    Fetch();
-    socket.on('CategoryCreated', newCategory => {
-      setCategory(prev => [...prev, newCategory]);
-    });
+    async function TopRatedProducts() {
+      try {
+        let res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/topProduct`,
+        );
 
-    return () => socket.off('CategoryCreated');
-  }, [socket]);
-
-  let handleSubmit = async category => {
-    try {
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_SERVER_PORT
-        }api/v3/category/getCategory?id=${encodeURIComponent(category)}`,
-        {
-          cache: 'no-store',
-        },
-      );
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-
-      window.location.href = `/category/${category}`;
-    } catch (error) {
-      console.error(error.message);
+        if (!res.ok) throw new Error('Failed to fetch top product');
+        let data = await res.json();
+        setTopProducts(data.topProduct);
+      } catch (error) {
+        console.log(error);
+        console.error(error);
+      }
     }
-  };
+
+    TopRatedProducts();
+  }, []);
 
   let handleShowProduct = async product => {
     try {
@@ -89,19 +63,13 @@ const TopRated = () => {
     <>
       <section className="mobile:w-full tablet:w-full mobile:pb-[30px] tablet:pb-5 laptop:pb-[30px] computer:pb-[30px] bg-[#E6963A]/30">
         <Container>
-          <div className="flex items-center justify-between border-b border-dashed border-black">
-            <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-5">
-              Top Rated
-            </h3>
-            <h3
-              onClick={() => handleSubmit(category[0]._id)}
-              className="mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal  laptop:font-normal computer:font-normal text-[#1e293b] mb-5 cursor-pointer underline"
-            >
-              See all
+          <div className=" flex items-center justify-center border-b border-dashed border-black">
+            <h3 className=" bg-white px-3 py-1 mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal laptop:font-medium computer:font-medium text-[#1e293b] -mb-[17px] rounded-md">
+              Our Best Deal Products
             </h3>
           </div>
-          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[20px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
-            {category[0]?.Product?.slice(0, 8).map((pro, idx) => (
+          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
+            {TopProducts?.map((pro, idx) => (
               <div
                 key={idx}
                 className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
@@ -116,19 +84,15 @@ const TopRated = () => {
                     alt="product"
                   />
                 </div>
-               
-                  <div className="absolute top-[5px] left-[5px] bg-green-500 mobile:text-[12px] tablet:text-[14px] laptop:text-[14px] computer:text-[14px] font-nunito font-bold text-white mobile:w-[90px] mobile:h-[30px] tablet:w-[90px] tablet:h-[35px] laptop:w-[90px] laptop:h-[35px] computer:w-[90px] computer:h-[35px] rounded-full flex items-center justify-center z-10">
-                    Top Sale!
-                  </div>
-               
+
+                <div className="absolute top-[5px] left-[5px] bg-green-500 mobile:text-[12px] tablet:text-[14px] laptop:text-[14px] computer:text-[14px] font-nunito font-bold text-white mobile:w-[90px] mobile:h-[30px] tablet:w-[90px] tablet:h-[35px] laptop:w-[90px] laptop:h-[35px] computer:w-[90px] computer:h-[35px] rounded-full flex items-center justify-center z-10">
+                  Top Sale!
+                </div>
 
                 <div className="bg-[#eeeeee] text-center w-full max-h-[220px] pb-[15px]">
                   <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-auto tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                     {pro.name}
                   </h3>
-                  <h5 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]">
-                    {category[0]?.name}
-                  </h5>
                   <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
                     <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
                       {pro.oldPrice}6000৳

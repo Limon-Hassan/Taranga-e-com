@@ -3,7 +3,7 @@ import React from "react";
 const Navber = () => {
   return (
     <nav className="w-full bg-white p-4 py-[20px] shadow-xl shadow-black/30">
-      <div className="mx-auto max-w-[1400px]">
+      <div className="desktop:max-w-[1400px] desktop:px-0 mx-auto sm:max-w-0 sm:px-5">
         <div className="flex items-center justify-between">
           <div className="relative h-[50px] w-[750px] rounded-full border-2 border-black/50">
             <input

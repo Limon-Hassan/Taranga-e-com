@@ -107,11 +107,10 @@ async function getProduct(req, res) {
   }
 }
 
-//top rated work baki
 async function topProduct(req, res) {
   try {
     let topProduct = await productSchema
-      .find()
+      .find({ sold: { $gt: 0 } })
       .sort({ sold: -1 })
       .limit(8)
       .populate({ path: 'category', select: 'name description image' });
@@ -138,9 +137,28 @@ async function updateProduct(req, res) {
     ChangeBrand,
     ChangeWeight,
     ChangeOldPrice,
+    ChangeProductSold,
     ChangeDisCountPrice,
   } = req.body;
   try {
+    let updatedData = {};
+    if (ChangeName) updatedData.name = ChangeName;
+    if (ChangeDescription) updatedData.description = ChangeDescription;
+    if (ChangePrice !== undefined) updatedData.price = ChangePrice;
+    if (Changestock !== undefined) updatedData.stock = Changestock;
+    if (ChangeBrand) updatedData.brand = ChangeBrand;
+    if (ChangeWeight !== undefined) updatedData.weight = ChangeWeight;
+    if (ChangeOldPrice !== undefined) updatedData.oldPrice = ChangeOldPrice;
+    if (ChangeDisCountPrice !== undefined)
+      updatedData.disCountPrice = ChangeDisCountPrice;
+    if (ChangeProductSold !== undefined) updatedData.sold = ChangeProductSold;
+
+    if (ChangeCategory) {
+      updatedData.category = Array.isArray(ChangeCategory)
+        ? ChangeCategory
+        : [ChangeCategory];
+    }
+
     let fileNames = [];
     if (req.files) {
       if (Array.isArray(req.files)) {
@@ -150,30 +168,24 @@ async function updateProduct(req, res) {
       } else {
         fileNames.push(process.env.HOST_NAME + req.files.filename);
       }
+
+      updatedData.photo = fileNames;
     }
 
-    let updateProduct = await productSchema.findByIdAndUpdate(
+    let updatedProduct = await productSchema.findByIdAndUpdate(
       { _id: id },
-      {
-        name: ChangeName,
-        description: ChangeDescription,
-        price: ChangePrice,
-        category: Array.isArray(ChangeCategory)
-          ? ChangeCategory
-          : [ChangeCategory],
-        stock: Changestock,
-        brand: ChangeBrand,
-        weight: ChangeWeight,
-        oldPrice: ChangeOldPrice,
-        disCountPrice: ChangeDisCountPrice,
-        photo: fileNames.length > 0 ? fileNames : undefined,
-      },
+      { $set: updatedData },
       { new: true },
     );
-    getIO().emit('productUpdated', updateProduct);
+
+    if (!updateProduct) {
+      return res.json({ msg: 'product Not found !' });
+    }
+
+    getIO().emit('productUpdated', updatedProduct);
     return res.json({
       msg: 'Product update Successfully !',
-      data: updateProduct,
+      data: updatedProduct,
     });
   } catch (error) {
     console.log(error.message);

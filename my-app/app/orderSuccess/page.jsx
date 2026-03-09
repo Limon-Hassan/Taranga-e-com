@@ -5,7 +5,7 @@ const page = () => {
   return (
     <>
       <Container>
-        <div className="bg-gray-500">
+        <div className=" pt-[200px]">
           <div className="bg-white p-6  md:mx-auto">
             <svg
               viewBox="0 0 24 24"

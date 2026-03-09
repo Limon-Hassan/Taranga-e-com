@@ -18,7 +18,7 @@ async function addCart(req, res) {
     }
 
     const existingItem = cart.items.find(
-      item => item.productId.toString() === productId
+      item => item.productId.toString() === productId,
     );
     if (existingItem)
       return res
@@ -42,7 +42,7 @@ async function addCart(req, res) {
 
     cart.subTotal = cart.items.reduce(
       (acc, item) => acc + Number(item.singleSubtotal),
-      0
+      0,
     );
 
     cart.totalPrice = cart.subTotal;
@@ -75,7 +75,7 @@ async function readCart(req, res) {
     }));
     let subTotal = item.reduce(
       (acc, item) => acc + Number(item.singleSubtotal),
-      0
+      0,
     );
     getIO()
       .to(cartId)
@@ -115,37 +115,24 @@ async function cartSummary(req, res) {
 
     cart.items = cart.items.map(item => {
       const price = Number(item.productId.price) || 0;
-      const rawWeight = item.productId.weight;
-      const weight =
-        typeof rawWeight === 'number' ? rawWeight : Number(rawWeight) || 0;
       item.singleSubtotal = price * item.quantity;
-
-      let shippingCost = 0;
-
-      if (weight > 0) {
-        if (area === 'insideDhaka') {
-          if (weight <= 1) shippingCost = 60;
-          else if (weight <= 2) shippingCost = 80;
-          else shippingCost = 100;
-        } else if (area === 'outsideDhaka') {
-          if (weight <= 1) shippingCost = 120;
-          else if (weight <= 2) shippingCost = 150;
-          else shippingCost = 200;
-        }
-      }
-
-      item.shippingCost = shippingCost;
       return item;
     });
 
+    let shippingCost = 0;
+    if (area === 'insideDhaka') {
+      shippingCost = 80;
+    } else if (area === 'outsideDhaka') {
+      shippingCost = 150;
+    }
+
+    cart.shippingCost = shippingCost;
+
     cart.subTotal = cart.items.reduce(
       (acc, item) => acc + item.singleSubtotal,
-      0
+      0,
     );
-    cart.shippingCost = cart.items.reduce(
-      (acc, item) => acc + item.shippingCost,
-      0
-    );
+
     cart.totalPrice = cart.subTotal + cart.shippingCost;
     await cart.save();
     getIO().to(cartId).emit('cartSummery', {
@@ -209,7 +196,7 @@ async function IncrementCart(req, res) {
       return res.status(404).json({ msg: 'cart not found!' });
     }
     let item = cartItems.items.find(
-      i => i.productId._id.toString() === productId
+      i => i.productId._id.toString() === productId,
     );
     if (!item)
       return res.status(404).json({ msg: 'Product not found in cart' });
@@ -235,14 +222,10 @@ async function IncrementCart(req, res) {
 
     cartItems.subTotal = cartItems.items.reduce(
       (acc, item) => acc + item.singleSubtotal,
-      0
-    );
-    cartItems.shippingCost = cartItems.items.reduce(
-      (acc, item) => acc + item.shippingCost,
-      0
+      0,
     );
 
-    cartItems.totalPrice = cartItems.subTotal + cartItems.shippingCost;
+    cartItems.totalPrice = cartItems.subTotal;
     await cartItems.save();
     getIO().to(cartId).emit('IncrementCart', { cartItems });
     return res.status(200).json({
@@ -266,7 +249,7 @@ async function deleteSingleCartItem(req, res) {
     if (!cart) return res.status(404).json({ msg: 'Cart not found' });
 
     cart.items = cart.items.filter(
-      item => item.productId.toString() !== productId
+      item => item.productId.toString() !== productId,
     );
 
     if (cart.items.length === 0) {
@@ -277,7 +260,7 @@ async function deleteSingleCartItem(req, res) {
 
     cart.subTotal = cart.items.reduce(
       (acc, item) => acc + Number(item.singleSubtotal),
-      0
+      0,
     );
     cart.totalPrice = cart.subTotal;
 

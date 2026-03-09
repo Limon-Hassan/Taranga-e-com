@@ -316,7 +316,7 @@ const page = () => {
                           <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
                             {cartProduct.productId.price}
                             <span className="mobile:hidden tablet:block laptop:block computer:block">
-                              .00৳
+                              ৳
                             </span>
                           </h4>
                           <div className="flex items-center">
@@ -349,7 +349,7 @@ const page = () => {
                           <h4 className="mobile:text-[10px] tablet:text-[16px] laptop:text-[16px]  computer:text-[16px] font-bold font-nunito text-[#1e293b] tablet:flex tablet:items-center tablet:gap-1 laptop:flex laptop:items-center laptop:gap-1 computer:flex computer:items-center computer:gap-1">
                             {cartProduct.singleSubtotal}
                             <span className="mobile:hidden tablet:block laptop:block computer:block">
-                              .00৳
+                              ৳
                             </span>
                           </h4>
                         </div>
@@ -377,20 +377,20 @@ const page = () => {
                     </h4>
                   </div>
                   <div className="flex items-center justify-between border-b border-black/30 p-2.5">
-                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
+                    <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
                       Subtotal
                     </h4>
-                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
-                      {SummeryData?.subTotal || 0}.00৳
+                    <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito font-bold text-[#1e293b]">
+                      {SummeryData?.subTotal || 0}৳
                     </h4>
                   </div>
                   <div className="flex items-center justify-between border-b border-black/30 p-2.5">
-                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                    <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
                       Shipping
                     </h4>
                     <div className="my-2.5">
                       <CheckBox
-                        label={`Inside Dhaka: ${
+                        label={`ঢাকার ভিতরে: ${
                           Selectpayment === 'insideDhaka'
                             ? SummeryData?.shippingCost || 0
                             : 0
@@ -401,7 +401,7 @@ const page = () => {
                       />
 
                       <CheckBox
-                        label={`Outside Dhaka: ${
+                        label={`ঢাকার বাহিরে: ${
                           Selectpayment === 'outsideDhaka'
                             ? SummeryData?.shippingCost || 0
                             : 0
@@ -413,16 +413,16 @@ const page = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between border-b border-black/30 p-2.5">
-                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                    <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
                       Total
                     </h4>
-                    <h4 className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
-                      {SummeryData?.totalPrice || 0}.00৳
+                    <h4 className="mobile:text-[14px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-bold font-nunito text-[#1e293b]">
+                      {SummeryData?.totalPrice || 0}৳
                     </h4>
                   </div>
                   <button
                     onClick={handleCheckout}
-                    className="mobile:text-[12px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-3.5 tablet:py-[18px] laptop:py-[18px] computer:py-[18px] w-full hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-5 rounded-md mb-[30px] cursor-pointer"
+                    className="mobile:text-[16px] tablet:text-[16px] laptop:text-[18px] computer:text-[18px] font-nunito font-bold text-[#1e293b] bg-[#f1a31c] mobile:py-3.5 tablet:py-[18px] laptop:py-[18px] computer:py-[18px] w-full hover:text-[#FFF] hover:bg-[#4169e1] ease-in-out duration-300 mt-5 rounded-md mb-[30px] cursor-pointer"
                   >
                     Proceed to checkout
                   </button>

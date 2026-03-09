@@ -33,7 +33,7 @@ export function SideBer() {
   };
 
   return (
-    <Card className="card h-screen rounded-none border border-black/20 p-4 shadow-xl shadow-black/30">
+    <Card className="sm:hidden card h-screen rounded-none border border-black/20 p-4 shadow-xl shadow-black/30">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           E-COMMERCE DESHBOARD

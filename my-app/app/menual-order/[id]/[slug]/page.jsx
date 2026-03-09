@@ -2,12 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Container from '../../../../Componets/Container/Container';
 import { useSnackbar } from 'notistack';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import CheckBox from '../../../../Componets/CheckBox';
 
 const page = () => {
   let router = useRouter();
-  const { id } = useParams();
   let [name, SetName] = useState('');
   let { enqueueSnackbar } = useSnackbar();
   let [phone, SetPhone] = useState('');
@@ -52,12 +51,30 @@ const page = () => {
     }
   }
 
+  async function FetchSummery() {
+    try {
+      let cartId = localStorage.getItem('cartID');
+      if (!cartId) return;
+      let res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/cart/FinalSummery?CartId=${cartId}`,
+      );
+
+      if (!res.ok) return;
+
+      let data = await res.json();
+      if (data?.data) {
+        setSummeryData(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     FetchInfo();
+    FetchSummery();
   }, []);
-
-
 
   const convertToEnglishDigits = str => {
     return str.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
@@ -65,7 +82,7 @@ const page = () => {
 
   let handleSubmit = async () => {
     const isMobile = window.innerWidth < 768;
-    let productId = id;
+    let cartId = localStorage.getItem('cartID');
     try {
       if (!name || !phone || !Address) {
         setError({
@@ -120,9 +137,10 @@ const page = () => {
         phone: convertToEnglishDigits(phone),
         address: Address,
         saveInfo,
+        cartId,
       };
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/directCheckout?productId=${productId}&area=${Selectpayment}`,
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/checkout/makeCheckout`,
         {
           method: 'POST',
           headers: {
@@ -134,8 +152,10 @@ const page = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.msg || 'Checkout failed');
       if (data.msg === 'Checkout successful') {
-        setSummeryData([]);
+        setSummeryData({});
         localStorage.setItem('userInfo', JSON.stringify(phone));
+        localStorage.removeItem('cartInfo');
+        localStorage.removeItem('cartID');
         window.dispatchEvent(new Event('storage'));
         enqueueSnackbar('ধন্যবাদ, আপনার অর্ডার সফল হয়েছে 🎊', {
           variant: 'success',
@@ -275,24 +295,34 @@ const page = () => {
                   অর্ডার লিস্ট
                 </h4>
                 <div className="flex items-center justify-between mb-[20px]">
-                  <h4 className="text-[16px] font-bold font-nunito text-gray-600">
-                    Products
-                  </h4>
+                  <div className="flex items-center gap-3">
+                    <h4 className="text-[16px] font-bold font-nunito text-gray-600">
+                      Qty
+                    </h4>
+                    <h4 className="text-[16px] font-bold font-nunito text-gray-600">
+                      Products
+                    </h4>
+                  </div>
                   <h4 className="text-[16px] font-bold font-nunito text-gray-600">
                     Subtotals
                   </h4>
                 </div>
-                <div className="flex items-center justify-between mb-[10px]">
-                  <h4
-                    onClick={() => handleShowProduct(item.productId._id)}
-                    className="text-[16px] mobile:w-[220px] tablet:w-[415px] laptop:w-[478px] hover:text-[#4169e1] computer:w-[360px] truncate font-bold font-nunito text-[#f1a31c] cursor-pointer"
+                {SummeryData?.items?.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between mb-[10px]"
                   >
-                    (1) {SummeryData.productName}
-                  </h4>
-                  <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
-                    {SummeryData.productPrice}৳
-                  </h4>
-                </div>
+                    <h4
+                      onClick={() => handleShowProduct(item.productId._id)}
+                      className="text-[16px] mobile:w-[220px] tablet:w-[415px] laptop:w-[478px] hover:text-[#4169e1] computer:w-[360px] truncate font-bold font-nunito text-[#f1a31c] cursor-pointer"
+                    >
+                      ({item.quantity}) {item.productId.name}
+                    </h4>
+                    <h4 className=" text-[16px] font-bold font-noto-bengali text-gray-600">
+                      {item.productId.price}৳
+                    </h4>
+                  </div>
+                ))}
 
                 <div className="flex items-center justify-between mb-[20px] border-t border-[#000]/30 ">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500 mt-[10px]">
@@ -303,7 +333,7 @@ const page = () => {
                   </h4>
                 </div>
 
-                <div className="my-2.5">
+                {/* <div className="my-2.5">
                   <CheckBox
                     label={`ঢাকার ভিতরে: ${
                       Selectpayment === 'insideDhaka'
@@ -325,6 +355,19 @@ const page = () => {
                     className="rounded-full"
                     onChange={() => handlePaymentChange('outsideDhaka')}
                   />
+                </div> */}
+                <div className="my-3 w-full">
+                  {SummeryData?.shippingCost === 80 ? (
+                    <h4 className="font-bold text-[16px] font-noto-bengali text-gray-500 flex items-center justify-between">
+                      ঢাকার ভিতরে:
+                      <span>{SummeryData?.shippingCost || 0}৳</span>
+                    </h4>
+                  ) : (
+                    <h4 className="font-bold text-[16px] font-noto-bengali text-gray-500 flex items-center justify-between">
+                      ঢাকার বাহিরে:
+                      <span>{SummeryData?.shippingCost || 0}৳</span>
+                    </h4>
+                  )}
                 </div>
                 <div className="flex items-center justify-between mb-[30px]">
                   <h4 className="text-[16px] font-bold font-nunito text-gray-500">
@@ -340,9 +383,9 @@ const page = () => {
                 </h4>
                 <button
                   onClick={handleSubmit}
-                  className="mobile:text-[20px] tablet:text-[28px] laptop:text-[28px] computer:text-[28px] font-bold font-noto-bengali text-white bg-[#C67D09] w-full h-[60px] cursor-pointer rounded-[4px] mt-[30px]"
+                  className="mobile:text-[20px] tablet:text-[28px] laptop:text-[28px] computer:text-[28px] font-bold font-noto-bengali text-white bg-[#E6963A] hover:bg-[#C67D09] w-full h-[60px] cursor-pointer rounded-[4px] mt-[30px]"
                 >
-                  অর্ডার করুন
+                  অর্ডারটি কনফার্ম করুন
                 </button>
               </div>
             </div>

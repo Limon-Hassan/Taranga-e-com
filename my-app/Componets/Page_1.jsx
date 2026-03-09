@@ -95,7 +95,7 @@ const Page_1 = () => {
       <section className="mobile:w-full tablet:w-full mobile:pb-[30px] tablet:pb-5 laptop:pb-[30px] computer:pb-[30px] bg-[#E6963A]/30">
         <Container>
           <div className=" flex items-center justify-center border-b border-dashed border-black">
-            <h3 className=" bg-white px-3 py-1 mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal laptop:font-medium computer:font-medium text-[#1e293b] -mb-[18px] rounded-md">
+            <h3 className=" bg-white px-3 py-1 mobile:text-[15px] tablet:text-[18px] laptop:text-[18px] computer:text-[18px] font-nunito mobile:font-bold tablet:font-normal laptop:font-medium computer:font-medium text-[#1e293b] -mb-[17px] rounded-md">
               Our All Fetured Products
             </h3>
           </div>

@@ -25,7 +25,6 @@ const ClientShop = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [ActiveSidebar, setActiveSidebar] = useState(false);
 
-  
   useEffect(() => {
     setQuery(searchParams.get('search') || '');
   }, [searchParams]);
@@ -107,7 +106,7 @@ const ClientShop = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -124,7 +123,7 @@ const ClientShop = () => {
   let handleDirectCheckout = async proID => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -138,7 +137,7 @@ const ClientShop = () => {
   };
 
   return (
-    <section className="relative z-0">
+    <section className="relative z-0 py-[200px]">
       <Container>
         <div
           className="flex justify-between mobile:mt-0 laptop:mt-[60px] computer:mt-[60px] "
@@ -317,11 +316,11 @@ const ClientShop = () => {
                 <div
                   key={idx}
                   onClick={() => handleShowProduct(pro._id)}
-                  className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[31%] hover:border-[#F1A31C] rounded-sm"
+                  className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
                 >
-                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
                     <img
-                      className="w-full h-full bg-white object-cover cursor-pointer"
+                      className="w-full h-full bg-white object-contain cursor-pointer"
                       src={pro.photo[0]}
                       alt="product"
                     />
@@ -335,14 +334,6 @@ const ClientShop = () => {
                     <h3 className="mobile:text-[14px] wrap-break-word tablet:text-[16px] laptop:text-[15px] computer:text-[15px] pt-2.5 mobile:font-bold tablet:font-bold laptop:font-medium mobile:w-auto tablet:w-[170px] laptop:w-[185px] computer:w-[200px] text-center mx-auto computer:font-medium cursor-pointer font-nunito text-[#1e293b] mb-[5px] line-clamp-3 overflow-hidden text-ellipsis h-[75px]">
                       {pro.name}
                     </h3>
-                    {pro.category?.map((cat, index) => (
-                      <span
-                        key={index}
-                        className="mobile:text-[12px] tablet:text-[16px] laptop:text-[16px] computer:text-[16px] font-nunito  font-normal text-[#1e293b] mb-[5px] h-[20px]"
-                      >
-                        {cat.name}
-                      </span>
-                    ))}
                     <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
                       <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
                         {pro.oldPrice}৳
