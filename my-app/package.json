@@ -13,6 +13,7 @@
     "cloudinary": "^2.7.0",
     "dotenv": "^17.2.3",
     "formidable": "^3.5.4",
+    "framer-motion": "^12.35.2",
     "lightningcss": "^1.29.3",
     "mongodb": "^6.20.0",
     "mongoose": "^8.18.3",

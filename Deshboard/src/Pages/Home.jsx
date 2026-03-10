@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <>
       <section>
-        <div className="mx-auto max-w-[1400px]">
-          <div className="flex items-center justify-between">
+        <div className="sm:mx-0 sm:max-w-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
+          <div className="sm:flex-col sm:gap-4 desktop:flex-row desktop:gap-0 flex  desktop:items-center sm:justify-normal desktop:justify-between">
             <SalesCard></SalesCard>
             <Totalincome></Totalincome>
             <Totalpaid></Totalpaid>

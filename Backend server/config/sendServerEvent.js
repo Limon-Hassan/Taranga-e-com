@@ -45,8 +45,6 @@ const sendServerEvent = async (eventName, eventData = {}) => {
     });
 
     const data = await res.json();
-    console.log('SERVER SIDE EVENT SENT:', data);
-
     return data;
   } catch (err) {
     console.error('Meta Pixel Server Error:', err);

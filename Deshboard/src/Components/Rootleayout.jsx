@@ -4,7 +4,7 @@ import { SideBer } from "./Sideber";
 import Navber from "./Navber";
 const Rootleayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="sm:flex sm:flex-col desktop:flex desktop:flex-row h-screen w-full">
       <aside className="bg-gray-800">
         <SideBer />
       </aside>

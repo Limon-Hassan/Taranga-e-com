@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Container from './Container/Container';
 import { FaCartShopping } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
 
 const TopRated = () => {
   const [TopProducts, setTopProducts] = useState([]);
@@ -59,6 +60,16 @@ const TopRated = () => {
     }
   };
 
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:pb-[30px] tablet:pb-5 laptop:pb-[30px] computer:pb-[30px] bg-[#E6963A]/30">
@@ -68,10 +79,28 @@ const TopRated = () => {
               Our Best Deal Products
             </h3>
           </div>
-          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]"
+          >
             {TopProducts?.map((pro, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{
+                  opacity: 0.5,
+                  filter: 'blur(6px)',
+                }}
+                animate={{
+                  opacity: 1,
+                  filter: 'blur(0px)',
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: idx * 0.15,
+                  ease: 'easeOut',
+                }}
                 className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
               >
                 <div
@@ -119,9 +148,9 @@ const TopRated = () => {
                     অডার করুন
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Container>
       </section>
     </>

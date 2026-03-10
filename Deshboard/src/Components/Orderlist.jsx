@@ -58,11 +58,15 @@ const Orderlist = () => {
 
   return (
     <section className="py-6">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="rounded-lg bg-white p-6 shadow-lg">
+      <div className="sm:mx-0 sm:max-w-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
+        <div className="rounded-lg bg-white sm:p-0 desktop:p-8 shadow-lg">
           <h2 className="mb-4 text-xl font-bold">Order List</h2>
 
-          <div className="mb-4 flex flex-wrap justify-between rounded-lg bg-gray-100 p-4">
+          <div>
+            <div></div>
+          </div>
+
+          <div className="sm:hidden mb-4 desktop:flex flex-wrap justify-between rounded-lg bg-gray-100 p-4">
             <p>
               Total Orders:
               <span className="font-semibold text-blue-600">{totalOrders}</span>
@@ -81,7 +85,7 @@ const Orderlist = () => {
             </p>
           </div>
 
-          <div className="mb-4 flex gap-2">
+          <div className="sm:hidden desktop:flex mb-4 gap-2">
             <input
               type="text"
               placeholder="Search by Product or Order ID..."
@@ -97,7 +101,7 @@ const Orderlist = () => {
             </button>
           </div>
 
-          <div className="w-full overflow-x-auto rounded-lg bg-white shadow-md">
+          <div className="sm:hidden desktop:block w-full overflow-x-auto rounded-lg bg-white shadow-md">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
@@ -166,7 +170,7 @@ const Orderlist = () => {
             </table>
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="sm:hidden desktop:flex mt-4 items-center justify-between">
             <p>Showing {currentOrders.length} entries</p>
             <div className="flex gap-2">
               <button

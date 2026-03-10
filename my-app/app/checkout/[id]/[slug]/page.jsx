@@ -223,12 +223,12 @@ const page = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      router.push(
-        `/productDetails/${data.product._id}/${data.product.name.replace(
-          /\s+/g,
-          '-',
-        )}`,
-      );
+      const slug = data.product.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+      router.push(`/productDetails/${data.product._id}/${slug}`);
     } catch (error) {
       console.log(error);
     }

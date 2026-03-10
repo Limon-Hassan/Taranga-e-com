@@ -84,7 +84,7 @@ const options = {
 const Oderchart = () => {
   return (
     <>
-      <div className=" mt-8 w-full rounded-2xl bg-white p-4 shadow-lg">
+      <div className=" mt-8 sm:w-[330px] desktop:w-full rounded-2xl bg-white p-4 shadow-lg">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Recent Order</h2>
           <button className="text-gray-500">...</button>

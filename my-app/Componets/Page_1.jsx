@@ -6,6 +6,7 @@ import { FaCartShopping } from 'react-icons/fa6';
 import socket from '../utills/socket';
 import { useInView } from 'react-intersection-observer';
 import PulseLoader from 'react-spinners/PulseLoader';
+import { motion } from 'framer-motion';
 
 const Page_1 = () => {
   const [products, SetProduct] = useState([]);
@@ -66,9 +67,13 @@ const Page_1 = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
-      window.location.href = `/productDetails/${
-        data.product._id
-      }/${data.product.name.replace(/\s+/g, '-')}`;
+      const slug = data.product.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+
+      window.location.href = `/productDetails/${data.product._id}/${slug}`;
     } catch (error) {
       console.log(error);
     }
@@ -90,6 +95,15 @@ const Page_1 = () => {
     }
   };
 
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
   return (
     <>
       <section className="mobile:w-full tablet:w-full mobile:pb-[30px] tablet:pb-5 laptop:pb-[30px] computer:pb-[30px] bg-[#E6963A]/30">
@@ -99,10 +113,28 @@ const Page_1 = () => {
               Our All Fetured Products
             </h3>
           </div>
-          <div className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]"
+          >
             {products.map((pro, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{
+                  opacity: 0.5,
+                  filter: 'blur(6px)',
+                }}
+                animate={{
+                  opacity: 1,
+                  filter: 'blur(0px)',
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: idx * 0.15,
+                  ease: 'easeOut',
+                }}
                 className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
               >
                 <div
@@ -151,16 +183,16 @@ const Page_1 = () => {
                     অডার করুন
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
-            
+
             {loading && (
-              <div className='w-full flex items-center justify-center py-5'>
+              <div className="w-full flex items-center justify-center py-5">
                 <PulseLoader color="#E6963A" size={20} />
               </div>
             )}
             <div ref={ref} className="h-10"></div>
-          </div>
+          </motion.div>
         </Container>
       </section>
     </>

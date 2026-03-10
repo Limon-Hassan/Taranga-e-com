@@ -321,8 +321,8 @@ const Navber_1 = () => {
             <div
               id="mobile-menu"
               className={
-                `absolute left-0 right-0 mobile:top-[70px] tablet:top-[120px] bg-white shadow-md z-50
-               transform origin-top transition-all  duration-300 ease-in-out
+                `absolute left-0 right-0 mobile:top-[65px] tablet:top-[120px] bg-white shadow-md z-50 max-h-[380px] overflow-scroll
+               transform origin-top transition-all   duration-300 ease-in-out
                ` +
                 (open
                   ? 'opacity-100 translate-y-0 pointer-events-auto'
@@ -330,7 +330,7 @@ const Navber_1 = () => {
               }
             >
               <ul className="mobile:flex-col tablet:flex-col mobile:items-center tablet:items-center mobile:mb-2.5 tablet:mb-[15px] mobile:p-2.5 tablet:p-5">
-                {category.slice(0, 8).map((c, i) => (
+                {category.map((c, i) => (
                   <li
                     key={i}
                     onClick={() => handleSubmit(c._id)}

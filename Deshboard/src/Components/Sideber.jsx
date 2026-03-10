@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Card,
   Typography,
@@ -22,22 +22,49 @@ import {
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-export function SideBer() {
+export function SideBer({ sidebar, setSidebar }) {
   const [open, setOpen] = React.useState(0);
   const [openProducts, setOpenProducts] = React.useState(false);
   const [openOrder, setOpenOrder] = React.useState(false);
   const [openCategory, setOpenCategory] = React.useState(false);
+  let sectionRef = useRef(null);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (sectionRef.current && !sectionRef.current.contains(e.target)) {
+        setSidebar(false);
+      }
+    }
+
+    window.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <Card className="sm:hidden card h-screen rounded-none border border-black/20 p-4 shadow-xl shadow-black/30">
+    <Card
+      ref={sectionRef}
+      className={`card h-screen transform rounded-none border border-black/20 bg-white p-4 shadow-xl shadow-black/30 transition-transform duration-300 ease-in-out sm:fixed sm:left-0 sm:top-0 sm:z-50 desktop:relative ${sidebar ? "translate-x-0" : "-translate-x-full"} desktop:translate-x-0`}
+    >
       <div className="mb-2 p-4">
-        <Typography variant="h5" color="blue-gray">
-          E-COMMERCE DESHBOARD
-        </Typography>
+        <div className="flex items-center justify-between">
+          <Typography variant="h5" color="blue-gray">
+            Deluxe Admin Panel
+          </Typography>
+          <Typography
+            onClick={() => setSidebar(false)}
+            variant="h5"
+            color="blue-gray"
+          >
+            <i className="fa-solid fa-x text-[24px] text-gray-600"></i>
+          </Typography>
+        </div>
       </div>
       <List>
         <Link to="/">

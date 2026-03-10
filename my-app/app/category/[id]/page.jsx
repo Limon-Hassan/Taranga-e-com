@@ -15,7 +15,7 @@ const page = () => {
           `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/category/getCategory?id=${id}`,
           {
             cache: 'no-store',
-          }
+          },
         );
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
@@ -31,7 +31,7 @@ const page = () => {
   let handleShowProduct = async product => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${product}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
@@ -48,14 +48,17 @@ const page = () => {
   let handleDirectCheckout = async proID => {
     try {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`
+        `${process.env.NEXT_PUBLIC_SERVER_PORT}api/v3/product/getProduct?id=${proID}`,
       );
 
       if (!response.ok) throw new Error('Failed to fetch product');
       let data = await response.json();
-      window.location.href = `/checkout/${
-        data.product._id
-      }/${data.product.name.replace(/\s+/g, '-')}`;
+      const slug = data.product.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+      window.location.href = `/checkout/${data.product._id}/${slug}`;
     } catch (error) {
       console.log(error);
     }

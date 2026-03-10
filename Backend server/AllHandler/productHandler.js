@@ -112,7 +112,7 @@ async function topProduct(req, res) {
     let topProduct = await productSchema
       .find({ sold: { $gt: 0 } })
       .sort({ sold: -1 })
-      .limit(8)
+      .limit(12)
       .populate({ path: 'category', select: 'name description image' });
 
     getIO().emit('topProduct', topProduct);

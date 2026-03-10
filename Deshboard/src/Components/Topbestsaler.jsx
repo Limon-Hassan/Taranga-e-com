@@ -3,7 +3,7 @@ import React from "react";
 const Topbestsaler = () => {
   return (
     <>
-      <div className="mt-8 w-full rounded-2xl bg-white p-4 shadow-lg">
+      <div className="mt-8 rounded-2xl bg-white p-4 shadow-lg sm:hidden desktop:block w-full">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Best Shop Sellers</h2>
           <button className="text-sm text-gray-500">View all ▼</button>
