@@ -33,31 +33,26 @@ const { sendServerEvent } = require('./config/sendServerEvent');
 let server = http.createServer(app);
 const io = initSocket(server);
 io.on('connection', socket => {
-  console.log('✅ User connected:', socket.id);
 
   socket.on('joinUser', () => {
     const roomId = socket.id;
     socket.join(roomId);
-    console.log(`👤 User joined room ${roomId}`);
   });
 
   socket.on('joinCart', ({ cartId }) => {
     socket.join(cartId);
-    console.log(`🛒 User joined cart room: ${cartId}`);
   });
 
   socket.on('joinProduct', ({ productId }) => {
     socket.join(productId);
-    console.log(`👤 User joined product room ${productId}`);
   });
 
   socket.on('joinAdmin', () => {
     socket.join('adminRoom');
-    console.log(`👑 Admin joined adminRoom`);
   });
 
   socket.on('disconnect', () => {
-    console.log('❌ User disconnected:', socket.id);
+    console.log(' User disconnected:', socket.id);
   });
 
   socket.on(
@@ -74,7 +69,6 @@ io.on('connection', socket => {
         };
         const next = err => {
           if (err) {
-            console.error('Search error:', err);
             socket.emit('searchError', { msg: err.message });
           }
         };

@@ -141,7 +141,7 @@ const ClientShop = () => {
   };
 
   return (
-    <section className="relative z-0 py-[200px]">
+    <section className="relative z-0 mobile:pt-[150px] mobile:pb-[50px] computer:pt-[200px] computer:pb-[200px] bg-[#E6963A]/30">
       <Container>
         <div
           className="flex justify-between mobile:mt-0 laptop:mt-[60px] computer:mt-[60px] "
@@ -322,7 +322,7 @@ const ClientShop = () => {
                   onClick={() => handleShowProduct(pro._id)}
                   className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
                 >
-                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                  <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto overflow-hidden cursor-pointer">
                     <img
                       className="w-full h-full bg-white object-contain cursor-pointer"
                       src={pro.photo[0]}

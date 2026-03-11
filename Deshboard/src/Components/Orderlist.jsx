@@ -12,7 +12,6 @@ const Orderlist = () => {
     axios
       .get(`${api}api/v3/checkout/AdminReadCheckout`)
       .then((res) => {
-        console.log(res.data);
         setOrders(res.data.data || []);
       })
       .catch((err) => {
@@ -58,15 +57,60 @@ const Orderlist = () => {
 
   return (
     <section className="py-6">
-      <div className="sm:mx-0 sm:max-w-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
-        <div className="rounded-lg bg-white sm:p-0 desktop:p-8 shadow-lg">
+      <div className="sm:mx-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
+        <div className="rounded-lg bg-white shadow-lg sm:p-3 desktop:p-8">
           <h2 className="mb-4 text-xl font-bold">Order List</h2>
 
-          <div>
-            <div></div>
+          <div className="desktop:hidden w-full rounded-md bg-gray-400/30 p-3 max-h-[500px] overflow-y-auto">
+            {orders.length === 0 ? (
+              <p>No orders found.</p>
+            ) : (
+              currentOrders.map((order) => {
+                const product = order.items?.[0]?.productId;
+                const productName = product?.name || "Unnamed Product";
+                const productImage = product?.photo?.[0] || "/mans.png";
+                const price = order.items?.[0]?.price || 0;
+                const quantity = order.items?.[0]?.quantity || 1;
+                return (
+                  <div
+                    key={order._id}
+                    className="mb-4 border-b border-gray-600"
+                  >
+                    <div className="mb-2 flex items-center justify-between">
+                      <div>
+                        <img
+                          className="h-[80px] w-[80px] rounded-lg object-contain"
+                          src={productImage}
+                          alt={productName}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span>Ord Id : {order.uniqueOrderID}</span>
+                        <span>price : {price}৳</span>
+                        <span>Qty : {quantity}</span>
+                        <span>
+                          Action :{" "}
+                          <span
+                            onClick={() => handleDelete(order._id)}
+                            className="text-red-500 underline"
+                          >
+                            Delete
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <h4 className="mb-5 max-w-[290px] truncate text-wrap text-[16px] font-bold text-gray-700">
+                      St Japan16V BRUSHLESS Cordless Drill Machine 24 Pcs
+                      Accessories
+                    </h4>
+                  </div>
+                );
+              })
+            )}
           </div>
 
-          <div className="sm:hidden mb-4 desktop:flex flex-wrap justify-between rounded-lg bg-gray-100 p-4">
+          <div className="mb-4 flex-wrap justify-between rounded-lg bg-gray-100 p-4 sm:hidden desktop:flex">
             <p>
               Total Orders:
               <span className="font-semibold text-blue-600">{totalOrders}</span>
@@ -85,7 +129,7 @@ const Orderlist = () => {
             </p>
           </div>
 
-          <div className="sm:hidden desktop:flex mb-4 gap-2">
+          <div className="mb-4 gap-2 sm:hidden desktop:flex">
             <input
               type="text"
               placeholder="Search by Product or Order ID..."
@@ -101,7 +145,7 @@ const Orderlist = () => {
             </button>
           </div>
 
-          <div className="sm:hidden desktop:block w-full overflow-x-auto rounded-lg bg-white shadow-md">
+          <div className="w-full overflow-x-auto rounded-lg bg-white shadow-md sm:hidden desktop:block">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
@@ -170,7 +214,7 @@ const Orderlist = () => {
             </table>
           </div>
 
-          <div className="sm:hidden desktop:flex mt-4 items-center justify-between">
+          <div className="mt-4 items-center justify-between sm:hidden desktop:flex">
             <p>Showing {currentOrders.length} entries</p>
             <div className="flex gap-2">
               <button

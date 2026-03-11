@@ -181,13 +181,9 @@ const AddCategory = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex gap-4">
-            <Button color="blue" onClick={handleAddCategory}>
+          <div className="mt-6">
+            <Button className="w-full" color="blue" onClick={handleAddCategory}>
               Add Category
-            </Button>
-            <Button color="gray">Save Category</Button>
-            <Button color="gray" variant="outlined">
-              Schedule
             </Button>
           </div>
           <ToastContainer />

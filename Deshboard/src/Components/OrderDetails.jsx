@@ -37,11 +37,62 @@ const OrderDetails = () => {
 
   return (
     <section className="py-6">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="rounded-lg bg-white p-6 shadow-lg">
+      <div className="sm:mx-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
+        <div className="rounded-lg bg-white shadow-lg sm:p-3 desktop:p-6">
           <h2 className="mb-4 text-xl font-bold">Order Details</h2>
 
-          <div className="mb-4 flex gap-2">
+          <div className="max-h-[500px] w-full overflow-y-auto rounded-md bg-gray-400/30 p-3 desktop:hidden">
+            {orders.length === 0 ? (
+              <p>No orders found.</p>
+            ) : (
+              filteredOrders.map((order) => {
+                const quantity = order.items?.[0]?.quantity || 1;
+                return (
+                  <div
+                    key={order._id}
+                    className="mb-4 border-b border-gray-600"
+                  >
+                    <div className="mb-2 flex items-center justify-between">
+                      <div>
+                        <img
+                          className="h-[80px] w-[80px] rounded-lg object-contain"
+                          src={order.items[0].productId?.photo[0]}
+                          alt="product"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span>S.Cost : {order.shippingCost}৳</span>
+                        <span>Total : {order.totalPrice}৳</span>
+                        <span>Qty : {quantity}</span>
+                        <span>
+                          Action :
+                          <span
+                            onClick={() => handleDelete(order._id)}
+                            className="text-red-500 underline"
+                          >
+                            Delete
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <h4>Name: {order.name}</h4>
+                    <h4 className="mb-5 max-w-[290px] truncate text-wrap text-[16px] font-bold text-gray-700">
+                      Address:
+                      <a
+                        className="ml-2 mr-2 text-green-500 underline"
+                        href={`tel:${order.phone}`}
+                      >
+                        0{order.phone}
+                      </a>
+                      {order.address}
+                    </h4>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <div className="mb-4 gap-2 sm:hidden desktop:flex">
             <input
               type="text"
               placeholder="Search by Order ID..."
@@ -51,7 +102,7 @@ const OrderDetails = () => {
             />
           </div>
 
-          <div className="w-full overflow-x-auto rounded-lg bg-white shadow-md">
+          <div className="w-full overflow-x-auto rounded-lg bg-white shadow-md sm:hidden desktop:block">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b bg-gray-100 text-left">
@@ -67,7 +118,10 @@ const OrderDetails = () => {
               <tbody>
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
-                    <tr key={order._id} className="border-b bg-gray-50 relative">
+                    <tr
+                      key={order._id}
+                      className="relative border-b bg-gray-50"
+                    >
                       <img
                         className="h-[90px] w-[90px] rounded object-cover px-1 py-3"
                         src={order.items[0].productId?.photo[0]}
@@ -81,7 +135,7 @@ const OrderDetails = () => {
                         {order.address}
                       </td>
 
-                      <div className="px-1 py-3 absolute top-[20px] right-[50px]">
+                      <div className="absolute right-[50px] top-[20px] px-1 py-3">
                         <button
                           onClick={() => handleDelete(order._id)}
                           className="text-red-500 hover:underline"

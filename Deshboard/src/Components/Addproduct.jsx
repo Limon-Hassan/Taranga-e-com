@@ -23,6 +23,7 @@ const AddProduct = () => {
   const [stock, setStock] = useState("");
   const [discount, setDiscount] = useState("");
   const [oldPrice, setOldPrice] = useState("");
+  const [sold, setSold] = useState("");
   const [weight, setWeight] = useState("");
   const [images, setImages] = useState([]);
 
@@ -57,7 +58,6 @@ const AddProduct = () => {
     axios
       .get(`${api}api/v3/category/getCategory`, { withCredentials: true })
       .then((response) => {
-        console.log(response);
         let data = response.data?.data || response.data || [];
         const safeArray = Array.isArray(data) ? data : [data];
         setcategoriesFromBackend(safeArray);
@@ -82,6 +82,7 @@ const AddProduct = () => {
     formData.append("stock", stock);
     formData.append("weight", weight);
     formData.append("oldPrice", oldPrice);
+    formData.append("sold", sold);
     formData.append("disCountPrice", discount);
     formData.append("description", description);
     formData.append("price", price);
@@ -108,6 +109,7 @@ const AddProduct = () => {
         setStock("");
         setWeight("");
         setOldPrice("");
+        setSold("");
         setDiscount("");
         setImages([]);
         toast.success("Product added SuccessFully!", {
@@ -257,6 +259,19 @@ const AddProduct = () => {
               onChange={(e) => setOldPrice(e.target.value)}
             />
           </div>
+          <div>
+            <Typography variant="small" className="mb-3">
+              Sold
+            </Typography>
+            <Input
+              color="blue"
+              type="number"
+              label="Product Sold"
+              placeholder="not required"
+              value={sold}
+              onChange={(e) => setSold(e.target.value)}
+            />
+          </div>
           <div className="w-full">
             <Typography variant="small" className="mb-3">
               Description *
@@ -327,12 +342,8 @@ const AddProduct = () => {
         </div>
 
         <div className="mt-6 flex gap-4">
-          <Button color="blue" onClick={handleAddProduct}>
+          <Button className="w-full" color="blue" onClick={handleAddProduct}>
             Add Product
-          </Button>
-          <Button color="gray">Save Product</Button>
-          <Button color="gray" variant="outlined">
-            Schedule
           </Button>
         </div>
         <ToastContainer />

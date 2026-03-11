@@ -74,10 +74,16 @@ async function makeCheckout(req, res) {
       ip: req.ip,
       ua: req.headers['user-agent'],
       event_id: checkout._id.toString(),
+
       custom_data: {
         currency: 'BDT',
-        value: checkout.totalPrice,
-        content_ids: [cartId],
+        value: Number(checkout.totalPrice),
+        contents: [
+          {
+            id: cartId,
+            quantity: 1,
+          },
+        ],
         content_type: 'product',
       },
     });
@@ -161,7 +167,7 @@ async function directCheckout(req, res) {
       event_id: directCheckout._id.toString(),
       custom_data: {
         currency: 'BDT',
-        value: totalPrice,
+        value: Number(totalPrice),
         content_ids: [productId],
         content_type: 'product',
       },

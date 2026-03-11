@@ -7,7 +7,7 @@ const Navber = () => {
   return (
     <>
       <nav className="w-full bg-white p-4 py-[20px] shadow-xl shadow-black/30">
-        <div className="sm:mx-0 sm:max-w-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
+        <div className="sm:mx-0  sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
           <div className="items-center sm:flex sm:w-fit sm:justify-normal sm:gap-3 desktop:flex desktop:w-full desktop:justify-between">
             <button
               onClick={() => setSidebar(!sidebar)}

@@ -12,9 +12,9 @@ const CategoryList = () => {
       try {
         const response = await axios.get(`${api}api/v3/category/getCategory`);
         console.log(response.data);
-         let data = response.data?.data || response.data || [];
-         const safeArray = Array.isArray(data) ? data : [data];
-         setGetallCategories(safeArray);
+        let data = response.data?.data || response.data || [];
+        const safeArray = Array.isArray(data) ? data : [data];
+        setGetallCategories(safeArray);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -47,20 +47,20 @@ const CategoryList = () => {
   return (
     <>
       <section>
-        <div className="mx-auto max-w-[1400px]">
+        <div className="sm:mx-0 sm:px-5 desktop:mx-auto desktop:max-w-[1400px] desktop:px-0">
           <div className="mt-8 w-full rounded-2xl bg-white p-4 shadow-lg">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-lg font-semibold">All Categories</h2>
-              <div className="w-[450px]">
+              <div className="w-[450px] sm:hidden desktop:block">
                 <Input
                   color="blue"
                   label="Search..."
-                  className=" placeholder:font-Oi_kiree"
+                  className="placeholder:font-Oi_kiree"
                 />
               </div>
               <Link
                 to="/addcategory"
-                className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white"
+                className="sm:hidden desktop:block rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white"
               >
                 <span>+</span> Add category
               </Link>

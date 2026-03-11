@@ -37,9 +37,14 @@ const page = () => {
       if (!response.ok) throw new Error('Failed to fetch product');
 
       const data = await response.json();
+      const slug = data.product.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
       window.location.href = `/productDetails/${
         data.product._id
-      }/${data.product.name.replace(/\s+/g, '-')}`;
+      }/${slug}`;
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +71,7 @@ const page = () => {
 
   return (
     <>
-      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px] tablet:py-[150px] laptop:py-[200px] computer:py-[200px] mobile:py-[150px]">
+      <section className="mobile:w-full tablet:w-full mobile:mb-[50px] tablet:mb-[20px] laptop:mb-[30px] computer:mb-[30px] tablet:py-[150px] laptop:py-[200px] computer:py-[200px] mobile:py-[150px] bg-[#E6963A]/30">
         <Container>
           <div className="flex items-center justify-between ">
             <h3 className="mobile:text-[15px] tablet:text-[18px] laptop:text-[28px] computer:text-[28px] font-nunito mobile:font-bold tablet:font-bold  laptop:font-bold computer:font-bold text-[#1e293b] mb-[20px]">
@@ -83,9 +88,9 @@ const page = () => {
                 onClick={() => handleShowProduct(pro._id)}
                 className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
               >
-                <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-full tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto">
+                <div className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto overflow-hidden cursor-pointer">
                   <img
-                    className="w-full h-full bg-white object-cover cursor-pointer"
+                    className="w-full h-full bg-white object-contain  cursor-pointer"
                     src={pro.photo[0]}
                     alt="product"
                   />

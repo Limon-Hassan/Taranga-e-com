@@ -8,6 +8,7 @@ const {
   topProduct,
   updateProduct,
   deleteProduct,
+  getAllProduct,
 } = require('../../AllHandler/productHandler');
 const { makeReviews, getReviews } = require('../../AllHandler/reviewHandler');
 const { searchProduct } = require('../../AllHandler/searchHandler');
@@ -30,6 +31,7 @@ const upload = multer({
 
 router.post('/AddProduct', upload.array('photo', 4), createProduct);
 router.get('/getProduct', getProduct);
+router.get('/getAllProduct', getAllProduct);
 router.get('/product/searchProduct', searchProduct);
 router.post('/CreateReviews', makeReviews);
 router.get('/getReviews', getReviews);

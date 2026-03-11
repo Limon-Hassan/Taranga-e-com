@@ -30,14 +30,25 @@ const ProductList = () => {
   const [stockChange, setStockChange] = useState("");
   const [discountChange, setDiscountChange] = useState("");
   const [oldPriceChange, setOldPriceChange] = useState("");
+  const [changeSold, setChangeSold] = useState("");
   const [Changeweight, setChangeweight] = useState("");
   const [images, setImages] = useState([]);
   const [open, setOpen] = useState(false);
   const [proId, setProId] = useState(null);
 
-  const handleOpen = (productId) => {
+  const handleOpen = (product) => {
     setOpen(true);
-    setProId(productId);
+    setProId(product._id);
+    setProductChangeName(product.name || "");
+    setCategory(product.category?.[0]?._id || "");
+    setBrandChange(product.brand || "");
+    setPriceChange(product.price || "");
+    setStockChange(product.stock || "");
+    setDiscountChange(product.disCountPrice || "");
+    setOldPriceChange(product.oldPrice || "");
+    setChangeSold(product.sold || "");
+    setChangeweight(product.weight || "");
+    setDescriptionChange(product.description || "");
   };
 
   const config = useMemo(
@@ -54,7 +65,7 @@ const ProductList = () => {
 
   async function fetchProduct() {
     axios
-      .get(`${api}api/v3/product/getProduct`)
+      .get(`${api}api/v3/product/getAllProduct`, { withCredentials: true })
       .then((response) => {
         let data = response.data?.data || response.data || [];
         const safeArray = Array.isArray(data) ? data : [data];
@@ -106,8 +117,6 @@ const ProductList = () => {
 
       setGetallProducts((prev) => prev.filter((item) => item._id !== id));
 
-      console.log(res.data.msg);
-
       setTimeout(() => {
         axios
           .get(`${api}api/v3/product/getProduct`)
@@ -143,6 +152,7 @@ const ProductList = () => {
     formData.append("Changestock", stockChange);
     formData.append("ChangeWeight", Changeweight);
     formData.append("ChangeOldPrice", oldPriceChange);
+    formData.append("ChangeProductSold", changeSold);
     formData.append("ChangeDisCountPrice", discountChange);
     formData.append("ChangeDescription", descriptionChange);
     formData.append("ChangePrice", priceChange);
@@ -165,7 +175,6 @@ const ProductList = () => {
         },
       );
 
-      console.log(response);
       fetchProduct();
       setProductChangeName("");
       setCategory("");
@@ -175,6 +184,7 @@ const ProductList = () => {
       setChangeweight("");
       setOldPriceChange("");
       setDescriptionChange("");
+      setChangeSold("");
       setImages([]);
       toast.success("Product Update SuccessFully!", {
         position: "top-center",
@@ -202,16 +212,16 @@ const ProductList = () => {
   return (
     <>
       <section>
-        <div className="mx-auto max-w-[1400px]">
+        <div className="desktop:px-0 sm:mx-0  sm:px-5 desktop:mx-auto desktop:max-w-[1400px]">
           <div className="mt-8 w-full rounded-2xl bg-white p-4 shadow-lg">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-lg font-semibold">All Products</h2>
-              <div className="w-[450px]">
+              <div className="w-[450px] sm:hidden desktop:block">
                 <Input color="blue" label="Search..." />
               </div>
               <Link
                 to="/addproduct"
-                className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white"
+                className="rounded-lg border border-red-400 px-[42px] py-[12px] text-[20px] text-red-500 duration-300 ease-in-out hover:bg-red-500 hover:text-white sm:hidden desktop:block"
               >
                 <span>+</span> Add Product
               </Link>
@@ -224,6 +234,7 @@ const ProductList = () => {
                     <th className="px-0 py-2">Product</th>
                     <th className="px-0 py-2">Price</th>
                     <th className="px-0 py-2">Stock</th>
+                    <th className="px-0 py-2">Sold</th>
                     <th className="px-0 py-2">Discount</th>
                     <th className="px-0 py-2">Category</th>
                     <th className="px-0 py-2">Action</th>
@@ -234,7 +245,7 @@ const ProductList = () => {
                     GetallProducts?.map((product, index) => (
                       <>
                         <tr key={index} className="border-b">
-                          <td className="flex w-[380px] items-center gap-2 text-clip text-wrap px-0 py-[18px]">
+                          <td className="flex w-[380px] items-center gap-2 text-clip text-wrap py-[18px] sm:px-2 desktop:px-0">
                             <img
                               src={product.photo?.[0] || "/default-image.png"}
                               alt={product.name}
@@ -246,6 +257,7 @@ const ProductList = () => {
                           <td className="px-0 py-[18px]">
                             {product.stock > 0 ? product.stock : "out of stock"}
                           </td>
+                          <td className="px-0 py-[18px]">{product.sold}</td>
                           <td className="px-0 py-[18px]">
                             {product.disCountPrice || 0}%
                           </td>
@@ -265,7 +277,7 @@ const ProductList = () => {
                           <div className="flex items-center gap-3 px-0 py-[18px]">
                             <Button
                               className="bg-transparent shadow-none hover:shadow-none"
-                              onClick={() => handleOpen(product._id)}
+                              onClick={() => handleOpen(product)}
                             >
                               <i className="fa-light fa-pen-line cursor-pointer text-[24px] text-green-400"></i>
                             </Button>
@@ -320,7 +332,6 @@ const ProductList = () => {
                       label="Product changeName"
                       value={productChangeName}
                       onChange={(e) => setProductChangeName(e.target.value)}
-                      required
                       maxLength={80}
                     />
                   </div>
@@ -333,7 +344,6 @@ const ProductList = () => {
                       onChange={(value) => {
                         setCategory(value);
                       }}
-                      required
                     >
                       {categoriesFromBackend.length > 0 ? (
                         categoriesFromBackend.map((cat) => (
@@ -356,7 +366,6 @@ const ProductList = () => {
                       label="Product Brand Change"
                       value={brandChange}
                       onChange={(e) => setBrandChange(e.target.value)}
-                      required
                       maxLength={50}
                     />
                   </div>
@@ -366,11 +375,9 @@ const ProductList = () => {
                     </Typography>
                     <Input
                       color="blue"
-                      type="number"
                       label="Change Price"
                       value={priceChange}
                       onChange={(e) => setPriceChange(e.target.value)}
-                      required
                       min="1"
                     />
                   </div>
@@ -380,7 +387,6 @@ const ProductList = () => {
                     </Typography>
                     <Input
                       color="blue"
-                      type="number"
                       label="Change Discount"
                       value={discountChange}
                       placeholder="Exm: 10 - not required"
@@ -394,11 +400,9 @@ const ProductList = () => {
                     </Typography>
                     <Input
                       color="blue"
-                      type="number"
                       label="Change stock"
                       value={stockChange}
                       onChange={(e) => setStockChange(e.target.value)}
-                      required
                       min="1"
                     />
                   </div>
@@ -408,7 +412,6 @@ const ProductList = () => {
                     </Typography>
                     <Input
                       color="blue"
-                      type="number"
                       label="Change weight"
                       value={Changeweight}
                       placeholder="Exm: 2.5 - not required"
@@ -421,25 +424,35 @@ const ProductList = () => {
                     </Typography>
                     <Input
                       color="blue"
-                      type="number"
                       label="Old-Price"
                       placeholder="not required"
                       value={oldPriceChange}
                       onChange={(e) => setOldPriceChange(e.target.value)}
                     />
                   </div>
+                  <div>
+                    <Typography variant="small" className="mb-3">
+                      Sold
+                    </Typography>
+                    <Input
+                      color="blue"
+                      label="sold"
+                      placeholder="not required"
+                      value={changeSold}
+                      onChange={(e) => setChangeSold(e.target.value)}
+                    />
+                  </div>
                   <div className="w-full">
                     <Typography variant="small" className="mb-3">
                       Change Description *
                     </Typography>
-                    <div className="h-[400px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-2 text-[16px] font-normal text-black/50 outline-none">
+                    <div className="sm:h-[550px] desktop:h-[400px] w-full resize-none rounded border border-gray-300 bg-[#F5F5F5] p-2 text-[16px] font-normal text-black/50 outline-none">
                       <JoditEditor
                         ref={editor}
                         value={descriptionChange}
                         config={config}
                         tabIndex={1}
-                        required
-                        onBlur={(newContent) =>
+                        onChange={(newContent) =>
                           setDescriptionChange(newContent)
                         }
                       />

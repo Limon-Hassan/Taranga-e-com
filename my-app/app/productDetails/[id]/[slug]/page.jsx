@@ -282,7 +282,7 @@ const Page = () => {
                   <button
                     disabled={addedCart.includes(product._id)}
                     onClick={() => handleCart(product._id)}
-                    className={`text-[16px] font-bold font-nunito text-white ${addedCart.includes(product._id) ? 'bg-green-500 opacity-60 cursor-not-allowed ' : 'bg-green-600'} py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-transparent hover:border hover:border-green-500 hover:text-green-500 transition duration-300 ease-in-out flex items-center justify-center gap-2`}
+                    className={`text-[16px] font-bold font-nunito text-white ${addedCart.includes(product._id) ? 'bg-green-500 opacity-60 cursor-not-allowed ' : 'bg-green-600'} py-[10px] mobile:w-full tablet:w-full laptop:w-[180px] computer:w-[220px] rounded-[6px] cursor-pointer hover:bg-transparent hover:border hover:border-green-500 hover:text-green-500 transition duration-300 ease-in-out flex items-center justify-center gap-2 active:scale-95`}
                   >
                     {addedCart.includes(product._id) ? (
                       <>
@@ -336,7 +336,7 @@ const Page = () => {
                 >
                   <div
                     onClick={() => handleShowProduct(pro._id)}
-                    className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
+                    className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto overflow-hidden cursor-pointer"
                   >
                     <img
                       className="w-full h-full bg-white object-contain cursor-pointer"

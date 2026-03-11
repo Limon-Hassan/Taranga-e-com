@@ -107,6 +107,17 @@ async function getProduct(req, res) {
   }
 }
 
+async function getAllProduct(req, res) {
+  try {
+    let product = await productSchema.find().populate('category');
+    return res.json(product);
+  } catch (error) {
+    console.log(error.message);
+    console.error(error.message);
+    return res.status(500).json({ msg: 'error', error: error.message });
+  }
+}
+
 async function topProduct(req, res) {
   try {
     let topProduct = await productSchema
@@ -142,16 +153,23 @@ async function updateProduct(req, res) {
   } = req.body;
   try {
     let updatedData = {};
-    if (ChangeName) updatedData.name = ChangeName;
-    if (ChangeDescription) updatedData.description = ChangeDescription;
-    if (ChangePrice !== undefined) updatedData.price = ChangePrice;
-    if (Changestock !== undefined) updatedData.stock = Changestock;
+    if (ChangeName !== undefined && ChangeName !== '')
+      updatedData.name = ChangeName;
+    if (ChangeDescription !== undefined && ChangeDescription !== '')
+      updatedData.description = ChangeDescription;
+    if (ChangePrice !== undefined && ChangePrice !== '')
+      updatedData.price = Number(ChangePrice);
+    if (Changestock !== undefined && Changestock !== '')
+      updatedData.stock = Number(Changestock);
     if (ChangeBrand) updatedData.brand = ChangeBrand;
-    if (ChangeWeight !== undefined) updatedData.weight = ChangeWeight;
-    if (ChangeOldPrice !== undefined) updatedData.oldPrice = ChangeOldPrice;
-    if (ChangeDisCountPrice !== undefined)
-      updatedData.disCountPrice = ChangeDisCountPrice;
-    if (ChangeProductSold !== undefined) updatedData.sold = ChangeProductSold;
+    if (ChangeWeight !== undefined && ChangeWeight !== '')
+      updatedData.weight = Number(ChangeWeight);
+    if (ChangeOldPrice !== undefined && ChangeOldPrice !== '')
+      updatedData.oldPrice = Number(ChangeOldPrice);
+    if (ChangeDisCountPrice !== undefined && ChangeDisCountPrice !== '')
+      updatedData.disCountPrice = Number(ChangeDisCountPrice);
+    if (ChangeProductSold !== undefined && ChangeProductSold !== '')
+      updatedData.sold = Number(ChangeProductSold);
 
     if (ChangeCategory) {
       updatedData.category = Array.isArray(ChangeCategory)
@@ -160,7 +178,7 @@ async function updateProduct(req, res) {
     }
 
     let fileNames = [];
-    if (req.files) {
+    if (req.files && req.files.length > 0) {
       if (Array.isArray(req.files)) {
         req.files.forEach(file =>
           fileNames.push(process.env.HOST_NAME + file.filename),
@@ -178,7 +196,7 @@ async function updateProduct(req, res) {
       { new: true },
     );
 
-    if (!updateProduct) {
+    if (!updatedProduct) {
       return res.json({ msg: 'product Not found !' });
     }
 
@@ -232,5 +250,6 @@ module.exports = {
   getProduct,
   topProduct,
   updateProduct,
+  getAllProduct,
   deleteProduct,
 };

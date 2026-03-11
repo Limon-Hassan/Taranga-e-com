@@ -17,7 +17,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
         disabled={active === 1}
         className={` mobile:hidden tablet:flex laptop:flex computer:flex uppercase cursor-pointer  items-center gap-2 px-3 py-2.5 rounded-full text-sm  font-medium transition-all ease-in-out duration-300 ${
           active === 1
-            ? 'text-gray-400 cursor-not-allowed'
+            ? 'text-gray-800 cursor-not-allowed'
             : 'hover:text-[#FFF] text-black hover:bg-[#E6963A]'
         }`}
       >
@@ -35,7 +35,7 @@ const Pagination = ({ active, setActive, totalPages }) => {
             className={`mobile:w-[35px] mobile:h-[35px] tablet:w-10 tablet:h-10 laptop:w-10 laptop:h-10 computer:w-10 computer:h-10 flex items-center justify-center rounded-full transition-all ease-in-out duration-200 font-bold text-sm ${
               active === page
                 ? 'bg-[#E6963A] text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-[#E6963A]'
+                : 'bg-gray-800 text-white hover:bg-[#E6963A]'
             }`}
           >
             {page}

@@ -117,7 +117,7 @@ const Page_1 = () => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px]"
+            className="flex flex-wrap items-center mobile:justify-normal computer:justify-normal laptop:justify-normal tablet:justify-center mobile:gap-2.5 tablet:gap-[18px] laptop:gap-[26px] computer:gap-[26px] mobile:mt-[50px] tablet:mt-[50px] laptop:mt-[50px] computer:mt-[50px] "
           >
             {products.map((pro, idx) => (
               <motion.div
@@ -135,11 +135,11 @@ const Page_1 = () => {
                   delay: idx * 0.15,
                   ease: 'easeOut',
                 }}
-                className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm"
+                className="relative z-0 mobile:shadow-md tablet:shadow-md laptop:shadow-none computer:shadow-none border border-black/40 mobile:p-1 tablet:p-[3px] laptop:p-[3px] computer:p-[3px] mobile:w-[48%] tablet:w-[31%] laptop:w-[31%] computer:w-[23%] hover:border-[#F1A31C] rounded-sm "
               >
                 <div
                   onClick={() => handleShowProduct(pro._id)}
-                  className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto"
+                  className="mobile:w-full tablet:w-auto laptop:w-full computer:w-full mobile:h-[178px] tablet:h-full laptop:h-[250px] computer:h-[250px] flex items-center justify-center mx-auto overflow-hidden cursor-pointer"
                 >
                   <img
                     className="w-full h-full bg-white object-contain cursor-pointer"
@@ -159,8 +159,7 @@ const Page_1 = () => {
 
                   <div className="flex items-center justify-center gap-2.5 mx-auto h-[25px]">
                     <h2 className="mobile:text-[16px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#a1a0a0] my-line-through">
-                      {pro.oldPrice}6000৳
-                      {/* aikhane 6000 delete korete hobe */}
+                      {pro.oldPrice}৳
                     </h2>
                     <h2 className="mobile:text-[18px] tablet:text-[18px] laptop:text-[20px] computer:text-[20px] font-nunito font-bold text-[#778E38]">
                       {pro.price}৳
