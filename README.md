@@ -65,13 +65,6 @@ DeluxeXDeal is a full-stack hardware tools e-commerce platform developed based o
 
 ---
 
-## 🌐 Deployment
-
-- Live Site: https://deluxexdeal.com/
-- Dashboard: https://dashboard.deluxexdeal.com/
-
----
-
 ## 👨‍💻 My Role
 
 - Full Stack Development (Frontend + Backend)
